@@ -1,0 +1,47 @@
+---
+// Import necessary components
+import BaseHead from "../../../components/BaseHead.astro";
+import BaseHeader from "../../../components/BaseHeader.astro";
+import BaseScript from "../../../components/BaseScript.astro";
+import BaseFooter from "../../../components/BaseFooter.astro";
+import BaseNavmenu from "../../../components/BaseNavmenu.astro";
+import BasePodcastBanner from "../../../components/BasePodcastBanner.astro";
+import BaseNieuwsItem from "../../../components/BaseNieuwsItem.astro";
+import BaseHeadExclude from "../../../components/BaseHeadExclude.astro";
+
+export async function getStaticPaths() {
+    const allPosts = await Astro.glob('../*.md');
+    const tagMap = new Map();
+    
+    // Group posts by tag
+    allPosts.forEach((post) => {
+        if (post.frontmatter.title && post.frontmatter.tags) {
+            post.frontmatter.tags.forEach((tag) => {
+                const formattedTag = tag.toLowerCase().replace(/:/g, '');
+                if (!tagMap.has(formattedTag)) {
+                    tagMap.set(formattedTag, []);
+                }
+                tagMap.get(formattedTag).push(post);
+            });
+        }
+    });
+    
+    // Return an array of tag paths with their associated posts
+    return Array.from(tagMap.entries()).map(([tag, posts]) => ({
+        params: { tag },
+        props: { posts }
+    }));
+}
+
+const { tag } = Astro.params;
+---
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="refresh" content={`0;url=/nieuws/tags/${tag}/1`} />
+    </head>
+    <body>
+        <p>Redirecting to <a href={`/nieuws/tags/${tag}/1`}>first page</a>...</p>
+    </body>
+</html>

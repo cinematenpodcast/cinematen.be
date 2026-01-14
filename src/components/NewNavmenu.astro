@@ -1,0 +1,233 @@
+<div class="nav-container">
+    <div class="nav-content">
+        <a
+            id="heartbeat"
+            href="https://open.spotify.com/show/19O8JqKPSbQWek15vG3sig?si=065cd2ef2c294d09"
+            target="_blank"
+            class="luister-button-block"
+        >
+            <div class="luister-button">Luister nu!</div>
+        </a>
+        <nav class="main-nav">
+            <div class="menu-toggle" id="menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/nieuws">Nieuws</a></li>
+                <li><a href="/reviews&blogs">Reviews & Blogs</a></li>
+                <li><a href="/#over-ons">Over ons</a></li>
+                <li><a href="/#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<style>
+    .nav-container {
+        position: relative;
+        width: 100%;
+        background: transparent;
+        z-index: 1000;
+    }
+
+    .nav-content {
+        max-width: 1300px;
+        margin: 0 auto;
+        padding: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .luister-button-block {
+        background-color: var(--fluorescent-cyan);
+        color: var(--transparent);
+        border-radius: 12px;
+        margin-top: 0;
+        padding: clamp(6px, 0.8vw, 12px) clamp(12px, 1.5vw, 20px);
+        text-decoration: none;
+        transition: transform .2s cubic-bezier(.455, .03, .515, .955);
+        animation: heartbeat 2s ease 2s 1 normal forwards;
+    }
+
+    @keyframes heartbeat {
+        0% {
+            animation-timing-function: ease-out;
+            transform: scale(1);
+            transform-origin: center center;
+        }
+
+        10% {
+            animation-timing-function: ease-in;
+            transform: scale(0.91);
+        }
+
+        17% {
+            animation-timing-function: ease-out;
+            transform: scale(0.98);
+        }
+
+        33% {
+            animation-timing-function: ease-in;
+            transform: scale(0.87);
+        }
+
+        45% {
+            animation-timing-function: ease-out;
+            transform: scale(1);
+        }
+    }
+
+    .luister-button-block:hover {
+        transform: scale(1.05);
+    }
+
+    .luister-button {
+        color: var(--dark-purple);
+        font-size: clamp(0.9rem, 1vw, 1.1rem);
+        font-weight: 800;
+    }
+
+    .main-nav {
+        display: flex;
+        align-items: center;
+    }
+
+    .menu-toggle {
+        display: none;
+        flex-direction: column;
+        cursor: pointer;
+        padding: 0.5rem;
+    }
+
+    .menu-toggle span {
+        display: block;
+        width: 25px;
+        height: 3px;
+        background-color: var(--fluorescent-cyan);
+        margin: 3px 0;
+        transition: 0.3s;
+    }
+
+    .nav-links {
+        display: flex;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        gap: 1rem;
+        background: transparent !important;
+    }
+
+    .nav-links a {
+        color: white;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        font-weight: 600;
+        transition: color 0.3s ease;
+    }
+
+    .nav-links a:hover {
+        color: var(--fluorescent-cyan);
+    }
+
+    @media screen and (max-width: 767px) {
+        .menu-toggle {
+            display: flex;
+        }
+
+        .nav-links {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: linear-gradient(156deg, var(--dark-purple) 1%, var(--sapphire)) !important;
+            flex-direction: column;
+            padding-right: 1rem;
+            padding-bottom: 1rem;
+            padding-left: 1rem;
+            max-height: calc(100vh - 80px);
+            overflow-y: auto;
+
+            gap: 0.5rem;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+        }
+
+        .nav-links.active {
+            display: flex;
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+
+        /* Add transition for smooth fade */
+        :global(.image-3) {
+            transition: opacity 0.3s ease;
+        }
+
+        /* Hide logo when menu is active */
+        .nav-links.active ~ :global(.header_content) {
+            opacity: 0;
+        }
+
+        .nav-links.active ~ .nav-content,
+        .nav-links.active ~ .partner-text,
+        .nav-links.active ~ .partner-logo,
+        .nav-links.active ~ .cinematen-logo,
+        .nav-links.active ~ .cinematen-tagline {
+            opacity: 0 !important;
+            transition: opacity 0.1s ease;
+        }
+    }
+
+    .header_content {
+        opacity: 1 !important;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        transform: translateX(0) !important;
+    }
+
+    .nav-links.active ~ .header_content {
+        opacity: 0 !important;
+        transform: translateX(100%) !important;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const menuToggle = document.getElementById('menu-toggle');
+        const navLinks = document.getElementById('nav-links');
+        const headerContent = document.querySelector('.header_content');
+        if (!menuToggle || !navLinks) return; // Guard: alleen uitvoeren als menu aanwezig is
+        menuToggle.addEventListener('click', function() {
+            menuToggle.classList.toggle('active');
+            navLinks.classList.toggle('active');
+            if (headerContent) {
+                const headerEl = headerContent as HTMLElement;
+                if (navLinks.classList.contains('active')) {
+                    headerEl.style.opacity = '0';
+                    headerEl.style.transform = 'translateX(100%)';
+                } else {
+                    headerEl.style.opacity = '1';
+                    headerEl.style.transform = 'translateX(0)';
+                }
+            }
+        });
+    });
+</script> 

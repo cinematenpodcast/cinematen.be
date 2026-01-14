@@ -1,0 +1,203 @@
+---
+import BaseHead from "../components/BaseHead.astro";
+import BaseHeader from "../components/BaseHeader.astro";
+// import BaseScript from "../components/BaseScript.astro";
+import BaseFooter from "../components/BaseFooter.astro";
+import NewNavmenu from "../components/NewNavmenu.astro";
+import BasePodcastBanner from "../components/BasePodcastBanner.astro";
+import CategoriesNieuws from "../components/CategoriesNieuws.astro";
+import CategoriesReviews from "../components/CategoriesReviews.astro";
+import BaseNieuwsItem from "../components/BaseNieuwsItem.astro";
+import BasePodcastBlock from "../components/BasePodcastBlock.astro";
+import BaseFeaturedItem from "../components/BaseFeaturedItem.astro";
+import BaseReviewItem from "../components/BaseReviewItem.astro";
+import BaseAbout from "../components/BaseAbout.astro";
+import BaseContact from "../components/BaseContact.astro";
+
+const allNieuwsPosts = await Astro.glob('../pages/nieuws/*.md');
+
+const allRnbPosts = await Astro.glob('../pages/reviews&blogs/*.mdx');
+
+// Generate canonical URL for homepage
+const canonicalURL = `https://cinematen.be${Astro.url.pathname}`;
+
+// Function to truncate content to 200 characters with "..."
+function truncateContent(content, maxLength = 200) {
+    if (!content || typeof content !== 'string') return '';
+    // Strip HTML tags and normalize whitespace
+    const text = content.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength).trim() + '...';
+}
+
+---
+
+<html lang="nl">
+    <head>
+        <BaseHead canonicalURL={canonicalURL} />
+        <style>
+            .next-button {
+                display: inline-block;
+                padding: 20px 40px;
+                background-color: #2E58AE;
+                color: white;
+                text-decoration: none;
+                border-radius: 16px;
+                margin-top: 24px;
+                transition: background-color 0.3s ease;
+                width: 100%;
+                text-align: center;
+            }
+
+            .next-button:hover {
+                background-color: #254a94;
+            }
+
+            .next-button .title-medium {
+                color: white;
+                font-weight: 500;
+                font-size: 20px;
+            }
+        </style>
+    </head>
+    <body class="body">
+        <div class="page-wrapper">
+            <NewNavmenu />
+            <BaseHeader />
+            <main class="content">
+                <section class="nieuws-section">
+                    <h1 class="nieuws-title">Film & TV nieuws</h1>
+                    <div class="container">
+                        <div class="w-layout-grid blog-grid">
+                            <div class="content-left">
+                                {allNieuwsPosts
+                                    .sort((a, b) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime())
+                                    .slice(0, 5)
+                                    .map((post) => (
+                                        <article>
+                                            <BaseNieuwsItem
+                                                key={post.url}
+                                                url={post.url}
+                                                title={post.frontmatter.title}
+                                                thumbnail={post.frontmatter.thumbnail}
+                                                date={post.frontmatter.date}
+                                                content={truncateContent(post.rawContent())}
+                                            />
+                                        </article>
+                                    ))}
+                                <nav>
+                                    <a href="/nieuws" class="next-button">
+                                        <div class="title-medium">Meer nieuws</div>
+                                    </a>
+                                </nav>
+                            </div>
+                            <aside class="content-right">
+                                <div class="stick-wrapper">
+                                    <BasePodcastBlock />
+                                    <section class="featured-articles">
+                                        <h2 class="title-large xtra">Uitgelicht</h2>
+                                        <div class="featured-block">
+                                            {allRnbPosts
+                                                .filter(post => post.frontmatter.featured)
+                                                .sort((a, b) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime())
+                                                .slice(0, 5)
+                                                .map((post) => (
+                                                    <article>
+                                                        <BaseFeaturedItem
+                                                            key={post.url}
+                                                            url={post.url}
+                                                            title={post.frontmatter.title}
+                                                            thumbnail={post.frontmatter.thumbnail}
+                                                            date={post.frontmatter.date}
+                                                            featured={post.frontmatter.featured}
+                                                            rating={post.frontmatter.rating}
+                                                            asLink={true}
+                                                            square={true}
+                                                        />
+                                                    </article>
+                                                ))}                                        
+                                        </div>
+                                    </section>
+                                    <CategoriesNieuws />
+                                </div>
+                            </aside>
+                        </div>
+                    </div>
+                </section>
+                <BasePodcastBanner />
+                <section class="reviews-section">
+                    <div class="container">
+                        <h1 class="nieuws-title">Reviews & Blogs</h1>
+                        <div class="w-layout-grid blog-grid">
+                            <div class="content-left">
+                                {allRnbPosts
+                                    .sort((a, b) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime())
+                                    .slice(0, 5)
+                                    .map((post) => (
+                                        <article>
+                                            <BaseReviewItem
+                                                key={post.url}
+                                                url={post.url}
+                                                schrijver={post.frontmatter.schrijver}
+                                                title={post.frontmatter.title}
+                                                thumbnail={post.frontmatter.thumbnail}
+                                                date={post.frontmatter.date}
+                                                summary={post.frontmatter.summary}
+                                                rating={post.frontmatter.rating}
+                                            />
+                                        </article>
+                                    ))}
+                                <nav>
+                                    <a href="/reviews&blogs" class="next-button">
+                                        <div class="title-medium">Meer Reviews & Blogs</div>
+                                    </a>
+                                </nav>           
+                            </div>
+                            <aside class="content-right">
+                                <div class="stick-wrapper">
+                                    <section class="featured-articles">
+                                        <h2 class="title-large xtra">Cinematen Top 5</h2>
+                                        <div class="featured-block">
+                                            {allRnbPosts
+                                                .filter(post => post.frontmatter.rating !== undefined)
+                                                .filter(post => post.frontmatter.rating !== null)
+                                                .sort((a, b) => {
+                                                    const ratingA = parseFloat(a.frontmatter.rating) || 0;
+                                                    const ratingB = parseFloat(b.frontmatter.rating) || 0;
+                                                    if (ratingB !== ratingA) {
+                                                        return ratingB - ratingA;
+                                                    }
+                                                    return new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime();
+                                                })
+                                                .slice(0, 5)
+                                                .map((post) => (
+                                                    <article>
+                                                        <BaseFeaturedItem
+                                                            key={post.url}
+                                                            url={post.url}
+                                                            title={post.frontmatter.title}
+                                                            thumbnail={post.frontmatter.thumbnail}
+                                                            date={post.frontmatter.date}
+                                                            featured={post.frontmatter.featured}
+                                                            rating={post.frontmatter.rating}
+                                                            asLink={true}
+                                                            square={true}
+                                                        />
+                                                    </article>
+                                                ))}
+                                        </div>
+                                    </section>
+                                    <CategoriesReviews />
+                                </div>
+                            </aside>
+                        </div>
+                    </div>
+                </section>
+            </main>
+            <BaseAbout id="over-ons"/>
+            <BaseContact />
+            <BaseFooter />
+        </div>
+        {/* BaseScript verwijderd voor performance op homepage */}
+    </body>
+</html>

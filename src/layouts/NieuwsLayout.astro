@@ -1,0 +1,144 @@
+---
+import BaseHeadNieuws from "../components/BaseHeadNieuws.astro";
+import NewNavmenu from "../components/NewNavmenu.astro";
+import BaseHeader from "../components/BaseHeader.astro";
+import BaseFooter from "../components/BaseFooter.astro";
+import BaseScript from "../components/BaseScript.astro";
+import BasePodcastBanner from "../components/BasePodcastBanner.astro";
+import RandomReviews from "../components/RandomReviews.astro";
+const { frontmatter } = Astro.props;
+
+// Generate canonical URL for this news article
+const canonicalURL = `https://cinematen.be${Astro.url.pathname}`;
+
+// Function to format the date and adjust for timezone
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return ""; // Return empty string if date is invalid
+    const options = {
+        timeZone: "UTC",
+        hour12: false
+    }; // Set the timezone to UTC
+    const formattedDate = date.toLocaleDateString("nl-NL", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+    });
+    const timePart = date.toLocaleTimeString("nl-NL", options);
+    return timePart === "00:00"
+        ? formattedDate
+        : `${formattedDate} ${timePart}`; // Return only date if time is midnight, otherwise combine date and time
+}
+
+// Format the date
+const formattedDateTime = formatDate(frontmatter.date);
+
+
+
+---
+
+<html lang="nl">
+    <head>
+        
+      <BaseHeadNieuws
+          title={frontmatter.title}
+          thumbnail={frontmatter.thumbnail}
+          content={frontmatter.summary}
+          canonicalURL={canonicalURL}
+          publishedDate={frontmatter.date}
+          modifiedDate={frontmatter.date}
+          author="Yorrick"
+        />
+      
+    </head>
+    <body class="body">
+        <div class="page-wrapper">
+            <NewNavmenu />
+            <BaseHeader />
+            <div
+                data-w-id="75dba001-0326-9ad8-ca3e-3734b81d7ff9"
+                class="content"
+            >
+                <div class="container">
+                    <a
+    href="javascript:history.back();"
+    class="terug-knop w-inline-block"
+>
+    <div class="terug-div">
+        <img
+            src="https://assets-global.website-files.com/6613d9d7c23cff2286422b25/66145e1f24aa75e6e8efe154_pijl.svg"
+            loading="lazy"
+            width="10"
+            alt=""
+            class="image-4"
+        />
+        <div class="terugknop-text">
+            Terug
+        </div>
+    </div>
+</a>
+                    <div class="content-left">
+                        <div class="blog-post-container">
+                            <div
+                                id="w-node-_834894ef-45d4-3601-08c4-adde27664434-01535055"
+                                class="blog-header"
+                            >
+                                <div
+                                    id="w-node-b6eeaddc-234a-634b-164b-ca588e2dae68-01535055"
+                                    class="blog-image-wrap"
+                                >
+                                    <img
+                                        src={frontmatter.thumbnail}
+                                        width="Auto"
+                                        sizes="(max-width: 479px) 100vw, (max-width: 767px) 77vw, 42vw"
+                                        class="blog-image"
+                                        alt="thumbnail"
+                                    />
+                                </div>
+                                <div
+                                    id="w-node-b6eeaddc-234a-634b-164b-ca588e2dae6a-01535055"
+                                    class="blog-title"
+                                >
+                                    <h3 class="heading-h2 nieuws-cat">
+                                        {frontmatter.soort} nieuws
+                                    </h3>
+                                    <h1 class="heading-h2 blog-title">
+                                        {frontmatter.title}
+                                    </h1>
+                                    <!-- Check if formattedDateTime is not empty before rendering -->
+                                    {
+                                        formattedDateTime && (
+                                            <p class="paragraph-detials-small">
+                                                {formattedDateTime}
+                                            </p>
+                                        )
+                                    }
+                                </div>
+                            </div>
+                            <div
+                                id="w-node-_2957b33b-ee9d-a9a8-80b3-56ea90e637f9-01535055"
+                                class="blog-text w-richtext"
+                            >
+                                <slot />
+                                {frontmatter.trailer && 
+                                    <div id="trailer">
+                                        <h2 style="text-align: center; margin-top: 20px;">Bekijk hier de trailer:</h2>
+                                        <div class="video-container">
+                                            <div class="video-wrapper">
+                                                <iframe src={`https://www.youtube-nocookie.com/embed/${frontmatter.trailer}`} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    }       
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <RandomReviews currentSlug={frontmatter.slug} />
+            </div>
+            <BasePodcastBanner />
+            <BaseFooter />
+        </div>
+        <BaseScript />
+    </body>
+</html>

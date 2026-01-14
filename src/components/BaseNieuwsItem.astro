@@ -1,0 +1,84 @@
+---
+const { title, url, thumbnail, date, content } = Astro.props;
+
+// Function to format the date and adjust for timezone
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return ''; // Return empty string if date is invalid
+    const options = { timeZone: 'UTC', hour12: false, hour: 'numeric', minute: 'numeric' }; // Set the timezone to UTC and format the hour and minute without seconds
+    const formattedDate = date.toLocaleDateString('nl-NL', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    const timePart = date.toLocaleTimeString('nl-NL', options);
+    return timePart === '00:00' ? formattedDate : `${formattedDate} ${timePart}`; // Return only date if time is midnight, otherwise combine date and time
+}
+
+// Function to clean content for display
+function cleanContent(content) {
+    if (!content || typeof content !== 'string') return '';
+    // Remove markdown syntax and extra whitespace
+    return content
+        .replace(/---[\s\S]*?---/g, '') // Remove frontmatter
+        .replace(/#{1,6}\s+/g, '') // Remove markdown headers
+        .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // Convert links to plain text
+        .replace(/\*\*([^*]+)\*\*/g, '$1') // Remove bold markdown
+        .replace(/\*([^*]+)\*/g, '$1') // Remove italic markdown
+        .replace(/\s+/g, ' ') // Normalize whitespace
+        .trim();
+}
+
+// Format the date
+const formattedDateTime = formatDate(date);
+const displayContent = cleanContent(content);
+
+---
+
+<a href={url} class="blog-item w-inline-block">
+    <div class="blog-image-wrap">
+        <img
+            src={thumbnail}
+            width="Auto"
+            sizes="(max-width: 479px) 100vw, (max-width: 767px) 87vw, (max-width: 876px) 89vw, (max-width: 991px) 780px, 40vw"
+            alt=""
+            class="blog-image"
+        />
+    </div>
+    <div
+        id="w-node-_418d31a5-b85b-8a37-3c22-664fffc3beb3-86422b70"
+        class="blog-content"
+    >
+        <h3 class="heading-h2">
+            {title}
+        </h3>
+        <p class="paragraph-detials-medium" id="summary">
+            {displayContent}
+        </p>
+        <div class="date-time">
+            <div class="normal-wrapper">
+                <p class="paragraph-detials-small">
+                    {formattedDateTime && <p class="paragraph-detials-small">{formattedDateTime}</p>}
+                </p>
+            </div>
+            <div class="lees-meer">Lees meer...</div>
+        </div>
+    </div>
+</a>
+
+<style>
+@media (max-width: 700px) {
+  .blog-item {
+    padding-bottom: 12px !important;
+  }
+  .blog-content {
+    padding-bottom: 0 !important;
+  }
+  .heading-h2 {
+    margin-bottom: 6px !important;
+  }
+  .paragraph-detials-medium {
+    margin-bottom: 6px !important;
+  }
+  .paragraph-detials-small {
+    margin-top: 2px !important;
+    margin-bottom: 0 !important;
+  }
+}
+</style>

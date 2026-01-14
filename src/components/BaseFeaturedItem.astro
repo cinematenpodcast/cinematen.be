@@ -1,0 +1,201 @@
+---
+const { title, url, thumbnail, rating, square, asLink } = Astro.props;
+
+// Functie om sterren te genereren
+function generateStarRating(rating) {
+    const fullStar = "/images/star-full.png";
+    const halfStar = "/images/star-half.png";
+    const emptyStar = "/images/star-empty.png";
+    const stars = [];
+    let remainingRating = parseFloat(rating);
+    for (let i = 0; i < 5; i++) {
+        if (remainingRating >= 1) {
+            stars.push(fullStar);
+            remainingRating--;
+        } else if (remainingRating > 0) {
+            stars.push(halfStar);
+            remainingRating = 0;
+        } else {
+            stars.push(emptyStar);
+        }
+    }
+    return stars;
+}
+const showStars = rating !== undefined && rating !== null && rating > 0;
+const starRatingImages = showStars ? generateStarRating(rating) : [];
+---
+{asLink ? (
+  <a href={url} class="featured-card-link">
+    <div class="featured-item-horizontal">
+      <div class={`featured-thumb-wrapper${square ? ' square' : ''}`}>
+        <div class={`thumb-aspect-box${square ? ' square' : ''}`}>
+          <img
+            src={thumbnail}
+            alt="feature-thumbnail"
+            class="featured-thumb-img"
+          />
+        </div>
+      </div>
+      <div class="featured-content-box">
+        <div class="title-small-horizontal">{title}</div>
+        {showStars && (
+          <div class="star-row-horizontal">
+            {starRatingImages.map(starImage => (
+              <img src={starImage} loading="eager" alt="ster" class="star-image-horizontal" />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  </a>
+) : (
+  <div class="featured-item-horizontal">
+    <div class={`featured-thumb-wrapper${square ? ' square' : ''}`}>
+      <div class={`thumb-aspect-box${square ? ' square' : ''}`}>
+        <img
+          src={thumbnail}
+          alt="feature-thumbnail"
+          class="featured-thumb-img"
+        />
+      </div>
+    </div>
+    <div class="featured-content-box">
+      <div class="title-small-horizontal">{title}</div>
+      {showStars && (
+        <div class="star-row-horizontal">
+          {starRatingImages.map(starImage => (
+            <img src={starImage} loading="eager" alt="ster" class="star-image-horizontal" />
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+)}
+
+<style>
+.featured-item-horizontal {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background: none;
+  box-shadow: none;
+  border-radius: 0;
+  transition: none;
+}
+/* Anchor wrapper for clickable cards */
+.featured-card-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+  transition: transform 0.18s cubic-bezier(.4,0,.2,1);
+}
+.featured-card-link:hover {
+  transform: translateY(-2px) scale(1.025);
+}
+.featured-thumb-wrapper {
+  flex: 0 0 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #fff;
+  margin-right: 24px;
+}
+.thumb-aspect-box {
+  width: 120px;
+  aspect-ratio: 16/9;
+  background: #fff;
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.featured-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+/* Vierkante variant */
+.featured-thumb-wrapper.square,
+.thumb-aspect-box.square {
+  width: 100px !important;
+  height: 80px !important;
+  aspect-ratio: 5/4 !important;
+  border-radius: 14px;
+  background: transparent !important;
+}
+.thumb-aspect-box.square {
+  background: #fff;
+}
+.featured-content-box {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+.title-small-horizontal {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #232b50;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  margin-bottom: 10px;
+  line-height: 1.2;
+}
+.star-row-horizontal {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 0;
+}
+.star-image-horizontal {
+  width: 22px;
+  height: 22px;
+  margin-right: 2px;
+  display: inline-block;
+}
+/* Gap between featured items */
+:global(.featured-block article) {
+  margin-bottom: 18px;
+}
+@media (max-width: 700px) {
+  .featured-item-horizontal {
+    flex-direction: row !important;
+    align-items: center !important;
+  }
+  .featured-thumb-wrapper {
+    margin-right: 16px;
+    margin-bottom: 0;
+    width: 90px;
+    height: 90px;
+    max-width: 90px;
+  }
+  .thumb-aspect-box {
+    width: 90px;
+    aspect-ratio: 16/9;
+  }
+  .featured-content-box {
+    width: 100%;
+  }
+  .star-row-horizontal {
+    justify-content: flex-start;
+  }
+  .featured-thumb-wrapper.square,
+  .thumb-aspect-box.square {
+    width: 80px !important;
+    height: 64px !important;
+    aspect-ratio: 5/4 !important;
+  }
+}
+</style>

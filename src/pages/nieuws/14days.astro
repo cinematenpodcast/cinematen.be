@@ -1,0 +1,54 @@
+---
+// Import necessary components
+import BaseHead from "../../components/BaseHead.astro";
+import BaseHeader from "../../components/BaseHeader.astro";
+import BaseScript from "../../components/BaseScript.astro";
+import BaseFooter from "../../components/BaseFooter.astro";
+import NewNavmenu from "../../components/NewNavmenu.astro";
+import BasePodcastBanner from "../../components/BasePodcastBanner.astro";
+import BaseNieuwsItem from "../../components/BaseNieuwsItem.astro"; // Corrected component name from Niews to Nieuws
+import BaseHeadExclude from "../../components/BaseHeadExclude.astro";
+
+const allNieuwsPosts = await Astro.glob('./*.md');
+
+// Define the date threshold (replace 'your_date_string' with the desired date)
+const thresholdDate = new Date('2024-09-21');
+
+// Filter posts based on the threshold date
+const filteredPosts = allNieuwsPosts.filter(post => new Date(post.frontmatter.date) >= thresholdDate);
+
+exclude_from_search: true
+---
+
+<html lang="nl">
+    <head>
+        <BaseHeadExclude />
+    </head>
+    <body class="body">
+        <div class="page-wrapper">
+            <NewNavmenu />
+            <BaseHeader />
+            <div class="content">
+                <div class="container">
+                    <h1 class="nieuws-title">Film & TV nieuws</h1>
+                    <div class="w-layout-grid nieuws-list">
+                        {filteredPosts
+                            .sort((a, b) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime()) // Sort by date, newest to oldest
+                            .map((post) => (
+                                <BaseNieuwsItem
+                                    key={post.url}
+                                    url={post.url}
+                                    title={post.frontmatter.title}
+                                    thumbnail={post.frontmatter.thumbnail}
+                                    date={post.frontmatter.date}
+                                    content={post.rawContent}
+                                />
+                            ))}
+                    </div>
+                </div>
+            </div>
+            <BaseFooter />
+        </div>
+        <BaseScript />
+    </body>
+</html>
