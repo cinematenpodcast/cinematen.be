@@ -24,7 +24,7 @@ export default defineConfig({
         path: "src/pages/nieuws",
         format: "md",
         match: {
-          exclude: ["**/pages/[page].astro", "**/pages/**/*.astro", "**/tags/**"],
+          exclude: ["pages/**", "tags/**", "**/*.astro"],
         },
         fields: [
           {
