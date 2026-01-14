@@ -3,8 +3,8 @@ import { defineConfig } from "tinacms";
 // This file is used to configure the TinaCMS admin interface
 export default defineConfig({
   branch: "main",
-  clientId: "ea4bf47c-e240-403b-a7bf-8ea9e1222162", // Get this from tina.io
-  token: "e383481b3f2191e1a4ff54b47429b942b0a35a5f", // Get this from tina.io
+  clientId: "68f4665d-7d78-4cfc-90e0-236381fd6e9c", // Get this from tina.io
+  token: "3f2958f6e4e7461c17694871029a66d6abfbcc34", // Get this from tina.io
 
   build: {
     outputFolder: "admin",
