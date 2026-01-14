@@ -1,4 +1,11 @@
 import type { Collection } from "tinacms";
+import createSlug from "../../src/lib/createSlug";
+
+// Function to convert title to slug
+function generateSlugFromTitle(title: string): string {
+  if (!title) return '';
+  return createSlug(title);
+}
 
 export const NieuwsCollection: Collection = {
   name: "nieuws",
@@ -7,11 +14,18 @@ export const NieuwsCollection: Collection = {
   format: "mdx",
   ui: {
     router({ document }) {
-      // Remove .mdx extension for clean URLs
-      const filename = document._sys.filename;
-      // Remove .mdx extension if present
-      const slug = filename.replace(/\.mdx$/, '');
+      // Use slug from frontmatter if available, otherwise use filename
+      const slug = (document as any).slug || document._sys.filename.replace(/\.mdx$/, '');
       return `/nieuws/${slug}`;
+    },
+    filename: {
+      slugify: (values: any) => {
+        // Generate filename from title
+        if (values?.title) {
+          return generateSlugFromTitle(values.title);
+        }
+        return values?.slug || 'untitled';
+      },
     },
   },
   fields: [
@@ -63,8 +77,11 @@ export const NieuwsCollection: Collection = {
       type: "string",
       name: "slug",
       label: "Slug",
-      description: "URL-vriendelijke versie van de titel",
+      description: "URL-vriendelijke versie van de titel (automatisch gegenereerd)",
       required: false,
+      ui: {
+        component: "hidden",
+      },
     },
     {
       type: "boolean",

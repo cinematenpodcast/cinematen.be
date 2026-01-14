@@ -1,4 +1,11 @@
 import type { Collection } from "tinacms";
+import createSlug from "../../src/lib/createSlug";
+
+// Function to convert title to slug
+function generateSlugFromTitle(title: string): string {
+  if (!title) return '';
+  return createSlug(title);
+}
 
 export const ReviewsCollection: Collection = {
   name: "reviews",
@@ -7,11 +14,18 @@ export const ReviewsCollection: Collection = {
   format: "mdx",
   ui: {
     router({ document }) {
-      // Remove .mdx extension for clean URLs
-      const filename = document._sys.filename;
-      // Remove .mdx extension if present
-      const slug = filename.replace(/\.mdx$/, '');
+      // Use slug from frontmatter if available, otherwise use filename
+      const slug = (document as any).slug || document._sys.filename.replace(/\.mdx$/, '');
       return `/reviews&blogs/${slug}`;
+    },
+    filename: {
+      slugify: (values: any) => {
+        // Generate filename from title
+        if (values?.title) {
+          return generateSlugFromTitle(values.title);
+        }
+        return values?.slug || 'untitled';
+      },
     },
   },
   fields: [
@@ -70,8 +84,11 @@ export const ReviewsCollection: Collection = {
       type: "string",
       name: "slug",
       label: "Slug",
-      description: "URL-vriendelijke versie van de titel",
+      description: "URL-vriendelijke versie van de titel (automatisch gegenereerd)",
       required: false,
+      ui: {
+        component: "hidden",
+      },
     },
     {
       type: "number",
@@ -79,11 +96,6 @@ export const ReviewsCollection: Collection = {
       label: "Rating",
       description: "Rating van 0 tot 5 (bijv. 3.5)",
       required: false,
-      ui: {
-        step: 0.5,
-        min: 0,
-        max: 5,
-      },
     },
     {
       type: "string",

@@ -9,6 +9,14 @@ const branch =
   process.env.HEAD ||
   "main";
 
+import createSlug from "../src/lib/createSlug";
+
+// Function to generate slug from title
+function generateSlugFromTitle(title: string): string {
+  if (!title) return '';
+  return createSlug(title);
+}
+
 export default defineConfig({
   branch,
 
