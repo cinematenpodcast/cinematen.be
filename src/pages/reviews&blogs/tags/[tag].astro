@@ -8,53 +8,51 @@ import NewNavmenu from "../../../components/NewNavmenu.astro";
 import BasePodcastBanner from "../../../components/BasePodcastBanner.astro";
 import BaseReviewItem from "../../../components/BaseReviewItem.astro";
 import BaseHeadExclude from "../../../components/BaseHeadExclude.astro";
+import { getCollection } from "astro:content";
 
 export async function getStaticPaths () {
-  // grab all .mdx files from a folder
-  let allPosts = await Astro.glob('../*.mdx');
-  // I need this filter to ignore files that do not have 
-  // a title, or no published date (in frontmatter)
-  // this way I leave the date out while the post is not finished.
-  let dix = {};
-  allPosts.forEach((post) => {
-    // go thru each tag in each published post,
-    // fill in the object...
-    post.frontmatter.tags.forEach((tag) => {
-      // Convert tag to lowercase and remove extra characters
-      const formattedTag = tag.toLowerCase().replace(/:/g, '');
-      if (!dix[formattedTag]) dix[formattedTag] = 0;
-      dix[formattedTag] += 1;
-    });
-  });
-  console.log('dix', dix); // <-- prints out our tag-cloud data.
+  // Get all reviews from content collection
+  const allPostsRaw = await getCollection("reviews");
+  const allPosts = allPostsRaw.map(post => ({
+    url: `/reviews&blogs/${post.id}`,
+    frontmatter: post.data,
+    rawContent: () => {
+      const body = post.data.body;
+      if (typeof body === 'string') {
+        return body.substring(0, 200) + '...';
+      }
+      return "";
+    },
+  }));
 
-  let ary = [];
-  // format the data to return from getStaticPaths()
-  for (let prop in dix) {
-    ary.push({
-      params: { tag: prop },
-      props: { tagname: prop, count: dix[prop] }
-    });
-  }
-  return ary;
+  // Build tag map
+  const tagMap = new Map();
+  allPosts.forEach((post) => {
+    if (post.frontmatter.title && post.frontmatter.tags) {
+      post.frontmatter.tags.forEach((tag) => {
+        const formattedTag = tag.toLowerCase().replace(/:/g, '');
+        if (!tagMap.has(formattedTag)) {
+          tagMap.set(formattedTag, []);
+        }
+        tagMap.get(formattedTag).push(post);
+      });
+    }
+  });
+
+  // Return paths for each tag
+  return Array.from(tagMap.entries()).map(([tag, posts]) => ({
+    params: { tag },
+    props: { 
+      tagname: tag, 
+      count: posts.length,
+      tagged: posts
+    }
+  }));
 }
 
 // grab the selected tag from the url (dynamic [tag])
 const tagname = Astro.params.tag.toLowerCase(); // Convert tagname to lowercase
-const tagcount = Astro.props.count;
-
-// These section feels duplicated from getStaticPaths()
-// opportunity to refactor...
-let allPosts = await Astro.glob('../*.mdx');
-let filteredPosts = 
-    allPosts.filter((p) => { 
-      return p.frontmatter.title;
-    });
-// now filter to only posts containing the selected tag,
-// these will be rendered below in the markup.
-let tagged = filteredPosts.filter((p) => { 
-  return p.frontmatter.tags.map(tag => tag.toLowerCase().replace(/:/g, '')).includes(tagname); 
-});
+const { tagged, count: tagcount } = Astro.props;
 
 exclude_from_search: true
 ---
