@@ -24,7 +24,8 @@ export default defineConfig({
         path: "src/pages/nieuws",
         format: "md",
         match: {
-          exclude: "**/pages/**",
+          include: "*.md",
+          exclude: ["**/pages/**", "**/tags/**"],
         },
         fields: [
           {
@@ -50,8 +51,7 @@ export default defineConfig({
             label: "Datum",
             required: true,
             ui: {
-              dateFormat: "YYYY-MM-DD HH:mm",
-              timeFormat: "HH:mm",
+              dateFormat: "YYYY-MM-DD",
             },
           },
           {
@@ -111,7 +111,8 @@ export default defineConfig({
         path: "src/pages/reviews&blogs",
         format: "mdx",
         match: {
-          exclude: "**/pages/**",
+          include: "*.mdx",
+          exclude: ["**/pages/**", "**/tags/**"],
         },
         fields: [
           {
@@ -137,8 +138,7 @@ export default defineConfig({
             label: "Datum",
             required: true,
             ui: {
-              dateFormat: "YYYY-MM-DD HH:mm",
-              timeFormat: "HH:mm",
+              dateFormat: "YYYY-MM-DD",
             },
           },
           {
