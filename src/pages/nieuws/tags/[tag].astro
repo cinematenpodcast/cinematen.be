@@ -11,32 +11,32 @@ import BaseHeadExclude from "../../../components/BaseHeadExclude.astro";
 
 import { getCollection } from "astro:content";
 
-// Function to extract text from TinaCMS rich-text body
-function extractTextFromBody(body) {
-    if (typeof body === 'string') {
-        return body;
-    }
-    if (body && typeof body === 'object') {
-        if (body.children && Array.isArray(body.children)) {
-            const extractText = (node) => {
-                if (node.type === 'text') return node.text || '';
-                if (node.children && Array.isArray(node.children)) {
-                    return node.children.map(extractText).join(' ');
-                }
-                return '';
-            };
-            return body.children.map(extractText).join(' ').replace(/\s+/g, ' ').trim();
-        }
-    }
-    return '';
-}
-
-// Helper function to ensure clean ID without .mdx extension
-function getCleanId(id) {
-    return id ? id.replace(/\.mdx$/, '') : '';
-}
-
 export async function getStaticPaths() {
+    // Function to extract text from TinaCMS rich-text body
+    function extractTextFromBody(body) {
+        if (typeof body === 'string') {
+            return body;
+        }
+        if (body && typeof body === 'object') {
+            if (body.children && Array.isArray(body.children)) {
+                const extractText = (node) => {
+                    if (node.type === 'text') return node.text || '';
+                    if (node.children && Array.isArray(node.children)) {
+                        return node.children.map(extractText).join(' ');
+                    }
+                    return '';
+                };
+                return body.children.map(extractText).join(' ').replace(/\s+/g, ' ').trim();
+            }
+        }
+        return '';
+    }
+    
+    // Helper function to ensure clean ID without .mdx extension
+    function getCleanId(id) {
+        return id ? id.replace(/\.mdx$/, '') : '';
+    }
+    
     const allPostsRaw = await getCollection("nieuws");
     const allPosts = allPostsRaw.map(post => ({
         url: `/nieuws/${getCleanId(post.id)}`,
