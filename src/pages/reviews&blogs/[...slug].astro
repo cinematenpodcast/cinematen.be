@@ -1,0 +1,47 @@
+---
+import { getCollection } from "astro:content";
+import ReviewLayout from "../../layouts/ReviewLayout.astro";
+import client from "../../../tina/__generated__/client";
+import AdminReview from "../../../tina/pages/AdminReview";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("reviews");
+
+  return posts.map((post) => {
+    // Use tinaInfo if available, otherwise construct relativePath from id
+    let relativePath = post.data.tinaInfo?.relativePath;
+    
+    if (!relativePath) {
+      // post.id already has .mdx removed by content.config.ts, so add it back
+      // But check if it already ends with .mdx (shouldn't happen, but be safe)
+      relativePath = post.id.endsWith('.mdx') ? post.id : `${post.id}.mdx`;
+    } else {
+      // Ensure relativePath doesn't have double .mdx
+      if (relativePath.endsWith('.mdx.mdx')) {
+        relativePath = relativePath.replace(/\.mdx\.mdx$/, '.mdx');
+      }
+    }
+    
+    return {
+      params: { slug: post.id },
+      props: {
+        post,
+        getTinaProps: async () =>
+          client.queries.reviews({
+            relativePath: relativePath,
+          }),
+      },
+    };
+  });
+}
+
+const { post, getTinaProps } = Astro.props;
+const tinaProps = await getTinaProps();
+const frontmatter = post.data;
+// Render the MDX content - layout field has been removed from files
+const { Content } = await post.render();
+---
+
+<ReviewLayout frontmatter={frontmatter}>
+  <AdminReview {...tinaProps} client:tina />
+</ReviewLayout>

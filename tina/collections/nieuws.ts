@@ -3,14 +3,15 @@ import type { Collection } from "tinacms";
 export const NieuwsCollection: Collection = {
   name: "nieuws",
   label: "Nieuws Artikelen",
-  path: "src/pages/nieuws",
+  path: "src/content/nieuws",
   format: "mdx",
-  match: {
-    include: "*.mdx",
-  },
   ui: {
     router({ document }) {
-      return `/nieuws/${document._sys.filename.replace(/\.mdx$/, "")}`;
+      // Keep .mdx extension for the route
+      const filename = document._sys.filename;
+      // If filename already has .mdx, use it, otherwise add it
+      const slug = filename.endsWith('.mdx') ? filename : `${filename}.mdx`;
+      return `/nieuws/${slug}`;
     },
   },
   fields: [
@@ -18,8 +19,7 @@ export const NieuwsCollection: Collection = {
       type: "string",
       name: "layout",
       label: "Layout",
-      required: true,
-      options: ["../../layouts/NieuwsLayout.astro"],
+      required: false,
       ui: {
         component: "hidden",
       },
@@ -35,7 +35,7 @@ export const NieuwsCollection: Collection = {
       type: "datetime",
       name: "date",
       label: "Datum",
-      required: true,
+      required: false,
       ui: {
         dateFormat: "YYYY-MM-DD",
       },
@@ -44,14 +44,13 @@ export const NieuwsCollection: Collection = {
       type: "string",
       name: "soort",
       label: "Soort",
-      required: true,
-      options: ["Film", "TV", "Comics", "Trailer", "Casting"],
+      required: false,
     },
     {
       type: "image",
       name: "thumbnail",
       label: "Thumbnail Afbeelding",
-      required: true,
+      required: false,
     },
     {
       type: "string",
@@ -65,7 +64,7 @@ export const NieuwsCollection: Collection = {
       name: "slug",
       label: "Slug",
       description: "URL-vriendelijke versie van de titel",
-      required: true,
+      required: false,
     },
     {
       type: "boolean",
@@ -79,15 +78,14 @@ export const NieuwsCollection: Collection = {
       name: "tags",
       label: "Tags",
       list: true,
-      required: true,
-      options: ["film", "tv", "comics", "trailer", "casting"],
+      required: false,
     },
     {
       type: "rich-text",
       name: "body",
       label: "Inhoud",
       isBody: true,
-      required: true,
+      required: false,
     },
   ],
 };

@@ -3,27 +3,18 @@ import type { Collection } from "tinacms";
 export const ReviewsCollection: Collection = {
   name: "reviews",
   label: "Reviews & Blogs",
-  path: "src/pages/reviews&blogs",
+  path: "src/content/reviews",
   format: "mdx",
-  match: {
-    include: "*.mdx",
-  },
   ui: {
     router({ document }) {
-      return `/reviews&blogs/${document._sys.filename.replace(/\.mdx$/, "")}`;
+      // Keep .mdx extension for the route
+      const filename = document._sys.filename;
+      // If filename already has .mdx, use it, otherwise add it
+      const slug = filename.endsWith('.mdx') ? filename : `${filename}.mdx`;
+      return `/reviews&blogs/${slug}`;
     },
   },
   fields: [
-    {
-      type: "string",
-      name: "layout",
-      label: "Layout",
-      required: true,
-      options: ["../../layouts/ReviewLayout.astro"],
-      ui: {
-        component: "hidden",
-      },
-    },
     {
       type: "string",
       name: "title",
@@ -35,7 +26,7 @@ export const ReviewsCollection: Collection = {
       type: "datetime",
       name: "date",
       label: "Datum",
-      required: true,
+      required: false,
       ui: {
         dateFormat: "YYYY-MM-DD",
       },
@@ -44,33 +35,33 @@ export const ReviewsCollection: Collection = {
       type: "string",
       name: "schrijver",
       label: "Schrijver",
-      required: true,
+      required: false,
     },
     {
       type: "string",
       name: "soort",
       label: "Soort",
-      required: true,
+      required: false,
       options: ["Film review", "TV review", "Blog"],
     },
     {
       type: "image",
       name: "thumbnail",
       label: "Thumbnail Afbeelding",
-      required: true,
+      required: false,
     },
     {
       type: "image",
       name: "poster",
       label: "Poster Afbeelding",
-      required: true,
+      required: false,
     },
     {
       type: "string",
       name: "summary",
       label: "Samenvatting",
       description: "Korte beschrijving voor previews",
-      required: true,
+      required: false,
       ui: {
         component: "textarea",
       },
@@ -80,7 +71,7 @@ export const ReviewsCollection: Collection = {
       name: "slug",
       label: "Slug",
       description: "URL-vriendelijke versie van de titel",
-      required: true,
+      required: false,
     },
     {
       type: "number",
@@ -99,8 +90,7 @@ export const ReviewsCollection: Collection = {
       name: "tags",
       label: "Tags",
       list: true,
-      required: true,
-      options: ["Film", "TV", "science-fiction", "horror", "comedy", "drama", "action"],
+      required: false,
     },
     {
       type: "boolean",
@@ -121,7 +111,7 @@ export const ReviewsCollection: Collection = {
       name: "body",
       label: "Inhoud",
       isBody: true,
-      required: true,
+      required: false,
     },
   ],
 };

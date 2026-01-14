@@ -2,6 +2,8 @@
 import { defineConfig } from "astro/config";
 import mdx from "@astrojs/mdx";
 import pagefind from "astro-pagefind";
+import react from "@astrojs/react";
+import tinaDirective from "./astro-tina-directive/register";
 
 // Export the combined configuration
 export default defineConfig({
@@ -24,5 +26,7 @@ export default defineConfig({
   integrations: [
     mdx(),
     pagefind(),
+    react(),
+    tinaDirective(),
   ],
 });

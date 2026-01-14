@@ -161,16 +161,6 @@ console.log("Rating:", frontmatter.rating); // Add this line to check the value 
                                     class="review-text w-richtext"
                                 >
                                     <slot />
-                                    {frontmatter.trailer && 
-                                        <div id="trailer">
-                                            <h2 style="text-align: center; margin-top: 80px;">Bekijk hier de trailer:</h2>
-                                            <div class="video-container">
-                                                <div class="video-wrapper">
-                                                    <iframe src={`https://www.youtube-nocookie.com/embed/${frontmatter.trailer}`} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        }                 
                                 </div>
                             </div>
                         </div>

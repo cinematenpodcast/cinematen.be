@@ -3,8 +3,14 @@ import BaseFeaturedItem from "./BaseFeaturedItem.astro";
 
 const { currentSlug } = Astro.props;
 
+import { getCollection } from "astro:content";
+
 // Alle reviews ophalen
-const allReviews = await Astro.glob("../pages/reviews&blogs/*.mdx");
+const allReviewsRaw = await getCollection("reviews");
+const allReviews = allReviewsRaw.map(post => ({
+    url: `/reviews&blogs/${post.id}`,
+    frontmatter: post.data,
+}));
 
 // Filter de huidige review eruit
 const filteredReviews = allReviews.filter(post => post.frontmatter.slug !== currentSlug);

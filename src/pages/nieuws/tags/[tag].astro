@@ -9,8 +9,21 @@ import BasePodcastBanner from "../../../components/BasePodcastBanner.astro";
 import BaseNieuwsItem from "../../../components/BaseNieuwsItem.astro";
 import BaseHeadExclude from "../../../components/BaseHeadExclude.astro";
 
+import { getCollection } from "astro:content";
+
 export async function getStaticPaths() {
-    const allPosts = await Astro.glob('../*.mdx');
+    const allPostsRaw = await getCollection("nieuws");
+    const allPosts = allPostsRaw.map(post => ({
+        url: `/nieuws/${post.id}`,
+        frontmatter: post.data,
+        rawContent: () => {
+            const body = post.data.body;
+            if (typeof body === 'string') {
+                return body.substring(0, 200) + '...';
+            }
+            return "";
+        },
+    }));
     const tagMap = new Map();
     
     // Group posts by tag

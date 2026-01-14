@@ -14,9 +14,27 @@ import BaseReviewItem from "../components/BaseReviewItem.astro";
 import BaseAbout from "../components/BaseAbout.astro";
 import BaseContact from "../components/BaseContact.astro";
 
-const allNieuwsPosts = await Astro.glob('../pages/nieuws/*.mdx');
+import { getCollection } from "astro:content";
 
-const allRnbPosts = await Astro.glob('../pages/reviews&blogs/*.mdx');
+const allNieuwsPostsRaw = await getCollection("nieuws");
+const allNieuwsPosts = allNieuwsPostsRaw.map(post => ({
+    url: `/nieuws/${post.id}`,
+    frontmatter: post.data,
+    rawContent: () => {
+        const body = post.data.body;
+        if (typeof body === 'string') {
+            return body.substring(0, 200) + '...';
+        }
+        return "";
+    },
+}));
+
+const allRnbPostsRaw = await getCollection("reviews");
+const allRnbPosts = allRnbPostsRaw.map(post => ({
+    url: `/reviews&blogs/${post.id}`,
+    frontmatter: post.data,
+    rawContent: () => post.body || "",
+}));
 
 // Generate canonical URL for homepage
 const canonicalURL = `https://cinematen.be${Astro.url.pathname}`;
