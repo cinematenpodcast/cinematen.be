@@ -1,10 +1,21 @@
 import { defineConfig } from "tinacms";
+import { NieuwsCollection } from "./collections/nieuws";
+import { ReviewsCollection } from "./collections/reviews";
 
-// This file is used to configure the TinaCMS admin interface
+// Your hosting provider likely exposes this as an environment variable
+const branch =
+  process.env.GITHUB_BRANCH ||
+  process.env.VERCEL_GIT_COMMIT_REF ||
+  process.env.HEAD ||
+  "main";
+
 export default defineConfig({
-  branch: "test-tinacms-indexing",
-  clientId: "68f4665d-7d78-4cfc-90e0-236381fd6e9c", // Get this from tina.io
-  token: "3f2958f6e4e7461c17694871029a66d6abfbcc34", // Get this from tina.io
+  branch,
+
+  // Get this from tina.io
+  clientId: process.env.PUBLIC_TINA_CLIENT_ID || "68f4665d-7d78-4cfc-90e0-236381fd6e9c",
+  // Get this from tina.io
+  token: process.env.TINA_TOKEN || "3f2958f6e4e7461c17694871029a66d6abfbcc34",
 
   build: {
     outputFolder: "admin",
@@ -16,61 +27,11 @@ export default defineConfig({
       publicFolder: "public",
     },
   },
+  // See docs on content modeling for more info on how to setup new content models: https://tina.io/docs/schema/
   schema: {
     collections: [
-      {
-        name: "nieuws",
-        label: "Nieuws Artikelen",
-        path: "src/pages/nieuws",
-        format: "md",
-        fields: [
-          {
-            type: "string",
-            name: "title",
-            label: "Titel",
-            isTitle: true,
-            required: true,
-          },
-          {
-            type: "datetime",
-            name: "date",
-            label: "Datum",
-            required: true,
-          },
-          {
-            type: "string",
-            name: "soort",
-            label: "Soort",
-            required: false,
-          },
-          {
-            type: "string",
-            name: "thumbnail",
-            label: "Thumbnail",
-            required: false,
-          },
-          {
-            type: "string",
-            name: "slug",
-            label: "Slug",
-            required: false,
-          },
-          {
-            type: "string",
-            name: "tags",
-            label: "Tags",
-            list: true,
-            required: false,
-          },
-          {
-            type: "rich-text",
-            name: "body",
-            label: "Inhoud",
-            isBody: true,
-            required: true,
-          },
-        ],
-      },
+      NieuwsCollection,
+      ReviewsCollection,
     ],
   },
 });
