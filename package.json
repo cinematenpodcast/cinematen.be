@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "tinacms dev -c \"astro dev\"",
     "dev:astro": "astro dev",
-    "start": "astro dev",
-    "build": "astro build",
+    "start": "tinacms build && astro preview",
+    "build": "tinacms build && astro build",
     "preview": "astro preview",
     "astro": "astro",
     "tinacms": "tinacms"
@@ -25,5 +25,8 @@
   "main": "index.js",
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^25.0.8"
+  }
 }

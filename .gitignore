@@ -26,3 +26,5 @@ pnpm-debug.log*
 # TinaCMS generated files
 admin/
 .tina/__generated__/
+
+node_modules
