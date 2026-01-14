@@ -1,1 +1,10 @@
-<meta http-equiv="refresh" content="0;url=/reviews&blogs/pages/1" /> 
+---
+// Instant HTTP 301 redirect - no visible redirect page
+return new Response(null, {
+    status: 301,
+    headers: {
+        'Location': '/reviews&blogs/pages/1',
+        'Cache-Control': 'public, max-age=31536000, immutable',
+    },
+});
+--- 

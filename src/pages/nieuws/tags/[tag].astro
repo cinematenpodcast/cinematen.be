@@ -68,14 +68,12 @@ export async function getStaticPaths() {
 }
 
 const { tag } = Astro.params;
----
 
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="refresh" content={`0;url=/nieuws/tags/${tag}/1`} />
-    </head>
-    <body>
-        <p>Redirecting to <a href={`/nieuws/tags/${tag}/1`}>first page</a>...</p>
-    </body>
-</html>
+// Instant HTTP 301 redirect - no visible redirect page
+return new Response(null, {
+    status: 301,
+    headers: {
+        'Location': `/nieuws/tags/${tag}/1`,
+        'Cache-Control': 'public, max-age=31536000, immutable',
+    },
+});

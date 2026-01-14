@@ -1,0 +1,24 @@
+{
+  "redirects": [
+    {
+      "source": "/nieuws.html",
+      "destination": "/nieuws/pages/1",
+      "permanent": true
+    },
+    {
+      "source": "/lees.html",
+      "destination": "/nieuws/pages/1",
+      "permanent": true
+    },
+    {
+      "source": "/nieuws",
+      "destination": "/nieuws/pages/1",
+      "permanent": true
+    },
+    {
+      "source": "/reviews&blogs",
+      "destination": "/reviews&blogs/pages/1",
+      "permanent": true
+    }
+  ]
+}
