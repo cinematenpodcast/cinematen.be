@@ -24,8 +24,7 @@ export default defineConfig({
         path: "src/pages/nieuws",
         format: "md",
         match: {
-          include: "*.md",
-          exclude: ["**/pages/**", "**/tags/**"],
+          exclude: "**/pages/**",
         },
         fields: [
           {
@@ -111,8 +110,7 @@ export default defineConfig({
         path: "src/pages/reviews&blogs",
         format: "mdx",
         match: {
-          include: "*.mdx",
-          exclude: ["**/pages/**", "**/tags/**"],
+          exclude: "**/pages/**",
         },
         fields: [
           {
