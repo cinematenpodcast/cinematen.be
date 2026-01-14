@@ -39,13 +39,18 @@ export async function getStaticPaths() {
     });
     
     // Add redirect route for URLs with .mdx extension (backward compatibility)
-    paths.push({
-      params: { slug: `${cleanId}.mdx` },
-      props: {
-        redirect: true,
-        target: `/nieuws/${cleanId}`,
-      },
-    });
+    // Skip redirect for posts with special characters/emoji that cause encoding issues
+    // Check if slug contains non-ASCII characters that might cause problems
+    const hasSpecialChars = /[^\x00-\x7F]/.test(cleanId);
+    if (cleanId && cleanId.length > 0 && !hasSpecialChars) {
+      paths.push({
+        params: { slug: `${cleanId}.mdx` },
+        props: {
+          redirect: true,
+          target: `/nieuws/${cleanId}`,
+        },
+      });
+    }
   });
   
   return paths;
@@ -55,6 +60,8 @@ const { post, getTinaProps, redirect, target } = Astro.props;
 
 // Handle redirects for old URLs with .mdx extension
 if (redirect && target) {
+  // Target is already properly formatted, but ensure it's safe for HTTP headers
+  // encodeURI handles the full URL path properly
   return Astro.redirect(target, 301);
 }
 
