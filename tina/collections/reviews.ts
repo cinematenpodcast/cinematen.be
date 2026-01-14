@@ -5,6 +5,9 @@ export const ReviewsCollection: Collection = {
   label: "Reviews & Blogs",
   path: "src/pages/reviews&blogs",
   format: "mdx",
+  match: {
+    include: "*.mdx",
+  },
   ui: {
     router({ document }) {
       return `/reviews&blogs/${document._sys.filename.replace(/\.mdx$/, "")}`;

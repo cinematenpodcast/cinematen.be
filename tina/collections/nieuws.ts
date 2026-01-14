@@ -5,6 +5,9 @@ export const NieuwsCollection: Collection = {
   label: "Nieuws Artikelen",
   path: "src/pages/nieuws",
   format: "md",
+  match: {
+    include: "*.md",
+  },
   ui: {
     router({ document }) {
       return `/nieuws/${document._sys.filename.replace(/\.md$/, "")}`;
