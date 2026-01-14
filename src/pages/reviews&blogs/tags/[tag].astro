@@ -10,7 +10,7 @@ import BaseReviewItem from "../../../components/BaseReviewItem.astro";
 import BaseHeadExclude from "../../../components/BaseHeadExclude.astro";
 
 export async function getStaticPaths () {
-  // grab all .md files from a folder
+  // grab all .mdx files from a folder
   let allPosts = await Astro.glob('../*.mdx');
   // I need this filter to ignore files that do not have 
   // a title, or no published date (in frontmatter)

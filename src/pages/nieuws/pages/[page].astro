@@ -11,7 +11,7 @@ import BaseHeadExclude from "../../../components/BaseHeadExclude.astro";
 
 export async function getStaticPaths({ paginate }) {
     // Load all news posts
-    const allNieuwsPosts = await Astro.glob('../*.md');
+    const allNieuwsPosts = await Astro.glob('../*.mdx');
 
     // Sort posts by date in descending order
     const sortedPosts = allNieuwsPosts.sort((a, b) => {

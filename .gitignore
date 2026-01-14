@@ -27,4 +27,7 @@ pnpm-debug.log*
 admin/
 tina/__generated__/
 
+# Reference/starter projects (not part of this repo)
+tina-astro-starter-main/
+
 node_modules

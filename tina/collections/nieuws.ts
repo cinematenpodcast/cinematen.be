@@ -4,13 +4,13 @@ export const NieuwsCollection: Collection = {
   name: "nieuws",
   label: "Nieuws Artikelen",
   path: "src/pages/nieuws",
-  format: "md",
+  format: "mdx",
   match: {
-    include: "*.md",
+    include: "*.mdx",
   },
   ui: {
     router({ document }) {
-      return `/nieuws/${document._sys.filename.replace(/\.md$/, "")}`;
+      return `/nieuws/${document._sys.filename.replace(/\.mdx$/, "")}`;
     },
   },
   fields: [
