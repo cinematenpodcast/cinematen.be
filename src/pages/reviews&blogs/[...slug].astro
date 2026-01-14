@@ -7,14 +7,18 @@ import AdminReview from "../../../tina/pages/AdminReview";
 export async function getStaticPaths() {
   const posts = await getCollection("reviews");
 
-  return posts.map((post) => {
-    // Use tinaInfo if available, otherwise construct relativePath from id
+  const paths = [];
+  
+  posts.forEach((post) => {
+    // Ensure post.id doesn't have .mdx extension (should be handled by content.config.ts, but double-check)
+    const cleanId = post.id.replace(/\.mdx$/, '');
+    
+    // Use tinaInfo if available, otherwise construct relativePath from cleanId
     let relativePath = post.data.tinaInfo?.relativePath;
     
     if (!relativePath) {
-      // post.id already has .mdx removed by content.config.ts, so add it back
-      // But check if it already ends with .mdx (shouldn't happen, but be safe)
-      relativePath = post.id.endsWith('.mdx') ? post.id : `${post.id}.mdx`;
+      // Add .mdx back for TinaCMS queries (TinaCMS needs the file extension)
+      relativePath = `${cleanId}.mdx`;
     } else {
       // Ensure relativePath doesn't have double .mdx
       if (relativePath.endsWith('.mdx.mdx')) {
@@ -22,8 +26,9 @@ export async function getStaticPaths() {
       }
     }
     
-    return {
-      params: { slug: post.id },
+    // Add route without .mdx extension (clean URL) - this is the primary route
+    paths.push({
+      params: { slug: cleanId },
       props: {
         post,
         getTinaProps: async () =>
@@ -31,15 +36,30 @@ export async function getStaticPaths() {
             relativePath: relativePath,
           }),
       },
-    };
+    });
+    
+    // Add redirect route for URLs with .mdx extension (backward compatibility)
+    paths.push({
+      params: { slug: `${cleanId}.mdx` },
+      props: {
+        redirect: true,
+        target: `/reviews&blogs/${cleanId}`,
+      },
+    });
   });
+  
+  return paths;
 }
 
-const { post, getTinaProps } = Astro.props;
+const { post, getTinaProps, redirect, target } = Astro.props;
+
+// Handle redirects for old URLs with .mdx extension
+if (redirect && target) {
+  return Astro.redirect(target, 301);
+}
+
 const tinaProps = await getTinaProps();
 const frontmatter = post.data;
-// Render the MDX content - layout field has been removed from files
-const { Content } = await post.render();
 ---
 
 <ReviewLayout frontmatter={frontmatter}>

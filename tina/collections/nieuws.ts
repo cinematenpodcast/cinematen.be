@@ -7,10 +7,10 @@ export const NieuwsCollection: Collection = {
   format: "mdx",
   ui: {
     router({ document }) {
-      // Keep .mdx extension for the route
+      // Remove .mdx extension for clean URLs
       const filename = document._sys.filename;
-      // If filename already has .mdx, use it, otherwise add it
-      const slug = filename.endsWith('.mdx') ? filename : `${filename}.mdx`;
+      // Remove .mdx extension if present
+      const slug = filename.replace(/\.mdx$/, '');
       return `/nieuws/${slug}`;
     },
   },

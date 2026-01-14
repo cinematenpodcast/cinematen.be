@@ -13,7 +13,7 @@ const nieuws = defineCollection({
 
         return {
           ...node,
-          id: node?._sys.relativePath.replace(/\.mdx?$/, ""), // Generate clean URLs
+          id: node?._sys.relativePath.replace(/\.mdx$/, ""), // Generate clean URLs without .mdx extension
           tinaInfo: node?._sys, // Include Tina system info if needed
         };
       });
@@ -49,7 +49,7 @@ const reviews = defineCollection({
 
         return {
           ...node,
-          id: node?._sys.relativePath.replace(/\.mdx?$/, ""), // Generate clean URLs
+          id: node?._sys.relativePath.replace(/\.mdx$/, ""), // Generate clean URLs without .mdx extension
           tinaInfo: node?._sys, // Include Tina system info if needed
         };
       });
