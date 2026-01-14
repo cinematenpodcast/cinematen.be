@@ -4,7 +4,7 @@ import { defineConfig } from "tinacms";
 export default defineConfig({
   branch: "main",
   clientId: "6d938534-2d0b-4da0-808d-6f6260d35dd7", // Get this from tina.io
-  token: "c73621376b750776f344aad8a0d4907dfe64be8b", // Get this from tina.io
+  token: "e383481b3f2191e1a4ff54b47429b942b0a35a5f", // Get this from tina.io
 
   build: {
     outputFolder: "admin",
