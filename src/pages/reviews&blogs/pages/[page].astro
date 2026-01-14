@@ -20,12 +20,17 @@ export async function getStaticPaths({ paginate }) {
         return new Date(b.data.date).getTime() - new Date(a.data.date).getTime();
     });
 
-    // Map to format expected by pagination
-    const sortedPosts = sortedPostsRaw.map(post => ({
-        url: `/reviews&blogs/${post.id}`,
-        frontmatter: post.data,
-        rawContent: post.data.summary || "",
-    }));
+        // Helper function to ensure clean ID without .mdx extension
+        function getCleanId(id) {
+            return id ? id.replace(/\.mdx$/, '') : '';
+        }
+
+        // Map to format expected by pagination
+        const sortedPosts = sortedPostsRaw.map(post => ({
+            url: `/reviews&blogs/${getCleanId(post.id)}`,
+            frontmatter: post.data,
+            rawContent: post.data.summary || "",
+        }));
 
     // Paginate the sorted array
     return paginate(sortedPosts, { pageSize: 8 });

@@ -10,11 +10,16 @@ import BaseReviewItem from "../../../components/BaseReviewItem.astro";
 import BaseHeadExclude from "../../../components/BaseHeadExclude.astro";
 import { getCollection } from "astro:content";
 
+// Helper function to ensure clean ID without .mdx extension
+function getCleanId(id) {
+  return id ? id.replace(/\.mdx$/, '') : '';
+}
+
 export async function getStaticPaths () {
   // Get all reviews from content collection
   const allPostsRaw = await getCollection("reviews");
   const allPosts = allPostsRaw.map(post => ({
-    url: `/reviews&blogs/${post.id}`,
+    url: `/reviews&blogs/${getCleanId(post.id)}`,
     frontmatter: post.data,
     rawContent: () => {
       const body = post.data.body;

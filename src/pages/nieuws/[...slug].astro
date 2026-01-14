@@ -26,7 +26,7 @@ export async function getStaticPaths() {
       }
     }
     
-    // Add route without .mdx extension (clean URL) - this is the primary route
+    // Add route without .mdx extension (clean URL only - no redirects)
     paths.push({
       params: { slug: cleanId },
       props: {
@@ -37,40 +37,14 @@ export async function getStaticPaths() {
           }),
       },
     });
-    
-    // Add redirect route for URLs with .mdx extension (backward compatibility)
-    // Skip redirect for posts with special characters/emoji that cause encoding issues
-    // Check if slug contains non-ASCII characters that might cause problems
-    const hasSpecialChars = /[^\x00-\x7F]/.test(cleanId);
-    if (cleanId && cleanId.length > 0 && !hasSpecialChars) {
-      paths.push({
-        params: { slug: `${cleanId}.mdx` },
-        props: {
-          redirect: true,
-          target: `/nieuws/${cleanId}`,
-        },
-      });
-    }
   });
   
   return paths;
 }
 
-const { post, getTinaProps, redirect, target } = Astro.props;
+const { post, getTinaProps } = Astro.props;
 
-// Handle redirects for old URLs with .mdx extension
-// Use instant client-side redirect instead of server redirect to avoid flash
-if (redirect && target) {
-  return new Response(null, {
-    status: 301,
-    headers: {
-      'Location': target,
-      'Cache-Control': 'public, max-age=31536000, immutable',
-    },
-  });
-}
-
-// Ensure post exists (should always be present for non-redirect routes)
+// Ensure post exists
 if (!post) {
   return Astro.redirect('/nieuws', 404);
 }

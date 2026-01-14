@@ -31,10 +31,15 @@ function extractTextFromBody(body) {
     return '';
 }
 
+// Helper function to ensure clean ID without .mdx extension
+function getCleanId(id) {
+    return id ? id.replace(/\.mdx$/, '') : '';
+}
+
 export async function getStaticPaths() {
     const allPostsRaw = await getCollection("nieuws");
     const allPosts = allPostsRaw.map(post => ({
-        url: `/nieuws/${post.id}`,
+        url: `/nieuws/${getCleanId(post.id)}`,
         frontmatter: post.data,
         rawContent: () => {
             const body = post.data.body;

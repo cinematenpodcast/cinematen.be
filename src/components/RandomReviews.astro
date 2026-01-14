@@ -5,10 +5,15 @@ const { currentSlug } = Astro.props;
 
 import { getCollection } from "astro:content";
 
+// Helper function to ensure clean ID without .mdx extension
+function getCleanId(id) {
+    return id ? id.replace(/\.mdx$/, '') : '';
+}
+
 // Alle reviews ophalen
 const allReviewsRaw = await getCollection("reviews");
 const allReviews = allReviewsRaw.map(post => ({
-    url: `/reviews&blogs/${post.id}`,
+    url: `/reviews&blogs/${getCleanId(post.id)}`,
     frontmatter: post.data,
 }));
 

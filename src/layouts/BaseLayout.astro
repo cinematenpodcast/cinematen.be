@@ -141,6 +141,11 @@ function extractTextFromMDXFile(slug) {
     }
 }
 
+// Helper function to ensure clean ID without .mdx extension
+function getCleanId(id) {
+    return id ? id.replace(/\.mdx$/, '') : '';
+}
+
 const allNieuwsPostsRaw = await getCollection("nieuws");
 const allNieuwsPosts = allNieuwsPostsRaw.map((post) => {
     // Try bodyPreview first, then extract from body, then extract from MDX file directly
@@ -162,7 +167,7 @@ const allNieuwsPosts = allNieuwsPostsRaw.map((post) => {
     }
     
     return {
-        url: `/nieuws/${post.id}`,
+        url: `/nieuws/${getCleanId(post.id)}`,
         frontmatter: post.data,
         rawContent: contentPreview,
     };
@@ -170,7 +175,7 @@ const allNieuwsPosts = allNieuwsPostsRaw.map((post) => {
 
 const allRnbPostsRaw = await getCollection("reviews");
 const allRnbPosts = allRnbPostsRaw.map(post => ({
-    url: `/reviews&blogs/${post.id}`,
+    url: `/reviews&blogs/${getCleanId(post.id)}`,
     frontmatter: post.data,
     rawContent: () => post.body || "",
 }));

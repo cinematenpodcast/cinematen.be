@@ -34,8 +34,13 @@ export async function getStaticPaths({ paginate }) {
         return '';
     }
     
+    // Helper function to ensure clean ID without .mdx extension
+    function getCleanId(id) {
+        return id ? id.replace(/\.mdx$/, '') : '';
+    }
+    
     const allPosts = allPostsRaw.map(post => ({
-        url: `/nieuws/${post.id}`,
+        url: `/nieuws/${getCleanId(post.id)}`,
         frontmatter: post.data,
         rawContent: () => {
             const body = post.data.body;
