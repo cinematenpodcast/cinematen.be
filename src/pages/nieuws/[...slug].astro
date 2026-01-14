@@ -59,10 +59,15 @@ export async function getStaticPaths() {
 const { post, getTinaProps, redirect, target } = Astro.props;
 
 // Handle redirects for old URLs with .mdx extension
+// Use instant client-side redirect instead of server redirect to avoid flash
 if (redirect && target) {
-  // Target is already properly formatted, but ensure it's safe for HTTP headers
-  // encodeURI handles the full URL path properly
-  return Astro.redirect(target, 301);
+  return new Response(null, {
+    status: 301,
+    headers: {
+      'Location': target,
+      'Cache-Control': 'public, max-age=31536000, immutable',
+    },
+  });
 }
 
 // Ensure post exists (should always be present for non-redirect routes)

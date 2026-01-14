@@ -16,14 +16,35 @@ import BaseContact from "../components/BaseContact.astro";
 
 import { getCollection } from "astro:content";
 
+// Function to extract text from TinaCMS rich-text body
+function extractTextFromBody(body) {
+    if (typeof body === 'string') {
+        return body;
+    }
+    if (body && typeof body === 'object') {
+        if (body.children && Array.isArray(body.children)) {
+            const extractText = (node) => {
+                if (node.type === 'text') return node.text || '';
+                if (node.children && Array.isArray(node.children)) {
+                    return node.children.map(extractText).join(' ');
+                }
+                return '';
+            };
+            return body.children.map(extractText).join(' ').replace(/\s+/g, ' ').trim();
+        }
+    }
+    return '';
+}
+
 const allNieuwsPostsRaw = await getCollection("nieuws");
 const allNieuwsPosts = allNieuwsPostsRaw.map(post => ({
     url: `/nieuws/${post.id}`,
     frontmatter: post.data,
     rawContent: () => {
         const body = post.data.body;
-        if (typeof body === 'string') {
-            return body.substring(0, 200) + '...';
+        const textContent = extractTextFromBody(body);
+        if (textContent) {
+            return textContent.substring(0, 200) + (textContent.length > 200 ? '...' : '');
         }
         return "";
     },
