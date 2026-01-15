@@ -3,6 +3,10 @@ import { getCollection } from "astro:content";
 import ReviewLayout from "../../layouts/ReviewLayout.astro";
 import client from "../../../tina/__generated__/client";
 import AdminReview from "../../../tina/pages/AdminReview";
+import { YouTube } from 'astro-embed';
+import EmptySpaceS from "../../components/EmptySpaceS.astro";
+import EmptySpaceM from "../../components/EmptySpaceM.astro";
+import EmptySpaceL from "../../components/EmptySpaceL.astro";
 
 export async function getStaticPaths() {
   const posts = await getCollection("reviews");
@@ -51,8 +55,11 @@ if (!post) {
 
 const tinaProps = await getTinaProps();
 const frontmatter = post.data;
+
+// Render the MDX content directly for production
+const { Content } = await post.render();
 ---
 
 <ReviewLayout frontmatter={frontmatter}>
-  <AdminReview {...tinaProps} client:tina />
+  <Content components={{ YouTube, EmptySpaceS, EmptySpaceM, EmptySpaceL }} />
 </ReviewLayout>
