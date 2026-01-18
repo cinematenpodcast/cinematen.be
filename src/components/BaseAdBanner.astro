@@ -38,7 +38,7 @@ const hasBanners = !isAdBannerDisabled && banners.length > 0;
 ---
 
 {hasBanners && (
-    <section class="ad-banner-section">
+    <section class="ad-banner-section" data-ad-banner="true">
         <div class="ad-banner-container">
             <div id="ad-banner-wrapper" class="ad-banner-wrapper">
                 {/* Banner will be inserted here by client-side script */}
@@ -83,73 +83,392 @@ const hasBanners = !isAdBannerDisabled && banners.length > 0;
 
             // Render the selected banner
             function renderBanner() {
-                const wrapper = document.getElementById('ad-banner-wrapper');
-                if (!wrapper || !banners || banners.length === 0) return;
+                const wrappers = document.querySelectorAll('#ad-banner-wrapper');
+                if (!wrappers || wrappers.length === 0 || !banners || banners.length === 0) return;
 
                 const sessionId = getSessionId();
                 const selectedBanner = selectBanner(banners, sessionId);
 
-                if (selectedBanner) {
-                    const bannerImage = document.createElement('img');
-                    bannerImage.src = selectedBanner.image;
-                    bannerImage.alt = selectedBanner.alt || 'Advertisement';
-                    bannerImage.loading = 'lazy';
-                    bannerImage.className = 'ad-banner-image';
+                if (!selectedBanner) return;
 
-                    wrapper.appendChild(bannerImage);
+                // On mobile, render in sidebar banner. On desktop, render in desktop banner.
+                const isMobile = window.innerWidth <= 767;
+                let targetWrapper = null;
+                
+                wrappers.forEach(function(wrapper) {
+                    const parentSection = wrapper.closest('.ad-banner-section');
+                    if (parentSection) {
+                        const isInSidebar = parentSection.closest('.content-right') !== null;
+                        const isDesktopBanner = parentSection.closest('.ad-banner-desktop') !== null;
+                        
+                        if (isMobile && isInSidebar) {
+                            targetWrapper = wrapper;
+                        } else if (!isMobile && isDesktopBanner) {
+                            targetWrapper = wrapper;
+                        }
+                    }
+                });
+
+                // Fallback: use first visible wrapper
+                if (!targetWrapper) {
+                    wrappers.forEach(function(wrapper) {
+                        const parentSection = wrapper.closest('.ad-banner-section');
+                        if (parentSection) {
+                            const style = window.getComputedStyle(parentSection);
+                            if (style.display !== 'none' && style.visibility !== 'hidden') {
+                                if (!targetWrapper) {
+                                    targetWrapper = wrapper;
+                                }
+                            }
+                        }
+                    });
+                }
+
+                // If still no wrapper, use first one
+                if (!targetWrapper && wrappers.length > 0) {
+                    targetWrapper = wrappers[0];
+                }
+
+                if (!targetWrapper) return;
+
+                // Clear any existing content
+                targetWrapper.innerHTML = '';
+
+                const bannerImage = document.createElement('img');
+                bannerImage.src = selectedBanner.image;
+                bannerImage.alt = selectedBanner.alt || 'Advertisement';
+                bannerImage.loading = 'lazy';
+                bannerImage.className = 'ad-banner-image';
+                
+                // Force width via inline styles to override any CSS rules
+                bannerImage.style.width = '100%';
+                bannerImage.style.maxWidth = '100%';
+                bannerImage.style.display = 'block';
+                bannerImage.style.margin = '0 auto';
+                bannerImage.style.height = 'auto';
+                bannerImage.style.objectFit = 'contain';
+                bannerImage.style.backgroundRepeat = 'no-repeat';
+                bannerImage.style.backgroundSize = 'contain';
+                
+                // Set mobile-specific styles
+                if (window.innerWidth <= 479) {
+                    bannerImage.style.width = '100%';
+                    bannerImage.style.minWidth = '100%';
+                    bannerImage.style.maxWidth = '100%';
+                    bannerImage.style.height = 'auto';
+                } else if (window.innerWidth <= 767) {
+                    bannerImage.style.width = '100%';
+                    bannerImage.style.minWidth = '100%';
+                    bannerImage.style.maxWidth = '100%';
+                    bannerImage.style.height = 'auto';
+                }
+
+                targetWrapper.appendChild(bannerImage);
+                
+                // Update on resize - re-render banner if viewport changes between mobile/desktop
+                let resizeTimeout;
+                let lastViewport = window.innerWidth <= 767 ? 'mobile' : 'desktop';
+                window.addEventListener('resize', function() {
+                    clearTimeout(resizeTimeout);
+                    resizeTimeout = setTimeout(function() {
+                        const currentViewport = window.innerWidth <= 767 ? 'mobile' : 'desktop';
+                        
+                        // If viewport changed between mobile/desktop, re-render banner
+                        if (currentViewport !== lastViewport) {
+                            lastViewport = currentViewport;
+                            renderBanner();
+                            return;
+                        }
+                        
+                        // Otherwise just update styles
+                        if (window.innerWidth <= 479) {
+                            bannerImage.style.width = '100%';
+                            bannerImage.style.minWidth = '100%';
+                            bannerImage.style.maxWidth = '100%';
+                            bannerImage.style.height = 'auto';
+                        } else if (window.innerWidth <= 767) {
+                            bannerImage.style.width = '100%';
+                            bannerImage.style.minWidth = '100%';
+                            bannerImage.style.maxWidth = '100%';
+                            bannerImage.style.height = 'auto';
+                        } else {
+                            bannerImage.style.width = '100%';
+                            bannerImage.style.maxWidth = '970px';
+                            bannerImage.style.height = 'auto';
+                        }
+                    }, 100);
+                });
+            }
+
+            // Move banner to top of stick-wrapper on mobile
+            function moveBannerOnMobile() {
+                if (window.innerWidth <= 767) {
+                    // Find the banner section
+                    const bannerSection = document.querySelector('.content-right .ad-banner-section') ||
+                                         document.querySelector('section.ad-banner-section') ||
+                                         document.querySelector('[data-ad-banner="true"]');
+                    const stickWrapper = document.querySelector('.content-right .stick-wrapper');
+                    const featuredArticles = document.querySelector('.content-right .featured-articles');
+                    
+                    if (bannerSection && stickWrapper) {
+                        // Check if banner is already in stick-wrapper
+                        if (bannerSection.parentElement === stickWrapper) {
+                            // Banner is in stick-wrapper, move it before featured-articles or to top
+                            if (featuredArticles && featuredArticles.parentElement === stickWrapper) {
+                                stickWrapper.insertBefore(bannerSection, featuredArticles);
+                            } else {
+                                stickWrapper.insertBefore(bannerSection, stickWrapper.firstChild);
+                            }
+                        } else {
+                            // Banner is not in stick-wrapper, move it there
+                            if (featuredArticles && featuredArticles.parentElement === stickWrapper) {
+                                stickWrapper.insertBefore(bannerSection, featuredArticles);
+                            } else {
+                                stickWrapper.insertBefore(bannerSection, stickWrapper.firstChild);
+                            }
+                        }
+                    }
                 }
             }
 
-            // Wait for DOM to be ready
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', renderBanner);
-            } else {
+            // Wait for DOM to be ready and render banner
+            function initBanner() {
+                // First move banner section to correct position on mobile
+                if (window.innerWidth <= 767) {
+                    moveBannerOnMobile();
+                }
+                
+                // Then render the banner
                 renderBanner();
+                
+                // Try multiple times to ensure DOM is ready and banner is moved
+                setTimeout(function() {
+                    if (window.innerWidth <= 767) {
+                        moveBannerOnMobile();
+                    }
+                }, 100);
+                setTimeout(function() {
+                    if (window.innerWidth <= 767) {
+                        moveBannerOnMobile();
+                    }
+                }, 500);
+                setTimeout(function() {
+                    if (window.innerWidth <= 767) {
+                        moveBannerOnMobile();
+                    }
+                }, 1000);
             }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initBanner);
+            } else {
+                initBanner();
+            }
+            
+            // Also move on resize
+            let resizeTimeout;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(function() {
+                    if (window.innerWidth <= 767) {
+                        moveBannerOnMobile();
+                    }
+                }, 200);
+            });
         })();
     </script>
 )}
 
 <style>
     .ad-banner-section {
-        width: 100%;
-        margin: 40px 0;
-        padding: 0 20px;
+        width: 100% !important;
+        margin: 20px 0 !important;
+        padding: 0 20px !important;
+        box-sizing: border-box !important;
     }
 
-    .ad-banner-container {
-        max-width: 970px;
-        margin: 0 auto;
-        width: 100%;
-    }
-
-    .ad-banner-wrapper {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .ad-banner-image {
-        width: 100%;
-        max-width: 970px;
-        height: auto;
-        display: block;
-        margin: 0 auto;
-    }
-
-    /* Ensure aspect ratio is maintained */
-    @media (max-width: 970px) {
-        .ad-banner-image {
-            width: 100%;
+    /* Desktop: show banner between sections, hide in sidebar */
+    @media (min-width: 768px) {
+        .content-right .ad-banner-section {
+            display: none !important;
+        }
+        
+        .ad-banner-desktop {
+            display: block !important;
         }
     }
 
-    /* Mobile optimization */
+    /* Mobile: hide banner between sections, show in sidebar above featured-articles */
+    @media (max-width: 767px) {
+        .ad-banner-desktop {
+            display: none !important;
+        }
+        
+        .content-right .ad-banner-section {
+            display: block !important;
+            margin: 0 0 20px 0 !important;
+            padding: 0 !important;
+        }
+        
+        /* Force flexbox on stick-wrapper for mobile - override any existing styles */
+        .content-right .stick-wrapper,
+        aside .stick-wrapper,
+        .stick-wrapper {
+            display: flex !important;
+            flex-direction: column !important;
+            position: relative !important;
+        }
+        
+        /* Banner comes first - use multiple selectors for maximum specificity */
+        .content-right .stick-wrapper > section[data-ad-banner="true"],
+        .content-right .stick-wrapper > section.ad-banner-section,
+        aside .stick-wrapper > section[data-ad-banner="true"],
+        aside .stick-wrapper > section.ad-banner-section,
+        .stick-wrapper > section[data-ad-banner="true"],
+        .stick-wrapper > section.ad-banner-section {
+            order: -999 !important;
+            -webkit-order: -999 !important;
+            display: block !important;
+        }
+        
+        /* Ensure banner is visible and positioned correctly */
+        .content-right .ad-banner-section {
+            display: block !important;
+            visibility: visible !important;
+        }
+        
+        /* Podcast block */
+        .stick-wrapper > div.podcast-banner {
+            order: 0 !important;
+        }
+        
+        /* Featured articles */
+        .stick-wrapper > section.featured-articles {
+            order: 1 !important;
+        }
+        
+        /* All other children come after */
+        .stick-wrapper > *:not([data-ad-banner]):not(.ad-banner-section):not(.featured-articles):not(.podcast-banner) {
+            order: 2 !important;
+        }
+    }
+
+    .ad-banner-container {
+        max-width: 970px !important;
+        margin: 0 auto !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .ad-banner-wrapper {
+        width: 100% !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        box-sizing: border-box !important;
+    }
+
+    .ad-banner-image {
+        width: 100% !important;
+        max-width: 970px !important;
+        height: auto !important;
+        display: block !important;
+        margin: 0 auto !important;
+        object-fit: contain !important;
+        box-sizing: border-box !important;
+        background-repeat: no-repeat !important;
+        background-size: contain !important;
+    }
+
+    /* Override general img styles that might affect the banner - use very specific selectors */
+    section.ad-banner-section img,
+    .ad-banner-section img.ad-banner-image,
+    .ad-banner-container img.ad-banner-image,
+    .ad-banner-wrapper img.ad-banner-image,
+    img.ad-banner-image {
+        width: 100% !important;
+        max-width: 970px !important;
+    }
+
+    /* Tablet and smaller desktop */
+    @media (max-width: 970px) {
+        .ad-banner-image {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+    }
+
+    /* Mobile optimization - ensure banner is visible and larger */
+    @media (max-width: 767px) {
+        .ad-banner-section {
+            margin: 15px 0 !important;
+            padding: 0 10px !important;
+        }
+
+        .ad-banner-container {
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 0 !important;
+        }
+
+        .ad-banner-wrapper {
+            width: 100% !important;
+            padding: 0 !important;
+        }
+
+        /* Override the general img { width: 30% } rule with very specific selectors */
+        section.ad-banner-section img,
+        .ad-banner-section img.ad-banner-image,
+        .ad-banner-container img.ad-banner-image,
+        .ad-banner-wrapper img.ad-banner-image,
+        img.ad-banner-image {
+            width: 100% !important;
+            min-width: 100% !important;
+            max-width: 100% !important;
+            height: auto !important;
+            object-fit: contain !important;
+            background-repeat: no-repeat !important;
+            background-size: contain !important;
+        }
+    }
+
     @media (max-width: 479px) {
         .ad-banner-section {
-            margin: 30px 0;
-            padding: 0 10px;
+            margin: 10px 0 !important;
+            padding: 0 5px !important;
+        }
+
+        .ad-banner-container {
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 0 !important;
+            margin: 0 auto !important;
+            box-sizing: border-box !important;
+        }
+
+        .ad-banner-wrapper {
+            width: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            box-sizing: border-box !important;
+        }
+
+        /* Override the general img { width: 30% } rule with very specific selectors */
+        section.ad-banner-section img,
+        .ad-banner-section img.ad-banner-image,
+        .ad-banner-container img.ad-banner-image,
+        .ad-banner-wrapper img.ad-banner-image,
+        img.ad-banner-image {
+            width: 100% !important;
+            min-width: 100% !important;
+            max-width: 100% !important;
+            height: auto !important;
+            object-fit: contain !important;
+            display: block !important;
+            margin: 0 auto !important;
+            box-sizing: border-box !important;
+            background-repeat: no-repeat !important;
+            background-size: contain !important;
         }
     }
 </style>
