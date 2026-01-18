@@ -50,34 +50,12 @@ const hasBanners = !isAdBannerDisabled && banners.length > 0;
 {hasBanners && (
     <script define:vars={{ banners }}>
         (function() {
-            // Get or create session ID
-            function getSessionId() {
-                const sessionKey = 'ad_banner_session_id';
-                let sessionId = localStorage.getItem(sessionKey);
-                
-                if (!sessionId) {
-                    // Generate a new session ID
-                    sessionId = Date.now().toString(36) + Math.random().toString(36).substr(2);
-                    localStorage.setItem(sessionKey, sessionId);
-                }
-                
-                return sessionId;
-            }
-
-            // Select a random banner based on session ID (consistent within session)
-            function selectBanner(banners, sessionId) {
+            // Select a random banner (changes on every page refresh)
+            function selectBanner(banners) {
                 if (!banners || banners.length === 0) return null;
                 
-                // Use session ID as seed for consistent selection
-                let hash = 0;
-                for (let i = 0; i < sessionId.length; i++) {
-                    const char = sessionId.charCodeAt(i);
-                    hash = ((hash << 5) - hash) + char;
-                    hash = hash & hash; // Convert to 32bit integer
-                }
-                
-                // Use absolute value and modulo to get index
-                const index = Math.abs(hash) % banners.length;
+                // Use Math.random() to select a random banner
+                const index = Math.floor(Math.random() * banners.length);
                 return banners[index];
             }
 
@@ -86,8 +64,7 @@ const hasBanners = !isAdBannerDisabled && banners.length > 0;
                 const wrappers = document.querySelectorAll('#ad-banner-wrapper');
                 if (!wrappers || wrappers.length === 0 || !banners || banners.length === 0) return;
 
-                const sessionId = getSessionId();
-                const selectedBanner = selectBanner(banners, sessionId);
+                const selectedBanner = selectBanner(banners);
 
                 if (!selectedBanner) return;
 
