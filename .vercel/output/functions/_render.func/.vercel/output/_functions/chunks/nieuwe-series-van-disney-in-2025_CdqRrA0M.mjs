@@ -1,0 +1,12 @@
+const id = "nieuwe-series-van-disney-in-2025.mdx";
+						const collection = "nieuws";
+						const slug = "nieuwe-series-van-disney-in-2025";
+						const body = "\nDisney+ heeft ons een spannende blik gegeven op de nieuwe series die in 2025\nzullen uitkomen. Twee van de meest verwachte shows zijn “Andor” seizoen 2 en\n“Alien: Earth”. Deze trailers laten ons zien wat we kunnen verwachten en zorgen\nvoor veel opwinding onder de fans.\n\n“Andor” is een onderdeel van het Star Wars-universum en het tweede seizoen\nverschijnt op 22 april 2025. In de teaser zien we Cassian Andor, die moet kiezen\nhoe hij zich moet gedragen: als een dief, een soldaat of een leider. We zien hem\nin gevaarlijke situaties en het lijkt erop dat de strijd tegen het Empire steeds\nserieuzer wordt. Ook zien we een paar bekende gezichten terug, zoals K2SO en\nOrson Krennic, die terugkomt uit de film “Rogue One”. De verhalen in dit seizoen\nzullen leiden naar de gebeurtenissen van die film.\n\nDaarnaast hebben we “Alien: Earth”, de nieuwe serie die zich afspeelt in het\nAlien-universum. Deze serie zal laten zien hoe een ruimteschip neerstort op\nAarde. Wat nog interessanter is, is dat het schip monsters heeft verzameld van\neen verre maan. Dit kan betekenen dat we niet alleen Xenomorfen, maar misschien\nook andere angstaanjagende wezens zullen zien. Het schip is verbonden met de\nWeyland-Yutani Corporatie, die in de Alien franchise bekend staat als de\nslechtste werkgever in de ruimte.\n\nBeide trailers zijn te zien in een nieuwe promovideo. De trailers geven ons niet\nveel details, maar ze zijn genoeg om de nieuwsgierigheid van fans te wekken.\nNaast “Andor” en “Alien: Earth” bevat de promo ook beelden van andere shows die\nin 2025 op Disney+ zullen verschijnen, zoals “Daredevil: Born Again”, “Percy\nJackson en de Olympians” en “Chad Powers”.\n\nHet lijkt erop dat Disney+ veel in petto heeft voor zijn kijkers.";
+						const data = {title:"Nieuwe series van Disney+ in 2025",date:new Date(1731419785118),soort:"tv",thumbnail:"/images/article-images/l-intro-1731414572.jpg",trailer:"",slug:"nieuwe-series-van-disney-in-2025",tags:["tv"]};
+						const _internal = {
+							type: 'content',
+							filePath: "/Users/yorrickschoonheydt/Documents/_Cinematen/cinematen.be-v2/src/content/nieuws/nieuwe-series-van-disney-in-2025.mdx",
+							rawData: undefined,
+						};
+
+export { _internal, body, collection, data, id, slug };

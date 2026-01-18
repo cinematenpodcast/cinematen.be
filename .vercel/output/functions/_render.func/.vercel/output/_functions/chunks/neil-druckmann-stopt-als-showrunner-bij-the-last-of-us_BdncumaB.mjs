@@ -1,0 +1,12 @@
+const id = "neil-druckmann-stopt-als-showrunner-bij-the-last-of-us.mdx";
+						const collection = "nieuws";
+						const slug = "neil-druckmann-stopt-als-showrunner-bij-the-last-of-us";
+						const body = "\nNeil Druckmann, de mede-bedenker van de HBO-serie \"The Last of Us\", gaat niet\nterugkeren als co-showrunner voor het derde seizoen. Hij maakte dit bekend via\neen verklaring op de Instagram-pagina van Naughty Dog, het bedrijf waar hij aan\nhet hoofd staat. De reden? Hij wil zich volledig richten op nieuwe projecten bij\nNaughty Dog, waaronder het schrijven en regisseren van het nieuwe spel\n\"Intergalactic: The Heretic Prophet.\"\n\nDruckmann speelde een cruciale rol in de ontwikkeling van de serie. Hij was niet\nalleen co-showrunner, maar schreef ook de originele game uit 2013. Samen met\nCraig Mazin werkte hij aan de eerste twee seizoenen. Hij noemt het een eer om\nmet Mazin te hebben samengewerkt en is dankbaar voor het harde werk van de cast\nen crew die het verhaal naar televisie brachten.\n\nMet zijn vertrek wordt Mazin nu de enige showrunner voor seizoen 3. Druckmann\nblijft wel betrokken als co-creator en executive producer. Hij houdt dus\ninvloed, maar verliest de dagelijkse regie over de serie.\n\nDeze beslissing volgt op het tweede seizoen, dat gemengde reacties kreeg en een\nlichte daling in kijkcijfers liet zien. Dat seizoen baseerde zich sterk op \"The\nLast of Us Part II\", een game die minder succesvol was dan de eerste.\n\nMazin reageerde positief op het vertrek. Hij noemde de samenwerking een droom en\ngaf aan enthousiast te zijn over Druckmanns volgende stap. Mazin neemt nu de\nvolledige leiding over de productie.\n\nDruckmann regisseerde ook enkele iconische afleveringen. In seizoen 1 was dat\n\"Infected\", waarin de wereldwijde virusuitbraak werd getoond, en in seizoen 2\n\"The Price\", met een belangrijke terugblik op Joel en Ellie.\n\nWij kijken uit naar het derde seizoen van \"The Last of Us\", dat nu te streamen\nis op HBO Max.";
+						const data = {title:"Neil Druckmann stopt als showrunner bij The Last of Us",date:new Date(1751483136061),soort:"TV",thumbnail:"/images/article-images/l-intro-1751482031.jpg",trailer:"",slug:"neil-druckmann-stopt-als-showrunner-bij-the-last-of-us",tags:["TV"]};
+						const _internal = {
+							type: 'content',
+							filePath: "/Users/yorrickschoonheydt/Documents/_Cinematen/cinematen.be-v2/src/content/nieuws/neil-druckmann-stopt-als-showrunner-bij-the-last-of-us.mdx",
+							rawData: undefined,
+						};
+
+export { _internal, body, collection, data, id, slug };

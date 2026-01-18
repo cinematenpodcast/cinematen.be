@@ -1,0 +1,12 @@
+const id = "jurassic-world-rebirth-is-een-grimmige-nieuwe-start.mdx";
+						const collection = "nieuws";
+						const slug = "jurassic-world-rebirth-is-een-grimmige-nieuwe-start";
+						const body = "\n\"Jurassic World: Rebirth\" komt op 2 juli 2025 in de bioscoop als nieuwste deel\nvan de Jurassic Park-reeks. Gareth Edwards, bekend van \"Godzilla\" en \"Rogue\nOne\", regisseert deze film met een script van David Koepp - dezelfde man die het\noriginele \"Jurassic Park\" schreef. De hoofdrollen worden vertolkt door Scarlett\nJohansson, Mahershala Ali, Jonathan Bailey, Rupert Friend en Manuel\nGarcia-Rulfo.\n\nHet verhaal speelt zich vijf jaar na \"Jurassic World Dominion\" af. Dinosaurussen\noverleven nu vooral op afgelegen eilanden met een prehistorisch klimaat. Drie\ngigantische dinosaurussen staan centraal, wiens DNA mogelijk een levensreddend\nmedicijn voor mensen bevat. We volgen een groep nieuwe personages die met deze\nsituatie moeten omgaan.\n\nDe film kiest bewust voor meer horror-elementen in plaats van pure actie, wat\neen duisterder sfeer creëert dan voorgangerfilms. Nieuwe dinosaurussen zoals de\nmutant D-rex dragen hieraan bij. Opvallend: er is géén extra scène na de\neindcredits, wat suggereert dat de makers nu geen direct vervolg voorbereiden.\n\nGareth Edwards' visuele stijl - bekend om indrukwekkende beelden - versterkt de\nspanning. De muziek en dino-uitbeeldingen zijn speciaal ontworpen om ons als\nkijker dieper in het verhaal te zuigen. De frisse cast combinatie geeft een\nnieuw perspectief op de vertrouwde thema's.\n\n\"Rebirth\" markeert een nieuw begin voor de franchise, met een sterke focus op\nnatuurbehoud en ethisch omgaan met wetenschap. De film onderzoekt hoe mensen\nzich aanpassen aan een veranderende wereld vol dinosauriërs. Wij zien dit als\neen veelbelovende reset die ons zeker naar de bioscoap zal lokken.";
+						const data = {title:"Jurassic World Rebirth is een grimmige nieuwe start",date:new Date(1751301201254),soort:"Film",thumbnail:"/images/article-images/l-intro-1751290144.jpg",trailer:"",slug:"jurassic-world-rebirth-is-een-grimmige-nieuwe-start",tags:["Film"]};
+						const _internal = {
+							type: 'content',
+							filePath: "/Users/yorrickschoonheydt/Documents/_Cinematen/cinematen.be-v2/src/content/nieuws/jurassic-world-rebirth-is-een-grimmige-nieuwe-start.mdx",
+							rawData: undefined,
+						};
+
+export { _internal, body, collection, data, id, slug };

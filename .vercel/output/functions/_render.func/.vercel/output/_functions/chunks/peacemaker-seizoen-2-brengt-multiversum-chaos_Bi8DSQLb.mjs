@@ -1,0 +1,12 @@
+const id = "peacemaker-seizoen-2-brengt-multiversum-chaos.mdx";
+						const collection = "nieuws";
+						const slug = "peacemaker-seizoen-2-brengt-multiversum-chaos";
+						const body = "\nJohn Cena keert terug als Peacemaker in een nieuw seizoen binnen het DC\nUniversum. Dit vervolg komt er na de positieve reacties op de eerste reeks en de\nfilm \"The Suicide Squad\". James Gunn, de architect van het vernieuwde DC\nUniversum, bevestigt dat seizoen 2 hier deel van uitmaakt.\n\nTijdens Comic-Con 2025 kregen we nieuwe trailers te zien waaruit blijkt dat\nCena's personage Christopher Smith op de vlucht is voor Rick Flag Sr. Deze\nlaatste wil wraak nemen voor de dood van zijn zoon Rick Flag Jr. De beelden\nonthullen ook dat Peacemaker door verschillende dimensies reist, wat de deur\nopent naar het multiversum.\n\nIn een teaser horen we Chris Smith zeggen: \"Er is een andere dimensie. Die is\nprecies hetzelfde als de onze. Maar het is beter.\" Dit suggereert dat zijn\nontmoeting met de Justice League uit het vorige seizoen mogelijk in een\nalternatieve realiteit plaatsvond. Elementen zoals de gebeurtenissen met Rick\nFlag Jr. blijven relevant ondanks de universele veranderingen.\n\nWe zien een angstaanjagende dimensie vol reusachtige spinachtige monsters en een\nverwijzing naar een fictieve punkband waar Clark Kent eerder fan van bleek. De\ntrailer introduceert ook een nieuwe versie van vijand White Dragon met een\nopgefrist kostuum, terwijl personages zoals Judomaster hun terugkeer maken.\n\nOp Comic-Con toonde het panel exclusieve footage van Peacemaker en zijn team in\nactie. Wij kijken uit naar deze nieuwe avonturen wanneer het seizoen debuteert\nop 21 augustus 2025 via HBO Max. Deze multiversum-verhaallijn legt mogelijk de\nbasis voor toekomstige DC-verhalen, waarbij verschillende realiteiten verkend\nworden met Peacemaker en zijn crew.";
+						const data = {title:"Peacemaker seizoen 2 brengt multiversum chaos",date:new Date(1753736576449),soort:"TV",thumbnail:"/images/article-images/l-intro-1753735724.jpg",trailer:"f6AZTfI54OU",slug:"peacemaker-seizoen-2-brengt-multiversum-chaos",tags:["TV"]};
+						const _internal = {
+							type: 'content',
+							filePath: "/Users/yorrickschoonheydt/Documents/_Cinematen/cinematen.be-v2/src/content/nieuws/peacemaker-seizoen-2-brengt-multiversum-chaos.mdx",
+							rawData: undefined,
+						};
+
+export { _internal, body, collection, data, id, slug };

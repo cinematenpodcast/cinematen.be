@@ -1,0 +1,12 @@
+const id = "dinooootijd-in-de-teaser-voor-jurassic-world-rebirth.mdx";
+						const collection = "nieuws";
+						const slug = "dinooootijd-in-de-teaser-voor-jurassic-world-rebirth";
+						const body = "\nDe nieuwste film uit de Jurassic Park franchise, genaamd Jurassic World:\nRebirth, komt op 2 juli in de bioscoop. Dit is het vierde deel van de Jurassic\nWorld serie en de zevende film over de bekende dinoparken en het verhaal speelt\nzich vijf jaar af na de gebeurtenissen in Jurassic World: Dominion.\n\nIn deze film volgen we een team van wetenschappers dat op een belangrijke missie\ngaat. Ze moeten genetische monsters verzamelen van drie enorme dinosaurussen die\nin de lucht, op het land en in de zee leven. De aarde is veranderd en niet meer\ngeschikt voor dinosaurussen om in te leven. De overgebleven dinosaurussen zijn\nnu enkel nog te vinden in gebieden waar ze ooit gekweekt zijn. Het DNA van deze\nenorme wezens kan mogelijk helpen bij het maken van een levensreddende medicijn\nvoor mensen.\n\nScarlett Johansson speelt de rol van Zora Bennett, een expert die speciale\nopdrachten uitvoert. Jonathan Bailey speelt de paleontoloog Dr. Henry Loomis en\nMahershala Ali is Duncan Kincaid, de teamleider die Zora vertrouwt om naar de\ndino’s te leiden. De film wordt geregisseerd door Gareth Edwards, gekend van\nGodzilla en Rogue One, en het script is geschreven door David Koepp, die ook aan\nhet originele Jurassic Park script heeft gewerkt.\n\nIn het verhaal worden Zora en Duncan verbonden met een gezin dat vastzit op een\neiland. Dit gezin, geleid door Manuel Garcia-Rulfo, is schipbreuk geleden door\naanval van agressieve zeedinosaurussen. Samen moeten ze geheimen ontdekken die\nal jaren verstopt zijn op het eiland.\n\nDe trailer geeft al een indruk van de spannende momenten die we kunnen\nverwachten. Fans van de franchise kunnen zich voorbereiden op nieuwe\nontdekkingen en gevaren in deze prachtige wereld.";
+						const data = {title:"Dinooootijd in de teaser voor Jurassic World Rebirth",date:new Date(1738792084797),soort:"Film",thumbnail:"/images/article-images/jurassicrebirth-trailer.jpg",trailer:"jan5CFWs9ic",slug:"dinooootijd-in-de-teaser-voor-jurassic-world-rebirth",tags:["Film"]};
+						const _internal = {
+							type: 'content',
+							filePath: "/Users/yorrickschoonheydt/Documents/_Cinematen/cinematen.be-v2/src/content/nieuws/dinooootijd-in-de-teaser-voor-jurassic-world-rebirth.mdx",
+							rawData: undefined,
+						};
+
+export { _internal, body, collection, data, id, slug };

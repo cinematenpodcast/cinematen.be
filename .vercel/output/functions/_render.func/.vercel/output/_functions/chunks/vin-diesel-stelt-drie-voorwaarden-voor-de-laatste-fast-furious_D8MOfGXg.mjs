@@ -1,0 +1,12 @@
+const id = "vin-diesel-stelt-drie-voorwaarden-voor-de-laatste-fast-furious.mdx";
+						const collection = "nieuws";
+						const slug = "vin-diesel-stelt-drie-voorwaarden-voor-de-laatste-fast-furious";
+						const body = "\nVin Diesel heeft tijdens het Fuel Fest in Pomona, Californië, grote plannen\nonthuld voor de toekomst van de \"Fast & Furious\"-films. De hoofdrolspeler deelde\nmee dat Universal Studios de finale van de franchise in april 2027 wil\nuitbrengen. Hiervoor stelde hij drie duidelijke voorwaarden.\n\nTen eerste moet de film terugkeren naar Los Angeles, dé iconische locatie waar\nveel actiescènes en races plaatsvonden. Ten tweede moet de autocultuur en\nstraatracen centraal staan, het hart van de hele serie. De derde voorwaarde is\nhet meest opvallend: de terugkeer van Brian O’Conner, het personage van de\noverleden Paul Walker.\n\nBrian O’Conner is een van de meest geliefde personages. Hoewel \"Furious 7\" al\nprobeerde hem via CGI en Walkers broers terug te brengen, staat het personage\nsinds 2013 niet meer echt op scherm. In de serie is Brian niet dood maar met\npensioen. Diesel benadrukt dat zijn terugkeer essentieel is voor de finale, wat\nleidt tot vragen over de uitvoering.\n\n\"Fast & Furious 11\" bouwt voort op \"Fast X\", de tiende film die wereldwijd ruim\n700 miljoen dollar verdiende. Wij hadden gemengde gevoelens over die film,\nvooral over de omgang met Brian-referenties. Het einde bevatte meerdere\ncliffhangers, zoals de terugkeer van oude personages en de dreiging van Dante\n(Jason Momoa). Regisseur Louis Leterrier hint al op een emotioneel vervolg dat\nons mogelijk tot tranen zal roeren.\n\nEr leven wel zorgen over de terugkeer van Brian. Wij hopen dat dit met respect\nvoor Paul Walkers nalatenschap gebeurt, zonder het impactvolle afscheid in\n\"Furious 7\" te ondermijnen. Het gebruik van CGI roept ethische vragen op. Wij\nwachten nu af hoe de filmmakers deze iconische reeks waardig afsluiten.";
+						const data = {title:"Vin Diesel stelt drie voorwaarden voor de laatste Fast & Furious",date:new Date(1751301779546),soort:"Film",thumbnail:"/images/article-images/l-intro-1751299701.jpg",trailer:"",slug:"vin-diesel-stelt-drie-voorwaarden-voor-de-laatste-fast-furious",tags:["Film"]};
+						const _internal = {
+							type: 'content',
+							filePath: "/Users/yorrickschoonheydt/Documents/_Cinematen/cinematen.be-v2/src/content/nieuws/vin-diesel-stelt-drie-voorwaarden-voor-de-laatste-fast-furious.mdx",
+							rawData: undefined,
+						};
+
+export { _internal, body, collection, data, id, slug };

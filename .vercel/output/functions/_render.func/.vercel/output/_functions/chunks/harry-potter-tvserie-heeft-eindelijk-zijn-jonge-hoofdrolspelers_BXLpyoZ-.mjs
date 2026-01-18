@@ -1,0 +1,12 @@
+const id = "harry-potter-tvserie-heeft-eindelijk-zijn-jonge-hoofdrolspelers.mdx";
+						const collection = "nieuws";
+						const slug = "harry-potter-tvserie-heeft-eindelijk-zijn-jonge-hoofdrolspelers";
+						const body = "\nWij Harry Potter-fans kunnen opgelucht ademhalen, want HBO heeft de nieuwe\nhoofdrolspelers voor de aankomende TV-serie gekozen. Dominic McLaughlin,\nAlastair Stout en Arabella Stanton zullen respectievelijk Harry Potter, Ron\nWeasley en Hermione Granger vertolken. Deze selectie volgde na meer dan 32.000\nauditietapes uit het Verenigd Koninkrijk en Ierland.\n\nProducenten Francesca Gardiner en Mark Mylod zijn erg tevreden over hun keuze.\nZe prijzen het \"geweldige\" talent van deze 9- tot 11-jarige acteurs, gekozen via\neen open casting call. De serie blijft trouw aan J.K. Rowlings boekenserie en\nzal alle zeven boeken over meerdere seizoenen verfilmen, inclusief nieuwe\ndetails die in de films ontbraken.\n\nDe cast omvat verder John Lithgow als Albus Dumbledore, Paapa Essiedu als\nSeverus Snape en Nick Frost als Rubeus Hagrid. Andere rollen zijn ingevuld door\nLuke Thallon (Quirinus Quirrell) en Paul Whitehouse (Argus Filch).\n\nOpnames vinden plaats in een speciaal gebouwde studio in Leavesden bij Watford,\nmet een kostenplaatje van £75 miljoen per aflevering. De studio is aangepast\nvoor jonge acteurs en dieren, terwijl Warner Bros. tientallen seizoenen plant.\n\nJ.K. Rowling werkt als uitvoerend producent, ondanks zorgen over haar\ncontroversiële uitspraken over gender en de gespannen relatie met de originele\ncast (Daniel Radcliffe, Emma Watson, Rupert Grint). Wij verwachten de première\neind 2026 of begin 2027, bijna 30 jaar na 'Harry Potter en de Steen der Wijzen'.\nDe originele films blijven beschikbaar, maar deze serie wil een frisse start\nbieden voor nieuwe generaties.";
+						const data = {title:"Harry Potter TV-serie heeft eindelijk zijn jonge hoofdrolspelers!",date:new Date(1748602169460),soort:"Film",thumbnail:"/images/article-images/2025-05-30T10-46-46-189Z.jpg",trailer:"",slug:"harry-potter-tvserie-heeft-eindelijk-zijn-jonge-hoofdrolspelers",tags:["Film"]};
+						const _internal = {
+							type: 'content',
+							filePath: "/Users/yorrickschoonheydt/Documents/_Cinematen/cinematen.be-v2/src/content/nieuws/harry-potter-tvserie-heeft-eindelijk-zijn-jonge-hoofdrolspelers.mdx",
+							rawData: undefined,
+						};
+
+export { _internal, body, collection, data, id, slug };

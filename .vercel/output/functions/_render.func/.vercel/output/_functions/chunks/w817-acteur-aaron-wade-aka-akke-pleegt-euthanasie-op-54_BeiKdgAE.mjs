@@ -1,0 +1,83 @@
+import { l as createVNode, H as Fragment, _ as __astro_tag_component__ } from './astro/server_Cu2gcJ3R.mjs';
+import { $ as $$Image } from './_astro_assets_CZpVmLws.mjs';
+import 'clsx';
+
+const frontmatter = {
+  "title": "W817 acteur Aaron Wade (aka Akke) pleegt euthanasie op 54",
+  "date": "2024-09-23T20:12:12.000Z",
+  "soort": "TV",
+  "thumbnail": "/images/article-images/a2df4490-ee27-457c-8b08-662ef27d7073.jpg",
+  "trailer": "",
+  "slug": "euthanasie-bij-ondraaglijk-psychisch-lijden-een-complex-ethisch-dilemma",
+  "tags": ["tv"]
+};
+function getHeadings() {
+  return [];
+}
+const __usesAstroImage = true;
+function _createMdxContent(props) {
+  const _components = {
+    a: "a",
+    p: "p",
+    strong: "strong",
+    ...props.components
+  };
+  return createVNode(Fragment, {
+    children: [createVNode(_components.p, {
+      children: "Aron Wade, een acteur die een indrukwekkende carrière opbouwde in de Vlaamse televisie- en theaterwereld, is helaas niet meer onder ons. De acteur, bekend van zijn rollen als Akke in ‘W817’ en Koentje in ‘De kotmadam’, heeft op 54-jarige leeftijd er voor gekozen om euthanasie te plegen."
+    }), "\n", createVNode(_components.p, {
+      children: "Wade werd in de jaren 90 eerst een bekend gezicht als Koentje in ‘De kotmadam’ op VTM. Maar wij bij Cinematen kennen hem het beste als Akke Impens in de populaire jongerenreeks ‘W817’. Een personage waar we vaak mee hebben gelachen in onze jongste jaren."
+    }), "\n", createVNode(_components.p, {
+      children: "De strijd tegen depressie en angst achter de schermen ging het echter minder goed met Wade. In 2014 werd hij getroffen door een zware depressie. In een openhartig interview vertelde hij over zijn worsteling: “Depressie is een eenzaamheidziekte. Waar je het meest nood aan hebt, dat is mensen in je omgeving. Dat is tegelijk ook het enige wat je niet kan verdragen.”"
+    }), "\n", createVNode(_components.p, {
+      children: "In een openhartig gesprek enkele maanden voor zijn dood zei hij: “Het lijden is voor mij veel erger dan het beëindigen ervan. Dat ik daar zelf een initiatief in kan nemen, is belangrijk.”"
+    }), "\n", createVNode(_components.p, {
+      children: "Ondanks zijn strijd was Wade dankbaar voor de mensen in zijn leven en de kansen die hij had gekregen. “Mocht ik niet psychisch ziek zijn geweest, dan zou ik durven zeggen dat ik een prachtig leven heb gehad. Ik vertrek met de glimlach op mijn lippen uit mijn bestaan.”"
+    }), "\n", createVNode(_components.p, {
+      children: "Aron Wade zal worden herinnerd als een veelzijdige acteur die zijn job graag deed. Zijn openhartige strijd tegen depressie en angst zal velen blijven inspireren. We zullen hem missen."
+    }), "\n", createVNode(_components.p, {
+      children: ["Nood aan een gesprek? Dan kan je 24/7 terecht bij ", createVNode(_components.strong, {
+        children: "Tele-Onthaal"
+      }), " op het nummer 106. Je kan ook chatten via ", createVNode(_components.a, {
+        href: "https://www.tele-onthaal.be/",
+        children: "www.tele-onthaal.be"
+      }), "."]
+    }), "\n", createVNode(_components.p, {
+      children: ["Jongeren kunnen terecht bij ", createVNode(_components.strong, {
+        children: "Awel"
+      }), " op telefoonnummer 102, of via chat op ", createVNode(_components.a, {
+        href: "https://awel.be/",
+        children: "awel.be"
+      }), "."]
+    }), "\n", createVNode(_components.p, {
+      children: ["Zit je met donkere gedachten? Neem dan contact op met de ", createVNode(_components.strong, {
+        children: "Zelfmoordlijn"
+      }), ", op het gratis nummer 1813, of op ", createVNode(_components.a, {
+        href: "https://www.zelfmoord1813.be/",
+        children: "zelfmoordlijn1813.be."
+      })]
+    })]
+  });
+}
+function MDXContent(props = {}) {
+  const {wrapper: MDXLayout} = props.components || ({});
+  return MDXLayout ? createVNode(MDXLayout, {
+    ...props,
+    children: createVNode(_createMdxContent, {
+      ...props
+    })
+  }) : _createMdxContent(props);
+}
+
+const url = "src/content/nieuws/w817-acteur-aaron-wade-aka-akke-pleegt-euthanasie-op-54.mdx";
+const file = "/Users/yorrickschoonheydt/Documents/_Cinematen/cinematen.be-v2/src/content/nieuws/w817-acteur-aaron-wade-aka-akke-pleegt-euthanasie-op-54.mdx";
+const Content = (props = {}) => MDXContent({
+  ...props,
+  components: { Fragment: Fragment, ...props.components, "astro-image":  props.components?.img ?? $$Image },
+});
+Content[Symbol.for('mdx-component')] = true;
+Content[Symbol.for('astro.needsHeadRendering')] = !Boolean(frontmatter.layout);
+Content.moduleId = "/Users/yorrickschoonheydt/Documents/_Cinematen/cinematen.be-v2/src/content/nieuws/w817-acteur-aaron-wade-aka-akke-pleegt-euthanasie-op-54.mdx";
+__astro_tag_component__(Content, 'astro:jsx');
+
+export { Content, __usesAstroImage, Content as default, file, frontmatter, getHeadings, url };

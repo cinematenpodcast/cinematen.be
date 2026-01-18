@@ -1,0 +1,30 @@
+---
+import NieuwsLayout from "../../layouts/NieuwsLayout.astro";
+import client from "../../../tina/__generated__/client";
+import AdminNieuws from "../../../tina/pages/AdminNieuws";
+
+const { slug } = Astro.params;
+
+if (!slug) {
+  return Astro.redirect('/404');
+}
+
+let tinaProps;
+try {
+  tinaProps = await client.queries.nieuws({
+    relativePath: `${slug}.mdx`,
+  });
+} catch (e) {
+  console.error(`Error fetching updated content for slug: ${slug}`, e);
+  return Astro.redirect('/404');
+}
+
+const frontmatter = tinaProps.data.nieuws;
+
+// Set Cache headers for On-Demand ISR behavior (1 minute cache)
+Astro.response.headers.set('Cache-Control', 'public, max-age=60, s-maxage=60');
+---
+
+<NieuwsLayout frontmatter={frontmatter}>
+  <AdminNieuws {...tinaProps} client:tina />
+</NieuwsLayout>

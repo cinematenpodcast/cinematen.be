@@ -1,0 +1,12 @@
+const id = "adam-sandlers-kans-op-een-oscar-met-jay-kelly.mdx";
+						const collection = "nieuws";
+						const slug = "adam-sandlers-kans-op-een-oscar-met-jay-kelly";
+						const body = "\nAdam Sandler is al jaren een bekende acteur in grappige films, maar hij heeft\nnog nooit een Oscar-nominatie gekregen. Zijn nieuwe film \"Jay Kelly\", die op\nNetflix komt, zou daar verandering in kunnen brengen.\n\nDe film wordt geregisseerd door Noah Baumbach en George Clooney speelt de\nhoofdrol van de beroemde filmster Jay Kelly. Sandler speelt een belangrijke\nbijrol als Ron Sukenick, de manager van Jay. Ron regelt al jaren het werk voor\nJay, maar moet ook balanceren met zijn eigen gezinsleven.\n\nBaumbach schreef de rol van Ron speciaal voor Sandler. De twee werkten eerder\nsamen in \"The Meyerowitz Stories\". Baumbach vertelde dat hij Sandler geschikt\nvond omdat beiden hun familie erg belangrijk vinden en vaak in hun films\nbetrekken. Sandler zelf zei in een interview met Vanity Fair dat hij meteen ja\nzei toen hij het script las. Hij vond het personage interessant omdat Ron heel\nveel om Jay geeft, en hij keek ernaar uit om dat met George Clooney te spelen.\nSandler gaf ook toe dat zijn eigen leven als bekende acteur enigszins lijkt op\ndat van Jay Kelly.\n\nSandler is vooral bekend van komedies, maar hij heeft ook indruk gemaakt in\nserieuze rollen zoals in \"Punch-Drunk Love\", \"Funny People\", \"Hustle\" en vooral\n\"Uncut Gems\" uit 2019. Voor die laatste rol vonden wij dat hij een\nOscar-nominatie verdiende, maar die bleef uit. Baumbach weet na hun eerdere\nsamenwerking en na \"Uncut Gems\" dat Sandler intense rollen aankan. \"Jay Kelly\"\nbiedt Sandler dus een nieuwe kans om zijn dramatische kant te laten zien.\n\nDe film komt op 5 december 2025 op Netflix. Wij hopen dat deze rol Sandler\neindelijk die felbegeerde Oscar-nominatie oplevert. Alleen de tijd zal het\nleren.";
+						const data = {title:"Adam Sandler's kans op een Oscar met Jay Kelly",date:new Date(1764881534183),soort:"Film",thumbnail:"/images/article-images/l-intro-1764712224.jpg",trailer:"",slug:"adam-sandlers-kans-op-een-oscar-met-jay-kelly",tags:["Film"]};
+						const _internal = {
+							type: 'content',
+							filePath: "/Users/yorrickschoonheydt/Documents/_Cinematen/cinematen.be-v2/src/content/nieuws/adam-sandlers-kans-op-een-oscar-met-jay-kelly.mdx",
+							rawData: undefined,
+						};
+
+export { _internal, body, collection, data, id, slug };

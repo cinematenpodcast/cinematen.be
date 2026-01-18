@@ -1,0 +1,12 @@
+const id = "call-of-duty-film-komt-eraan-maar-het-wordt-een-uitdaging.mdx";
+						const collection = "nieuws";
+						const slug = "call-of-duty-film-komt-eraan-maar-het-wordt-een-uitdaging";
+						const body = "\nParamount en Activision hebben hun krachten gebundeld om een live-action film te\nmaken gebaseerd op Call of Duty. Deze game reeks is immens populair, met meer\ndan 500 miljoen verkochte spellen en zo’n 100 miljoen actieve spelers in\nWarzone.\n\nDavid Ellison, de baas van Paramount en zelf een groot fan van de game, noemt\ndit project een droom die uitkomt. Hij heeft talloze uren in de game gespeeld en\nbelooft dat ze alles op alles zullen zetten om een film te maken die net zo goed\nis als de games. Het doel is om zowel ons, de trouwe fans, als nieuwe kijkers te\nkunnen bekoren.\n\nDe uitdaging ligt erin dat Call of Duty niet werkt met vaste personages zoals\nbijvoorbeeld Mario dat wel heeft. De games draaien vooral rond oorlogsthema’s,\nvan de Tweede Wereldoorlog tot moderne conflicten. Hoe ze dat gaan vertalen naar\neen boeiend verhaal voor het grote scherm, is nog even afwachten.\n\nEerder waren er al plannen voor een Call of Duty film, maar die zijn nooit van\nde grond gekomen. Nu hoopt Activision-baas Rob Kostich dat de samenwerking met\nParamount wél tot een spannende en succesvolle film zal leiden. Paramount heeft\nrecent ook de Duffer Brothers (van Stranger Things) in huis gehaald, wat\nwellicht extra creatieve kracht moet geven.\n\nHet succes van de recente Minecraft film, die bijna een miljard dollar opbracht,\ngeeft moed. Call of Duty is al zestien jaar op rij de best verkopende game in\nAmerika, dus de potentie is er. Ellison mikt op eenzelfde niveau als Top Gun:\nMaverick, waar hij ook aan meewerkte.\n\nEr is nog geen releasedatum, want ze staan nog aan het begin. Eerst moet er een\nscript komen en een regisseur worden gevonden. We kijken er naar uit, maar het\nzal nog even duren voor we resultaat zien.";
+						const data = {title:"Call of Duty film komt eraan, maar het wordt een uitdaging",date:new Date(1756831022806),soort:"Film",thumbnail:"/images/article-images/l-intro-1756827977.jpg",trailer:"",slug:"call-of-duty-film-komt-eraan-maar-het-wordt-een-uitdaging",tags:["Film"]};
+						const _internal = {
+							type: 'content',
+							filePath: "/Users/yorrickschoonheydt/Documents/_Cinematen/cinematen.be-v2/src/content/nieuws/call-of-duty-film-komt-eraan-maar-het-wordt-een-uitdaging.mdx",
+							rawData: undefined,
+						};
+
+export { _internal, body, collection, data, id, slug };

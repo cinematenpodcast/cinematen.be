@@ -1,0 +1,59 @@
+import { l as createVNode, H as Fragment, _ as __astro_tag_component__ } from './astro/server_Cu2gcJ3R.mjs';
+import { $ as $$Image } from './_astro_assets_CZpVmLws.mjs';
+import 'clsx';
+
+const frontmatter = {
+  "title": "The Boys seizoen 5 heeft een teaser",
+  "date": "2025-12-07T18:23:15.809Z",
+  "soort": "film",
+  "thumbnail": "https://login.wabliefteru.be/assets/b5a7ee6e-89cc-4e32-84a4-86dfd583fbce",
+  "trailer": "Fv0leN8TmR8",
+  "slug": "the-boys-seizoen-5-heeft-een-teaser"
+};
+function getHeadings() {
+  return [];
+}
+const __usesAstroImage = true;
+function _createMdxContent(props) {
+  const _components = {
+    p: "p",
+    ...props.components
+  };
+  return createVNode(Fragment, {
+    children: [createVNode(_components.p, {
+      children: "Prime Video heeft de releasedata bekendgemaakt voor het vijfde en meteen laatste\nseizoen van The Boys. De première is op 8 april 2026, met meteen twee\nafleveringen. Daarna volgt er wekelijks een nieuwe aflevering, tot de grote\nfinale op 20 mei 2026. De serie blijft exclusief te zien op Prime Video."
+    }), "\n", createVNode(_components.p, {
+      children: "De aankondiging vond plaats in Brazilië tijdens het CCXP evenement, waar meer\ndan drieduizend fans aanwezig waren. Eric Kripke, de bedenker van de serie, was\ner samen met castleden zoals Erin Moriarty, Laz Alonso, Karen Fukuhara, Tomer\nCapone en Colby Minifie. Zij toonden er de eerste teaser."
+    }), "\n", createVNode(_components.p, {
+      children: "Uit de teaser blijkt dat Homelander (Antony Starr) in seizoen 5 de macht heeft\ngegrepen. Hughie (Jack Quaid), Mother’s Milk (Laz Alonso) en Frenchie (Tomer\nCapone) zitten gevangen in een zogenaamd ‘Freedom Camp’. Annie (Erin Moriarty)\nprobeert in opstand te komen tegen de Supes, die in aantal de mensen\novertreffen. Kimiko (Karen Fukuhara) is spoorloos. Butcher (Karl Urban) keert\nterug met een virus dat alle Supes kan doden."
+    }), "\n", createVNode(_components.p, {
+      children: "De teaser onthulde ook de terugkeer van Soldier Boy (Jensen Ackles), die we in\neen soort diepvries zien. Er komt een nieuw personage bij, gespeeld door Jared\nPadalecki. Het is opvallend dat Ackles en Padalecki eerder samen speelden in\nSupernatural, een andere serie van Eric Kripke."
+    }), "\n", createVNode(_components.p, {
+      children: "The Boys is gebaseerd op de strips van Garth Ennis en Darick Robertson, die ook\nbetrokken zijn bij de serie. Eric Kripke is de showrunner, met medewerking van\nonder anderen Seth Rogen en Evan Goldberg."
+    }), "\n", createVNode(_components.p, {
+      children: "Binnen hetzelfde universum zijn er andere series. Gen V, over een school voor\nSupes, heeft net zijn tweede seizoen afgerond, wat de weg effent voor het einde\nvan The Boys. De animatieserie The Boys Presents: Diabolical krijgt\nwaarschijnlijk geen vervolg. Er zijn twee nieuwe series in ontwikkeling: Vought\nRising, een prequel onder leiding van Paul Grellong, en The Boys: Mexico,\ngemaakt door Diego Luna en Gael García Bernal, met een script van Gareth\nDunnet-Alcocer."
+    })]
+  });
+}
+function MDXContent(props = {}) {
+  const {wrapper: MDXLayout} = props.components || ({});
+  return MDXLayout ? createVNode(MDXLayout, {
+    ...props,
+    children: createVNode(_createMdxContent, {
+      ...props
+    })
+  }) : _createMdxContent(props);
+}
+
+const url = "src/content/nieuws/the-boys-seizoen-5-is-het-laatste-hier-komt-het-op-neer.mdx";
+const file = "/Users/yorrickschoonheydt/Documents/_Cinematen/cinematen.be-v2/src/content/nieuws/the-boys-seizoen-5-is-het-laatste-hier-komt-het-op-neer.mdx";
+const Content = (props = {}) => MDXContent({
+  ...props,
+  components: { Fragment: Fragment, ...props.components, "astro-image":  props.components?.img ?? $$Image },
+});
+Content[Symbol.for('mdx-component')] = true;
+Content[Symbol.for('astro.needsHeadRendering')] = !Boolean(frontmatter.layout);
+Content.moduleId = "/Users/yorrickschoonheydt/Documents/_Cinematen/cinematen.be-v2/src/content/nieuws/the-boys-seizoen-5-is-het-laatste-hier-komt-het-op-neer.mdx";
+__astro_tag_component__(Content, 'astro:jsx');
+
+export { Content, __usesAstroImage, Content as default, file, frontmatter, getHeadings, url };

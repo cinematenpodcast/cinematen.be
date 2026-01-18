@@ -1,0 +1,12 @@
+const id = "alien-earth-breidt-het-alien-universum-nog-meer-uit.mdx";
+						const collection = "nieuws";
+						const slug = "alien-earth-breidt-het-alien-universum-nog-meer-uit";
+						const body = "\nDe spannende wereld van de \"Alien\"-franchise krijgt een nieuw hoofdstuk met de\naankomende serie \"Alien: Earth\". Deze serie, gemaakt door Noah Hawley, zal in de\nzomer van 2025 op Disney+ te zien zijn. Fans van de franchise, die begon met de\niconische film van Ridley Scott in 1979, kunnen zich voorbereiden op heel wat\nnieuwe spannende momenten en avonturen.\n\nIn \"Alien: Earth\" volgen we een jonge vrouw en een groep soldaten die betrokken\nzijn bij de opruiming van een geheimzinnig ruimtevaartuig dat op aarde is\nneergestort. Tijdens hun zoektocht naar overlevenden doen ze een angstaanjagende\nontdekking in de vorm van vreemde en gevaarlijke wezens. De serie belooft een\nmix van spanning en horror te bieden die we gewend zijn van eerdere films in de\nfranchise, met zeker de aanwezigheid van de beruchte Xenomorphs.\n\nDe hoofdrol wordt gespeeld door Sydney Chandler, die eerder te zien was in\n\"Don't Worry Darling\". Daarnaast zien we ook bekende gezichten zoals Alex\nLawther en Timothy Olyphant, die naar verwachting een belangrijke rol zullen\nspelen.\n\nAlhoewel de teaser trailer van de serie nog niet veel onthult over het verhaal,\ngeeft het wel een hint over de sfeer: een sombere stem zegt in de promo dat\n\"Moeder Aarde iets verwacht\". Wat die verwachting precies inhoudt, is nog niet\nhelemaal duidelijk, maar het verwijst zeker naar de bekende gruwelen die we in\neerdere films hebben gezien.\n\n\"Alien: Earth\" bouwt voort op de rijke geschiedenis van de franchise, die altijd\nspannende, macabere en soms angstaanjagende momenten heeft gekend. De trailer\nheeft een aantal intrigerende beelden, zoals een glimmende Xenomorph-kop. Fans\nvan sci-fi horror kunnen dus iets om naar uit te kijken in de komende maanden.";
+						const data = {title:"Alien Earth breidt het Alien Universum nog meer uit",date:new Date(1732117935795),soort:"tv",thumbnail:"/images/article-images/l-intro-1732114522.jpg",trailer:"",slug:"alien-earth-breidt-het-alien-universum-nog-meer-uit",tags:["tv"]};
+						const _internal = {
+							type: 'content',
+							filePath: "/Users/yorrickschoonheydt/Documents/_Cinematen/cinematen.be-v2/src/content/nieuws/alien-earth-breidt-het-alien-universum-nog-meer-uit.mdx",
+							rawData: undefined,
+						};
+
+export { _internal, body, collection, data, id, slug };

@@ -1,0 +1,88 @@
+import { l as createVNode, H as Fragment, _ as __astro_tag_component__ } from './astro/server_Cu2gcJ3R.mjs';
+import { $ as $$Image } from './_astro_assets_CZpVmLws.mjs';
+import 'clsx';
+
+const frontmatter = {
+  "title": "Rebel Moon Part 1 Child of Fire",
+  "date": "2023-12-24T00:00:00.000Z",
+  "soort": "Film review",
+  "schrijver": "Yorrick",
+  "thumbnail": "https://assetsio.gnwcdn.com/Rebel-Moon_Part-1.jpeg?width=1200&height=1200&fit=bounds&quality=70&format=jpg&auto=webp",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTdmZDNhNjgtMjk4NS00YzQzLTliM2UtMDEzZDY2MDZmMTcwXkEyXkFqcGdeQXVyMTA4MzgzNDM3._V1_FMjpg_UX1000_.jpg",
+  "trailer": "fhr3MzT6exg",
+  "summary": "Ik keek uit naar een nieuwe Science Fiction saga, eentje die Dune een gevecht voor de kijkcijfers kon geven. Blijkt dat gewoon hetzelfde verhaal als \"The Seven Samurai\" of \"The Magnificent Seven\" te nemen en er wat elementen uit Star Wars en mooie slowmotion beelden erdoor te mixen niet genoeg is hiervoor... Who knew? Rebel Moon Part 1: A Child of Fire vond ik mooi gemaakt maar saai gesmaakt. Wanneer kwam Dune Part 2 nu ook weer uit?",
+  "slug": "rebel-moon-part-1-child-of-fire",
+  "draft": false,
+  "rating": 1.5,
+  "tags": ["Science-fiction", "Film"]
+};
+function getHeadings() {
+  return [{
+    "depth": 2,
+    "slug": "de-teleurstellende-space-saga",
+    "text": "De teleurstellende Space Saga"
+  }, {
+    "depth": 2,
+    "slug": "eén-grote-setup-naar-de-volgende",
+    "text": "Eén grote setup naar de volgende"
+  }];
+}
+const __usesAstroImage = true;
+function _createMdxContent(props) {
+  const _components = {
+    h2: "h2",
+    p: "p",
+    ...props.components
+  };
+  return createVNode(Fragment, {
+    children: [createVNode(_components.h2, {
+      id: "de-teleurstellende-space-saga",
+      children: "De teleurstellende Space Saga"
+    }), "\n", createVNode(_components.p, {
+      children: "Tot nu toe zijn al mijn reviews die ik voor de Cinematen website heb geschreven altijd positief. Laten we daar verandering in brengen! Kort gezegd: ik vond Rebel Moon Part 1: Child of Fire niet goed."
+    }), "\n", createVNode(_components.p, {
+      children: "De film doet me sterk denken aan “The Magnificent Seven” en diens inspiratiebron, “The Seven Samurai”. Het is een soort hervertelling van dit verhaal waarbij een klein dorpje bedreigd wordt door een grote militaire macht. In deze versie vormen enkele buitenbeetjes een team van zeven strijders, een verwijzing naar het aantal helden in “The Magnificent Seven”, maar dan gesitueerd in de ruimte. Vraag me niet wat die Child of Fire dan moet zijn want ik heb geen idee."
+    }), "\n", createVNode(_components.p, {
+      children: "Met een speelduur van ongeveer twee uur is het redelijk voor een Netflix-film, en ik ben opgelucht dat het geen bijna drie uur durende blockbuster is. Qua verhaal biedt het weinig nieuws met enkele leuke, maar niet baanbrekende, productiedesigns voor een sci-fi film. De acteerprestaties zijn over het algemeen niet opmerkelijk, met uitzondering van de schurk, gespeeld door Ed Skrein, die we kennen van “Deadpool” en “Alita: Battle Angel”. Hij springt eruit, niet vanwege een briljant script, maar vanwege zijn vermogen het beste te maken van wat hij krijgt."
+    }), "\n", createVNode(_components.p, {
+      children: "Verder herkennen we na een half uur Charlie Hunnam, bekend van “Sons of Anarchy” en “The Gentleman”, in een niet bijzonder opmerkelijke rol. Andere acteurs zoals Djimon Hounsou duiken op in kleinere rollen, maar niemand steekt er echt bovenuit als een supergrote Hollywood-ster."
+    }), "\n", createVNode(_components.p, {
+      children: "Dus ondanks een paar opvallende namen en een interessant concept, laat Rebel Moon Part 1: A Child of Fire veel te wensen over in termen van originaliteit en diepgang, zowel in verhaal als in acteerwerk."
+    }), "\n", createVNode(_components.h2, {
+      id: "eén-grote-setup-naar-de-volgende",
+      children: "Eén grote setup naar de volgende"
+    }), "\n", createVNode(_components.p, {
+      children: "De kern van het verhaal is het samenstellen van een team om een dorp te beschermen tegen een militaire dreiging. Er is een poging tot worldbuilding, die dient als basis voor toekomstige films, met een typisch “rebellen tegen het imperium” thema dat sterk doet denken aan “Star Wars.”"
+    }), "\n", createVNode(_components.p, {
+      children: "De schurken in “Rebel Moon” brengen niets nieuws; ze zijn gekleed in nazi-uniformen en spreken met een Brits accent, wat niet origineel is binnen het genre. De film valt bleek in vergelijking met zowel de originele “Star Wars” films als de nieuwe sciencefiction saga “Dune”, waarbij het lijkt alsof het probeert te concurreren met (maar niet eens in de buurt komt van) het werk van Denis Villeneuve."
+    }), "\n", createVNode(_components.p, {
+      children: "Ondanks enkele visueel aantrekkelijke actiescènes met de kenmerkende slow-motion techniek van Zack Snyder, blijft “Rebel Moon” één van de slechtste films die ik dit jaar heb gezien. Er is weliswaar een ambitie om een uitgebreid universum op te bouwen rondom de film, inclusief aanvullende films, comicbooks en tv-series, maar ik betwijfel of dit zal gebeuren. Dat zal afhangen van de ontvangst van deze film door het grote publiek."
+    }), "\n", createVNode(_components.p, {
+      children: "De special effects zijn in orde, maar sommige achtergronden lijken niet meer dan projecties, wat teleurstellend is in vergelijking met de realistische weergave van films als “Dune.” Het acteerwerk en de dialogen zijn vaak stroef en soms zelfs cringeworthy. Hoewel ik het gebruik van minder bekende acteurs toejuich, leidt het in dit geval niet tot overtuigende acteerprestaties."
+    }), "\n", createVNode(_components.p, {
+      children: "Na het in één keer doorzitten van de film wens ik dat ik die twee uur aan iets anders had besteed. Rebel Moon Part 1: A Child of Fire vond ik uiteindelijk slecht en niet de moeite waard voor een rewatch."
+    })]
+  });
+}
+function MDXContent(props = {}) {
+  const {wrapper: MDXLayout} = props.components || ({});
+  return MDXLayout ? createVNode(MDXLayout, {
+    ...props,
+    children: createVNode(_createMdxContent, {
+      ...props
+    })
+  }) : _createMdxContent(props);
+}
+
+const url = "src/content/reviews/rebel-moon-part-1-child-of-fire.mdx";
+const file = "/Users/yorrickschoonheydt/Documents/_Cinematen/cinematen.be-v2/src/content/reviews/rebel-moon-part-1-child-of-fire.mdx";
+const Content = (props = {}) => MDXContent({
+  ...props,
+  components: { Fragment: Fragment, ...props.components, "astro-image":  props.components?.img ?? $$Image },
+});
+Content[Symbol.for('mdx-component')] = true;
+Content[Symbol.for('astro.needsHeadRendering')] = !Boolean(frontmatter.layout);
+Content.moduleId = "/Users/yorrickschoonheydt/Documents/_Cinematen/cinematen.be-v2/src/content/reviews/rebel-moon-part-1-child-of-fire.mdx";
+__astro_tag_component__(Content, 'astro:jsx');
+
+export { Content, __usesAstroImage, Content as default, file, frontmatter, getHeadings, url };

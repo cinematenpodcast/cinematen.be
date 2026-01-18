@@ -1,0 +1,56 @@
+import { l as createVNode, H as Fragment, _ as __astro_tag_component__ } from './astro/server_Cu2gcJ3R.mjs';
+import { $ as $$Image } from './_astro_assets_CZpVmLws.mjs';
+import 'clsx';
+
+const frontmatter = {
+  "title": "Het Conjuring universum krijgt een onverwachte prequel",
+  "date": "2025-10-30T16:49:09.134Z",
+  "soort": "Film",
+  "thumbnail": "/images/article-images/l-intro-1761841650.jpg",
+  "trailer": "",
+  "slug": "het-conjuring-universum-krijgt-een-onverwachte-prequel",
+  "tags": ["Film"]
+};
+function getHeadings() {
+  return [];
+}
+const __usesAstroImage = true;
+function _createMdxContent(props) {
+  const _components = {
+    p: "p",
+    ...props.components
+  };
+  return createVNode(Fragment, {
+    children: [createVNode(_components.p, {
+      children: "We dachten dat het afgelopen was met The Conjuring: Last Rites, maar het\nuniversum blijft groeien. Er komt waarschijnlijk een nieuwe prequel film die\nzich afspeelt vóór de andere films. Er zijn nog niet veel details bekend, de\nfilmmaatschappij is nog aan het praten met een regisseur. Het is ook onzeker of\nVera Farmiga en Patrick Wilson terugkomen als Ed en Lorraine Warren. Misschien\nkeren de acteurs die de jonge Warrens speelden wel terug."
+    }), "\n", createVNode(_components.p, {
+      children: "The Conjuring: Last Rites is de negende film in het universum, waarin de Warrens\neen familie met enge problemen helpen. Wij vonden het een van de beste films uit\nde reeks, hoewel sommigen onder ons het niet de allerengste vonden. We waren het\ner wel over eens dat Patrick Wilson en Vera Farmiga weer uitstekend acteerden.\nHun personages tonen veel emotie, met verdrietige momenten waarvan sommigen\nonder ons moesten huilen. Mia Tomlinson, die dochter Judy speelt, krijgt veel\ncomplimenten voor haar acteerwerk. De film is de langste van alle Conjuring\nfilms, wat soms wat trager aanvoelde. De Smurl familie krijgt volgens ons niet\nzo veel aandacht, maar voor ons als fans van de enge pop Annabelle is er goed\nnieuws: zij heeft een leuke rol."
+    }), "\n", createVNode(_components.p, {
+      children: "Een van de spin-off films die we erg appreciëren is Annabelle: Creation, die het\nontstaan van de enge pop toont. Het verhaal speelt zich af in 1955 waar een\npopmaker en zijn vrouw hun dochter Annabelle verliezen bij een ongeluk. Om hun\ndochter weer te zien, maken ze een deal met een demon die in een pop gaat\nzitten. Later vormen de demon een groot gevaar voor een zuster en een groep\nweesmeisjes die in hun huis komen wonen. Wij vinden Annabelle: Creation de beste\nspin-off film. Regisseur David F. Sandberg kreeg veel lof omdat hij de film niet\nalleen eng, maar ook zielig maakte. We begrijpen het verdriet van de popmaker en\nzijn vrouw, en de film legt perfect uit hoe angst en verdriet mensen in de\nproblemen kunnen brengen."
+    }), "\n", createVNode(_components.p, {
+      children: "Het is best verrassend dat er nu een nieuwe prequel komt, want we dachten\nallemaal dat Last Rites echt het einde was. De film heeft bijna een half miljard\ndollar verdiend, wat ongetwijfeld meespeelt in de beslissing voor nog een film.\nEr wordt ook gewerkt aan een televisieserie over het Conjuring universum. Het\nlijkt erop dat de verhalen over de Warrens en hun enge vijanden nog lang niet\nklaar zijn."
+    })]
+  });
+}
+function MDXContent(props = {}) {
+  const {wrapper: MDXLayout} = props.components || ({});
+  return MDXLayout ? createVNode(MDXLayout, {
+    ...props,
+    children: createVNode(_createMdxContent, {
+      ...props
+    })
+  }) : _createMdxContent(props);
+}
+
+const url = "src/content/nieuws/het-conjuring-universum-krijgt-een-onverwachte-prequel.mdx";
+const file = "/Users/yorrickschoonheydt/Documents/_Cinematen/cinematen.be-v2/src/content/nieuws/het-conjuring-universum-krijgt-een-onverwachte-prequel.mdx";
+const Content = (props = {}) => MDXContent({
+  ...props,
+  components: { Fragment: Fragment, ...props.components, "astro-image":  props.components?.img ?? $$Image },
+});
+Content[Symbol.for('mdx-component')] = true;
+Content[Symbol.for('astro.needsHeadRendering')] = !Boolean(frontmatter.layout);
+Content.moduleId = "/Users/yorrickschoonheydt/Documents/_Cinematen/cinematen.be-v2/src/content/nieuws/het-conjuring-universum-krijgt-een-onverwachte-prequel.mdx";
+__astro_tag_component__(Content, 'astro:jsx');
+
+export { Content, __usesAstroImage, Content as default, file, frontmatter, getHeadings, url };

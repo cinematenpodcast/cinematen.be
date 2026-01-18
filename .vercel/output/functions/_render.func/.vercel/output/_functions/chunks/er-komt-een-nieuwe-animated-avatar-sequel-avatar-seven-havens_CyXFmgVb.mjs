@@ -1,0 +1,12 @@
+const id = "er-komt-een-nieuwe-animated-avatar-sequel-avatar-seven-havens.mdx";
+						const collection = "nieuws";
+						const slug = "er-komt-een-nieuwe-animated-avatar-sequel-avatar-seven-havens";
+						const body = "\nNickelodeon en Avatar Studios hebben een nieuwe animatieserie aangekondigd,\ngetiteld \"Avatar: Seven Havens\". Deze serie is een aanvulling op de populaire\nseries \"Avatar: The Last Airbender\" en \"The Legend of Korra\". De originele\nmakers, Michael DiMartino en Bryan Konietzko, zijn weer betrokken bij dit nieuwe\nproject. De serie zal 26 afleveringen tellen, verdeeld over twee seizoenen met\nieder 13 afleveringen.\n\n\"Avatar: Seven Havens\" speelt zich af in een wereld die zwaar beschadigd is na\neen grote ramp. Het nieuwe hoofdpersonage is een jonge Earthbender die ontdekt\ndat zij de nieuwe Avatar is, na de dood van Korra. In deze gevaarlijke tijd\nwordt de Avatar gezien als de vernietiger van de mensheid, in plaats van als de\nredder. Zij en haar lang verloren tweelingzus moeten vechten tegen vijandige\nmensen en geesten. Hun doel is om hun mysterieuze oorsprong te ontdekken en de\nSeven Havens te redden voordat de laatste restanten van de beschaving\nineenstorten.\n\nDe serie is de eerste nieuwe animatieserie in de franchise in meer dan 10 jaar\nen is niet gebaseerd op de eerdere verhalen van de serie. De tijd setting van de\nserie is volledig nieuw, omdat deze zich afspeelt na de gebeurtenissen van \"The\nLegend of Korra\". We kunnen dus nieuwe avonturen en personages verwachten,\nterwijl ook de gekende wereld van de Avatar verder wordt verkend.\n\nHet is nog niet bekend wanneer \"Avatar: Seven Havens\" precies in première zal\ngaan. Ondertussen kunnen we nog uitkijken naar een andere sequel, \"Aang: The\nLast Airbender\", die op 30 januari 2026 in de bioscopen verschijnt. Deze film\nricht zich op een volwassen Aang.";
+						const data = {title:"Er komt een nieuwe animated Avatar sequel, Avatar Seven Havens",date:new Date(1740075022935),soort:"tv",thumbnail:"/images/article-images/l-intro-1740071487.jpg",trailer:"",slug:"er-komt-een-nieuwe-animated-avatar-sequel-avatar-seven-havens",tags:["tv"]};
+						const _internal = {
+							type: 'content',
+							filePath: "/Users/yorrickschoonheydt/Documents/_Cinematen/cinematen.be-v2/src/content/nieuws/er-komt-een-nieuwe-animated-avatar-sequel-avatar-seven-havens.mdx",
+							rawData: undefined,
+						};
+
+export { _internal, body, collection, data, id, slug };

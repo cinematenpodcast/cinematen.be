@@ -1,0 +1,12 @@
+const id = "de-nieuwe-harry-potter-serie-van-hbo-komt-eraan.mdx";
+						const collection = "nieuws";
+						const slug = "de-nieuwe-harry-potter-serie-van-hbo-komt-eraan";
+						const body = "\nHBO en Warner Bros. zijn nu officieel begonnen met de productie van de nieuwe\nHarry Potter TV-serie. Wij kijken uit naar deze hervertelling van het verhaal\nvan Harry, Ron en Hermelien. De serie start met \"Harry Potter en de Steen der\nWijzen\", waar we zien hoe Harry ontdekt dat hij een tovenaar is, naar Zweinstein\ngaat en zijn iconische vrienden ontmoet.\n\nDe eerste aflevering staat gepland voor 2027 en wordt opgenomen in Leavesden,\ndezelfde studio nabij Londen waar de originele films zijn gemaakt. De\nhoofdrollen zijn verdeeld: Dominic McLaughlin speelt Harry Potter, Arabella\nStanton is Hermelien Griffel en Alastair Stout vertolkt Ron Wemel. Ook opvallend\nzijn de castingkeuzes van John Lithgow als Albus Perkamentus en Nick Frost als\nRubeus Hagrid.\n\nHet plan is ambitieus: zeven seizoenen die elk één boek uit de reeks behandelen.\nHierdoor kunnen de makers dieper ingaan op details die in de films zijn\nweggelaten. Francesca Gardiner leidt het schrijfteam als hoofdschrijver en\nuitvoerend producent, met ervaring uit series als \"Succession\" en \"His Dark\nMaterials\". Regisseur Mark Mylod, bekend van \"Game of Thrones\", neemt meerdere\nafleveringen voor zijn rekening.\n\nDe sets worden momenteel gebouwd en de eerste beelden zijn al vrijgegeven.\nDaarop zien we Dominic McLaughlin in zijn rol als Harry, compleet met de\niconische bril en bliksemschichtlitteken. De voorlopige productietitel \"Dark\nTrain\" houdt de exacte invulling nog wat mysterieus.\n\nWij zijn benieuwd of de serie kan tippen aan de films, die nog steeds immens\npopulair zijn. Het team lijkt vastbesloten een frisse interpretatie neer te\nzetten. Terwijl de productie vordert, blijven we uitkijken naar meer updates\nover deze terugkeer naar de tovenaarswereld.";
+						const data = {title:"De Nieuwe Harry Potter Serie van HBO komt eraan!",date:new Date(1752509040107),soort:"TV",thumbnail:"/images/article-images/l-intro-1752508432.jpg",trailer:"",slug:"de-nieuwe-harry-potter-serie-van-hbo-komt-eraan",tags:["TV"]};
+						const _internal = {
+							type: 'content',
+							filePath: "/Users/yorrickschoonheydt/Documents/_Cinematen/cinematen.be-v2/src/content/nieuws/de-nieuwe-harry-potter-serie-van-hbo-komt-eraan.mdx",
+							rawData: undefined,
+						};
+
+export { _internal, body, collection, data, id, slug };

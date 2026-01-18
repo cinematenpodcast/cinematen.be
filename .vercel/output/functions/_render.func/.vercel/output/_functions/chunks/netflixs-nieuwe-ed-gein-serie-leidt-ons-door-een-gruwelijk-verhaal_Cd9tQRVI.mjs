@@ -1,0 +1,66 @@
+import { l as createVNode, H as Fragment, _ as __astro_tag_component__ } from './astro/server_Cu2gcJ3R.mjs';
+import { $ as $$Image } from './_astro_assets_CZpVmLws.mjs';
+import 'clsx';
+
+const frontmatter = {
+  "title": "Netflix's nieuwe Ed Gein serie leidt ons door een gruwelijk verhaal",
+  "date": "2025-09-04T19:05:16.008Z",
+  "soort": "TV",
+  "thumbnail": "/images/article-images/l-intro-1757011157.jpg",
+  "trailer": "T8FeHSoTHs8",
+  "slug": "netflixs-nieuwe-ed-gein-serie-leidt-ons-door-een-gruwelijk-verhaal",
+  "tags": ["TV"]
+};
+function getHeadings() {
+  return [];
+}
+const __usesAstroImage = true;
+function _createMdxContent(props) {
+  const _components = {
+    p: "p",
+    ...props.components
+  };
+  return createVNode(Fragment, {
+    children: [createVNode(_components.p, {
+      children: "Netflix brengt binnenkort “Monster: The Ed Gein Story” uit, een nieuwe serie\nover de beruchte seriemoordenaar Ed Gein. Ryan Murphy staat aan het roer van\ndeze productie, met Charlie Hunnam in de hoofdrol. Hunnam onderging een\nopmerkelijke transformatie voor deze rol en ziet er totaal anders uit dan we van\nhem gewend zijn."
+    }), "\n", createVNode(_components.p, {
+      children: "Ed Gein was actief in de jaren 50 en is misschien minder bekend dan bijvoorbeeld\nTed Bundy, maar zijn daden hebben een enorme impact gehad op de\nhorrorfilmwereld. Iconische films zoals “The Texas Chain Saw Massacre” en\n“Psycho” putten inspiratie uit zijn macabere verhalen. Gein stal lichamen van\nbegraafplaatsen en gebruikte lichaamsdelen als decoratie in zijn huis. Hij\nbekende twee moorden."
+    }), "\n", createVNode(_components.p, {
+      children: "De serie onderzoekt hoe Gein geleidelijk aan gek werd. De makers gaven aan dat\nhet aanvankelijk een uitdaging was om zijn verhaal te vertellen, maar vanwege\nzijn invloed op het horrorgenre besloten ze er toch voor te gaan. Wij kunnen de\nreeks bekijken vanaf 3 oktober 2025."
+    }), "\n", createVNode(_components.p, {
+      children: "Naast deze serie staat Netflix bekend om zijn uitgebreide aanbod van films en\nseries gebaseerd op waargebeurde misdaden en enge verhalen. Zo zijn er\nhorrorfilms zoals “Apostle”, over een man die op zoek gaat naar zijn zus op een\nmysterieus eiland, en “Cam”, over een webcam-model dat geconfronteerd wordt met\neen dubbelganger. “Don’t Move” vertelt het verhaal van een vrouw die verlamd\nraakt na een aanval in het bos en moet vechten om te overleven."
+    }), "\n", createVNode(_components.p, {
+      children: "Ook Mike Flanagan, de maker van “Gerald’s Game” en “The Haunting of Hill House”,\nheeft zijn stempel gedrukt op het platform met angstaanjagende verhalen. “The\nHaunting of Hill House” draait om een familie die wordt achtervolgd door hun\nverleden in een spookhuis, en “Stranger Things” blijft een van de populairste\nseries over mysterieuze gebeurtenissen en monsters."
+    }), "\n", createVNode(_components.p, {
+      children: "Daarnaast zijn er films die gebaseerd zijn op echte misdaden. “Extremely Wicked”\nmet Zac Efron als Ted Bundy toont hoe zijn vriendin aanvankelijk weigert te\ngeloven in zijn schuld. “The Good Nurse”, met Jessica Chastain en Eddie\nRedmayne, gaat over een verpleger die patiënten vermoordt."
+    }), "\n", createVNode(_components.p, {
+      children: "Andere waargebeurde drama’s zijn “The Irishman” van Martin Scorsese, een epische\nmaffiafilm met Robert De Niro, en “Lion” met Dev Patel, over een man die op zoek\ngaat naar zijn biologische familie. “Society of the Snow” vertelt het gruwelijke\nverhaal van een rugbyteam dat een vliegtuigcrash overleeft in de Andes, en\n“Maestro” focust op het leven van een beroemde componist."
+    }), "\n", createVNode(_components.p, {
+      children: "Tenslotte zijn er “Nyad”, over een langeafstandszwemmer die een onmogelijke\ntocht waagt, en “Rustin” met Colman Domingo, over een activist die mee aan de\nbasis lag van een historische protestmars."
+    }), "\n", createVNode(_components.p, {
+      children: "Netflix biedt ons een breed scala aan series en films die waargebeurd, eng,\ntriest of meeslepend zijn. Wij kunnen altijd terecht voor een boeiende\nkijkervaring."
+    })]
+  });
+}
+function MDXContent(props = {}) {
+  const {wrapper: MDXLayout} = props.components || ({});
+  return MDXLayout ? createVNode(MDXLayout, {
+    ...props,
+    children: createVNode(_createMdxContent, {
+      ...props
+    })
+  }) : _createMdxContent(props);
+}
+
+const url = "src/content/nieuws/netflixs-nieuwe-ed-gein-serie-leidt-ons-door-een-gruwelijk-verhaal.mdx";
+const file = "/Users/yorrickschoonheydt/Documents/_Cinematen/cinematen.be-v2/src/content/nieuws/netflixs-nieuwe-ed-gein-serie-leidt-ons-door-een-gruwelijk-verhaal.mdx";
+const Content = (props = {}) => MDXContent({
+  ...props,
+  components: { Fragment: Fragment, ...props.components, "astro-image":  props.components?.img ?? $$Image },
+});
+Content[Symbol.for('mdx-component')] = true;
+Content[Symbol.for('astro.needsHeadRendering')] = !Boolean(frontmatter.layout);
+Content.moduleId = "/Users/yorrickschoonheydt/Documents/_Cinematen/cinematen.be-v2/src/content/nieuws/netflixs-nieuwe-ed-gein-serie-leidt-ons-door-een-gruwelijk-verhaal.mdx";
+__astro_tag_component__(Content, 'astro:jsx');
+
+export { Content, __usesAstroImage, Content as default, file, frontmatter, getHeadings, url };

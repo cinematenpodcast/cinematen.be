@@ -1,0 +1,12 @@
+const id = "adil-en-bilall-maken-een-vlaamse-film-over-sanda-dia.mdx";
+						const collection = "nieuws";
+						const slug = "adil-en-bilall-maken-een-vlaamse-film-over-sanda-dia";
+						const body = "\nRegisseurs Adil El Arbi en Bilall Fallah werken aan een nieuwe film over het\nverhaal van Sanda Dia, een student die in 2018 overleed na een gevaarlijke\nstudentendoop van de vereniging Reuzegom. De film wordt gemaakt in samenwerking\nmet het Brusselse productiehuis Komoko.\n\nHet verhaal van Sanda Dia is gebaseerd op twee belangrijke boeken. Het eerste\nboek is geschreven door zijn vader, Ousmane Dia, met de titel \"Ze hebben mijn\nzoon vermoord\". Het tweede boek is \"De doop die leidde tot de dood\" van\njournalist Pieter Huyberechts. Beide boeken vertellen over de tragische\ngebeurtenis en de schok die het in België veroorzaakte.\n\nAdil en Bilall, die eerder al succesvolle films maakten zoals Patser, Patsers en\nBad Boys 3 & 4, zeggen dat ze erg onder de indruk zijn van de kracht en moed van\nSanda's vader. Ze beschrijven de film als een liefdesbrief van Papis Dia aan\nzijn zoon. De regisseurs hebben al langer de wens om dit verhaal te vertellen.\n\nVoor de film wordt het scenario geschreven door Raf Njotea. Hij is bekend van de\nserie 'Dertigers'. Het productiehuis Komoko heeft als doel om gedurfde en\nmaatschappelijk relevante films te maken. De dood van Sanda Dia heeft een groot\ngesprek op gang gebracht in België over racisme, rechtvaardigheid en\nverantwoordelijkheid. Dus dat valt wel mooi in dit lijstje.\n\nDe regisseurs zijn zich bewust van de belangrijkheid van het verhaal. Ze willen\ndat de film de verschillende kanten van deze zaak toont. Dit project bevindt\nzich nog in een vroeg stadium. De opnames en de releasedatum zijn nog niet\nbekend. Er zijn al wel ideeën voor de cast, met mogelijke bekende acteurs zoals\nMatthias Schoenaerts en Omar Sy.";
+						const data = {title:"Adil en Bilall maken een vlaamse film over Sanda Dia",date:new Date(1740052143885),soort:"Film",thumbnail:"/images/article-images/Adil_%26_Bilall.jpg",trailer:"",slug:"adil-en-bilall-maken-een-vlaamse-film-over-sanda-dia",tags:["Film"]};
+						const _internal = {
+							type: 'content',
+							filePath: "/Users/yorrickschoonheydt/Documents/_Cinematen/cinematen.be-v2/src/content/nieuws/adil-en-bilall-maken-een-vlaamse-film-over-sanda-dia.mdx",
+							rawData: undefined,
+						};
+
+export { _internal, body, collection, data, id, slug };
