@@ -3,8 +3,25 @@ import { readdirSync } from "fs";
 import { join } from "path";
 
 // Check if ad banner is disabled via environment variable
-const isAdBannerDisabled = import.meta.env.DISABLE_AD_BANNER === "true" || 
-                           import.meta.env.PUBLIC_DISABLE_AD_BANNER === "true";
+// Accepts: "true", "1", "yes" (case insensitive)
+function isTruthy(value: string | undefined): boolean {
+    if (!value) return false;
+    const lower = value.toLowerCase().trim();
+    return lower === "true" || lower === "1" || lower === "yes";
+}
+
+const disableBanner1 = import.meta.env.DISABLE_AD_BANNER;
+const disableBanner2 = import.meta.env.PUBLIC_DISABLE_AD_BANNER;
+const isAdBannerDisabled = isTruthy(disableBanner1) || isTruthy(disableBanner2);
+
+// Debug logging (only in development)
+if (import.meta.env.DEV) {
+    console.log('[Ad Banner] Environment variables:', {
+        DISABLE_AD_BANNER: disableBanner1,
+        PUBLIC_DISABLE_AD_BANNER: disableBanner2,
+        isDisabled: isAdBannerDisabled
+    });
+}
 
 // Automatically detect all image files in the ads directory
 let banners = [];
