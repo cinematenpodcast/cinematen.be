@@ -3,10 +3,15 @@ import { defineConfig } from "astro/config";
 import mdx from "@astrojs/mdx";
 import pagefind from "astro-pagefind";
 import react from "@astrojs/react";
+import vercel from "@astrojs/vercel/serverless";
 import tinaDirective from "./astro-tina-directive/register";
 
 // Export the combined configuration
 export default defineConfig({
+  output: "hybrid",
+  adapter: vercel({
+    runtime: "nodejs20.x",
+  }),
 
   // Define routes for dynamic pagination
   routes: [
