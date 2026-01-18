@@ -1,0 +1,155 @@
+---
+import { readdirSync } from "fs";
+import { join } from "path";
+
+// Check if ad banner is disabled via environment variable
+const isAdBannerDisabled = import.meta.env.DISABLE_AD_BANNER === "true" || 
+                           import.meta.env.PUBLIC_DISABLE_AD_BANNER === "true";
+
+// Automatically detect all image files in the ads directory
+let banners = [];
+if (!isAdBannerDisabled) {
+    try {
+        const adsDir = join(process.cwd(), "public/images/ads");
+        const files = readdirSync(adsDir);
+        
+        // Supported image extensions
+        const imageExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg', '.avif'];
+        
+        banners = files
+            .filter(file => {
+                // Exclude banners.json and check if it's an image file
+                const lowerFile = file.toLowerCase();
+                return file !== 'banners.json' && 
+                       imageExtensions.some(ext => lowerFile.endsWith(ext));
+            })
+            .map(file => ({
+                image: `/images/ads/${file}`,
+                alt: `Advertisement banner - ${file.replace(/\.[^/.]+$/, "")}`
+            }));
+    } catch (error) {
+        console.warn("Could not read ads directory:", error);
+        banners = [];
+    }
+}
+
+// Only render if we have banners and banner is not disabled
+const hasBanners = !isAdBannerDisabled && banners.length > 0;
+---
+
+{hasBanners && (
+    <section class="ad-banner-section">
+        <div class="ad-banner-container">
+            <div id="ad-banner-wrapper" class="ad-banner-wrapper">
+                {/* Banner will be inserted here by client-side script */}
+            </div>
+        </div>
+    </section>
+)}
+
+{hasBanners && (
+    <script define:vars={{ banners }}>
+        (function() {
+            // Get or create session ID
+            function getSessionId() {
+                const sessionKey = 'ad_banner_session_id';
+                let sessionId = localStorage.getItem(sessionKey);
+                
+                if (!sessionId) {
+                    // Generate a new session ID
+                    sessionId = Date.now().toString(36) + Math.random().toString(36).substr(2);
+                    localStorage.setItem(sessionKey, sessionId);
+                }
+                
+                return sessionId;
+            }
+
+            // Select a random banner based on session ID (consistent within session)
+            function selectBanner(banners, sessionId) {
+                if (!banners || banners.length === 0) return null;
+                
+                // Use session ID as seed for consistent selection
+                let hash = 0;
+                for (let i = 0; i < sessionId.length; i++) {
+                    const char = sessionId.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + char;
+                    hash = hash & hash; // Convert to 32bit integer
+                }
+                
+                // Use absolute value and modulo to get index
+                const index = Math.abs(hash) % banners.length;
+                return banners[index];
+            }
+
+            // Render the selected banner
+            function renderBanner() {
+                const wrapper = document.getElementById('ad-banner-wrapper');
+                if (!wrapper || !banners || banners.length === 0) return;
+
+                const sessionId = getSessionId();
+                const selectedBanner = selectBanner(banners, sessionId);
+
+                if (selectedBanner) {
+                    const bannerImage = document.createElement('img');
+                    bannerImage.src = selectedBanner.image;
+                    bannerImage.alt = selectedBanner.alt || 'Advertisement';
+                    bannerImage.loading = 'lazy';
+                    bannerImage.className = 'ad-banner-image';
+
+                    wrapper.appendChild(bannerImage);
+                }
+            }
+
+            // Wait for DOM to be ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', renderBanner);
+            } else {
+                renderBanner();
+            }
+        })();
+    </script>
+)}
+
+<style>
+    .ad-banner-section {
+        width: 100%;
+        margin: 40px 0;
+        padding: 0 20px;
+    }
+
+    .ad-banner-container {
+        max-width: 970px;
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    .ad-banner-wrapper {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .ad-banner-image {
+        width: 100%;
+        max-width: 970px;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+    }
+
+    /* Ensure aspect ratio is maintained */
+    @media (max-width: 970px) {
+        .ad-banner-image {
+            width: 100%;
+        }
+    }
+
+    /* Mobile optimization */
+    @media (max-width: 479px) {
+        .ad-banner-section {
+            margin: 30px 0;
+            padding: 0 10px;
+        }
+    }
+</style>

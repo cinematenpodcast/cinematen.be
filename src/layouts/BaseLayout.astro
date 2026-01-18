@@ -5,6 +5,7 @@ import BaseHeader from "../components/BaseHeader.astro";
 import BaseFooter from "../components/BaseFooter.astro";
 import NewNavmenu from "../components/NewNavmenu.astro";
 import BasePodcastBanner from "../components/BasePodcastBanner.astro";
+import BaseAdBanner from "../components/BaseAdBanner.astro";
 import CategoriesNieuws from "../components/CategoriesNieuws.astro";
 import CategoriesReviews from "../components/CategoriesReviews.astro";
 import BaseNieuwsItem from "../components/BaseNieuwsItem.astro";
@@ -286,6 +287,7 @@ function truncateContent(content, maxLength = 200) {
                         </div>
                     </div>
                 </section>
+                <BaseAdBanner />
                 <BasePodcastBanner />
                 <section class="reviews-section">
                     <div class="container">
