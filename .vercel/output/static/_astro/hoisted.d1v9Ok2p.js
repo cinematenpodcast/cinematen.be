@@ -1,1 +1,0 @@
-import"./BaseHeadNieuws.astro_astro_type_script_index_0_lang.DlUsdK5z.js";import"./NewNavmenu.astro_astro_type_script_index_0_lang.D5J6RlMR.js";import"./BaseScript.astro_astro_type_script_index_0_lang.Bc3EwiQ3.js";

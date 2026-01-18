@@ -1,1 +1,0 @@
-import"./NewNavmenu.astro_astro_type_script_index_0_lang.D5J6RlMR.js";import"./BaseScript.astro_astro_type_script_index_0_lang.Bc3EwiQ3.js";import"./hoisted.BZJhgUHZ.js";import"./YouTube.astro_astro_type_script_index_0_lang.DkY74W4p.js";import"./Vimeo.astro_astro_type_script_index_0_lang.CgRsrQuG.js";
