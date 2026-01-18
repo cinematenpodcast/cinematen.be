@@ -9,9 +9,7 @@ import tinaDirective from "./astro-tina-directive/register";
 // Export the combined configuration
 export default defineConfig({
   output: "hybrid",
-  adapter: vercel({
-    runtime: "nodejs20.x",
-  }),
+  adapter: vercel(),
 
   // Define routes for dynamic pagination
   routes: [
