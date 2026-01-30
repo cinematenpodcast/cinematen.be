@@ -22,7 +22,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "sharp": "^0.34.5",
-    "tinacms": "^2.9.0"
+    "tinacms": "^3.3.2"
   },
   "description": "```sh npm create astro@latest -- --template minimal ```",
   "main": "index.js",
@@ -30,7 +30,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@tinacms/cli": "^1.11.0",
+    "@tinacms/cli": "^2.1.2",
     "@types/node": "^25.0.8"
   },
   "engines": {
