@@ -13,6 +13,11 @@ export const NieuwsCollection: Collection = {
   path: "src/content/nieuws",
   format: "mdx",
   ui: {
+    // FIX: Expliciet create en delete toestaan
+    allowedActions: {
+      create: true,
+      delete: true,
+    },
     router({ document }) {
       // Use slug from frontmatter if available, otherwise use filename
       const slug = (document as any).slug || document._sys.filename.replace(/\.mdx$/, '');

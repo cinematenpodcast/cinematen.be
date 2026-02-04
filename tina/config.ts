@@ -20,26 +20,8 @@ export default defineConfig({
   },
   schema: {
     collections: [
-      {
-        ...NieuwsCollection,
-        ui: {
-          ...NieuwsCollection.ui,
-          allowedActions: {
-            create: true,
-            delete: true,
-          },
-        },
-      },
-      {
-        ...ReviewsCollection,
-        ui: {
-          ...ReviewsCollection.ui,
-          allowedActions: {
-            create: true,
-            delete: true,
-          },
-        },
-      },
+      NieuwsCollection,
+      ReviewsCollection,
     ],
   },
 });
