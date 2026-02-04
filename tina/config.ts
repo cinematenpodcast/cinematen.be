@@ -9,14 +9,6 @@ const branch =
   process.env.HEAD ||
   "main";
 
-import createSlug from "../src/lib/createSlug";
-
-// Function to generate slug from title
-function generateSlugFromTitle(title: string): string {
-  if (!title) return '';
-  return createSlug(title);
-}
-
 export default defineConfig({
   branch,
 
@@ -35,11 +27,28 @@ export default defineConfig({
       publicFolder: "public",
     },
   },
-  // See docs on content modeling for more info on how to setup new content models: https://tina.io/docs/schema/
   schema: {
     collections: [
-      NieuwsCollection,
-      ReviewsCollection,
+      {
+        ...NieuwsCollection,
+        ui: {
+          ...NieuwsCollection.ui,
+          allowedActions: {
+            create: true,
+            delete: true,
+          },
+        },
+      },
+      {
+        ...ReviewsCollection,
+        ui: {
+          ...ReviewsCollection.ui,
+          allowedActions: {
+            create: true,
+            delete: true,
+          },
+        },
+      },
     ],
   },
 });
