@@ -12,7 +12,7 @@ import BaseHeadExclude from "../../../../components/BaseHeadExclude.astro";
 import { getCollection } from "astro:content";
 
 export async function getStaticPaths({ paginate }) {
-    const allPostsRaw = await getCollection("nieuws");
+    const allPostsRaw = (await getCollection("nieuws")).filter(post => !post.data.draft);
     
     // Function to extract text from TinaCMS rich-text body
     function extractTextFromBody(body) {

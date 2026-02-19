@@ -147,7 +147,7 @@ function getCleanId(id) {
     return id ? id.replace(/\.mdx$/, '') : '';
 }
 
-const allNieuwsPostsRaw = await getCollection("nieuws");
+const allNieuwsPostsRaw = (await getCollection("nieuws")).filter(post => !post.data.draft);
 const allNieuwsPosts = allNieuwsPostsRaw.map((post) => {
     // Try bodyPreview first, then extract from body, then extract from MDX file directly
     let contentPreview = post.data.bodyPreview || extractTextFromBody(post.data.body) || "";

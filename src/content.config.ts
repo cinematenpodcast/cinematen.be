@@ -44,7 +44,7 @@ const nieuws = defineCollection({
 
     // Map Tina posts to the correct format for Astro
     return postsResponse.data.nieuwsConnection.edges
-      ?.filter((post) => !!post)
+      ?.filter((post) => !!post && !post.node?.draft)
       .map((post) => {
         const node = post?.node;
         const relativePath = node?._sys.relativePath;

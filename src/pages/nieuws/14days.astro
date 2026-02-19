@@ -36,7 +36,7 @@ function getCleanId(id) {
     return id ? id.replace(/\.mdx$/, '') : '';
 }
 
-const allNieuwsPostsRaw = await getCollection("nieuws");
+const allNieuwsPostsRaw = (await getCollection("nieuws")).filter(post => !post.data.draft);
 const allNieuwsPosts = allNieuwsPostsRaw.map(post => ({
     url: `/nieuws/${getCleanId(post.id)}`,
     frontmatter: post.data,

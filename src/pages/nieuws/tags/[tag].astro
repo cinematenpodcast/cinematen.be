@@ -37,7 +37,7 @@ export async function getStaticPaths() {
         return id ? id.replace(/\.mdx$/, '') : '';
     }
     
-    const allPostsRaw = await getCollection("nieuws");
+    const allPostsRaw = (await getCollection("nieuws")).filter(post => !post.data.draft);
     const allPosts = allPostsRaw.map(post => ({
         url: `/nieuws/${getCleanId(post.id)}`,
         frontmatter: post.data,

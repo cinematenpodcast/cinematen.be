@@ -15,7 +15,8 @@ import { join } from "path";
 
 export async function getStaticPaths({ paginate }) {
     // Load all news posts
-    const allNieuwsPosts = await getCollection("nieuws");
+    const allNieuwsPostsRaw = await getCollection("nieuws");
+    const allNieuwsPosts = allNieuwsPostsRaw.filter(post => !post.data.draft);
 
     // Sort posts by date in descending order
     const sortedPosts = allNieuwsPosts.sort((a, b) => {
