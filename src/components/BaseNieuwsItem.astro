@@ -1,5 +1,5 @@
 ---
-const { title, url, thumbnail, date, content } = Astro.props;
+const { title, url, thumbnail, date, content, priority = false } = Astro.props;
 
 // Function to format the date and adjust for timezone
 function formatDate(dateString) {
@@ -40,8 +40,9 @@ const displayContent = cleanContent(content);
             sizes="(max-width: 479px) 100vw, (max-width: 767px) 87vw, (max-width: 876px) 89vw, (max-width: 991px) 780px, 40vw"
             alt={title}
             class="blog-image"
-            loading="lazy"
-            decoding="async"
+            loading={priority ? "eager" : "lazy"}
+            decoding={priority ? "sync" : "async"}
+            fetchpriority={priority ? "high" : undefined}
         />
     </div>
     <div
@@ -66,6 +67,12 @@ const displayContent = cleanContent(content);
 </a>
 
 <style>
+#summary {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 @media (max-width: 700px) {
   .blog-item {
     padding-bottom: 12px !important;

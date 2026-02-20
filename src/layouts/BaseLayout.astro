@@ -212,7 +212,7 @@ function truncateContent(content, maxLength = 200) {
                                 {allNieuwsPosts
                                     .sort((a, b) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime())
                                     .slice(0, 5)
-                                    .map((post) => (
+                                    .map((post, index) => (
                                         <article>
                                             <BaseNieuwsItem
                                                 key={post.url}
@@ -221,6 +221,7 @@ function truncateContent(content, maxLength = 200) {
                                                 thumbnail={post.frontmatter.thumbnail}
                                                 date={post.frontmatter.date}
                                                 content={post.rawContent || ""}
+                                                priority={index === 0}
                                             />
                                         </article>
                                     ))}
@@ -345,3 +346,27 @@ function truncateContent(content, maxLength = 200) {
         {/* BaseScript verwijderd voor performance op homepage */}
     </body>
 </html>
+
+<style is:global>
+    .next-button {
+        display: inline-block !important;
+        padding: 20px 40px !important;
+        background-color: #2E58AE !important;
+        color: white !important;
+        text-decoration: none !important;
+        border-radius: 16px !important;
+        margin-top: 24px !important;
+        transition: background-color 0.3s ease;
+        width: 100% !important;
+        text-align: center !important;
+        box-sizing: border-box !important;
+    }
+    .next-button:hover {
+        background-color: #254a94 !important;
+    }
+    .next-button .title-medium {
+        color: white !important;
+        font-weight: 500 !important;
+        font-size: 20px !important;
+    }
+</style>
