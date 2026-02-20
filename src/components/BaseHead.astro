@@ -44,35 +44,24 @@ const formattedModifiedDate = formatDateForMeta(modifiedDate);
 <link href="/images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 <link href="/images/webclip.png" rel="apple-touch-icon" />
 
-<!-- Preconnect to image CDN -->
+<!-- Preconnect to font and image origins -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="preconnect" href="https://login.wabliefteru.be" />
-<link rel="dns-prefetch" href="https://login.wabliefteru.be" />
 
-<!-- Preload self-hosted fonts and logo -->
-<link rel="preload" href="/fonts/rubik-variable.woff2" as="font" type="font/woff2" crossorigin />
+<!-- Google Fonts (with display=swap, non-blocking for text rendering) -->
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Rubik+Mono+One&display=swap" rel="stylesheet" />
+
+<!-- Preload LCP image origin logo -->
 <link rel="preload" as="image" href="/images/LogoCleanSmaller.png" type="image/png" />
 
-<!-- Critical CSS with self-hosted fonts -->
-<style>
-    @font-face {
-        font-family: 'Rubik';
-        font-style: normal;
-        font-weight: 400 700;
-        font-display: swap;
-        src: url('/fonts/rubik-variable.woff2') format('woff2');
-    }
-    @font-face {
-        font-family: 'Rubik Mono One';
-        font-style: normal;
-        font-weight: 400;
-        font-display: swap;
-        src: url('/fonts/rubik-mono-one.woff2') format('woff2');
-    }
+<!-- Critical CSS (is:inline prevents Astro scoping so styles apply globally) -->
+<style is:inline>
     * {
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
     }
-    html, body, .page-wrapper, .content, .nieuws-section, .nieuws-title, .container, .w-layout-grid, .content-left, .content-right, .header_content, .nav-container, .nav-content, .main-nav, .menu-toggle, .nav-links, .next-button {
+    html, body, .page-wrapper, .content, .nieuws-section, .nieuws-title, .container, .w-layout-grid, .content-left, .content-right, .header_content, .nav-container, .nav-content, .main-nav, .menu-toggle, .nav-links {
         box-sizing: border-box;
         margin: 0;
         padding: 0;
@@ -106,25 +95,11 @@ const formattedModifiedDate = formatDateForMeta(modifiedDate);
         }
     }
     .next-button {
-        display: inline-block !important;
-        padding: 20px 40px !important;
-        background-color: #2E58AE !important;
-        color: white !important;
-        text-decoration: none !important;
-        border-radius: 16px !important;
+        display: block;
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
         margin-top: 24px !important;
-        transition: background-color 0.3s ease;
-        width: 100% !important;
-        text-align: center !important;
-        box-sizing: border-box !important;
-    }
-    .next-button:hover {
-        background-color: #254a94 !important;
-    }
-    .next-button .title-medium {
-        color: white !important;
-        font-weight: 500 !important;
-        font-size: 20px !important;
     }
 </style>
 
