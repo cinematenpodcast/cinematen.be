@@ -31,8 +31,10 @@ const starRatingImages = showStars ? generateStarRating(rating) : [];
         <div class={`thumb-aspect-box${square ? ' square' : ''}`}>
           <img
             src={thumbnail}
-            alt="feature-thumbnail"
+            alt={title}
             class="featured-thumb-img"
+            loading="lazy"
+            decoding="async"
           />
         </div>
       </div>
@@ -41,7 +43,7 @@ const starRatingImages = showStars ? generateStarRating(rating) : [];
         {showStars && (
           <div class="star-row-horizontal">
             {starRatingImages.map(starImage => (
-              <img src={starImage} loading="eager" alt="ster" class="star-image-horizontal" />
+              <img src={starImage} loading="lazy" alt="ster" class="star-image-horizontal" width="22" height="22" />
             ))}
           </div>
         )}
@@ -54,8 +56,10 @@ const starRatingImages = showStars ? generateStarRating(rating) : [];
       <div class={`thumb-aspect-box${square ? ' square' : ''}`}>
         <img
           src={thumbnail}
-          alt="feature-thumbnail"
+          alt={title}
           class="featured-thumb-img"
+          loading="lazy"
+          decoding="async"
         />
       </div>
     </div>
@@ -64,7 +68,7 @@ const starRatingImages = showStars ? generateStarRating(rating) : [];
       {showStars && (
         <div class="star-row-horizontal">
           {starRatingImages.map(starImage => (
-            <img src={starImage} loading="eager" alt="ster" class="star-image-horizontal" />
+            <img src={starImage} loading="lazy" alt="ster" class="star-image-horizontal" width="22" height="22" />
           ))}
         </div>
       )}

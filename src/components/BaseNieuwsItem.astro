@@ -35,10 +35,13 @@ const displayContent = cleanContent(content);
     <div class="blog-image-wrap">
         <img
             src={thumbnail}
-            width="Auto"
+            width="780"
+            height="440"
             sizes="(max-width: 479px) 100vw, (max-width: 767px) 87vw, (max-width: 876px) 89vw, (max-width: 991px) 780px, 40vw"
-            alt=""
+            alt={title}
             class="blog-image"
+            loading="lazy"
+            decoding="async"
         />
     </div>
     <div

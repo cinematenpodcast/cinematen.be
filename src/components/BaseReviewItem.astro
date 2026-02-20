@@ -55,14 +55,14 @@ const starRatingImages = generateStarRating(validatedRating);
                 <div class="rating-container">
                     <div class="rating">
                 {starRatingImages.map(starImage => (
-                  <img src={starImage} loading="eager" alt="" class="star-image" />
+                  <img src={starImage} loading="lazy" alt="" class="star-image" width="22" height="22" />
                 ))}
                     </div>
                 </div>
             </div>
           )}          
         <div class="blog-image-wrap">
-            <img src={thumbnail} width="Auto" sizes="(max-width: 479px) 100vw, (max-width: 767px) 87vw, (max-width: 876px) 89vw, (max-width: 991px) 780px, 40vw" alt="" class="blog-image" />
+            <img src={thumbnail} width="780" height="440" sizes="(max-width: 479px) 100vw, (max-width: 767px) 87vw, (max-width: 876px) 89vw, (max-width: 991px) 780px, 40vw" alt={title} class="blog-image" loading="lazy" decoding="async" />
         </div>
     </div>
     <div class="blog-content">

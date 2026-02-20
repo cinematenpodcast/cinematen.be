@@ -3,14 +3,12 @@ const { canonicalURL, title, description, publishedDate, modifiedDate, articleTy
 const defaultCanonical = "https://cinematen.be/";
 const finalCanonical = canonicalURL || defaultCanonical;
 
-// Default title and description for homepage
 const defaultTitle = "Film & TV Reviews en Nieuws";
 const defaultDescription = "Cinematen.be houdt je vinger aan de pols met het meest actuele nieuws uit de film- en seriewereld, inclusief de laatste ontwikkelingen uit Hollywood. Ontdek previews, trailers, recensies en exclusieve interviews. Blijf op de hoogte van alles wat actueel is op het grote en kleine scherm.";
 
 const finalTitle = title || defaultTitle;
 const finalDescription = description || defaultDescription;
 
-// Format dates for meta tags (ISO 8601 format)
 const formatDateForMeta = (dateString) => {
     if (!dateString) return null;
     const date = new Date(dateString);
@@ -20,175 +18,48 @@ const formatDateForMeta = (dateString) => {
 const formattedPublishedDate = formatDateForMeta(publishedDate);
 const formattedModifiedDate = formatDateForMeta(modifiedDate);
 ---
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-KZ3KYRB0T1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-KZ3KYRB0T1');
-</script>
-<meta name="google-site-verification" content="Ue-nOWKl8b37dpA_44eTIqresdKx1GF8BO1BEfSXwg4" />
 <meta charset="utf-8" />
-<title>{finalTitle}</title>
-<meta
-    content={finalDescription}
-    name="description"
-/>
-<meta content={finalTitle} property="og:title" />
-<meta
-    content={finalDescription}
-    property="og:description"
-/>
-<meta content="./images/Cinematelogotrans.png" property="og:image" />
-<meta content={finalTitle} property="twitter:title" />
-<meta
-    content={finalDescription}
-    property="twitter:description"
-/>
-<meta content="/images/Cinematelogotrans.png" property="twitter:image" />
-<meta content={articleType || "website"} property="og:type" />
-{formattedPublishedDate && <meta content={formattedPublishedDate} property="article:published_time" />}
-{formattedModifiedDate && <meta content={formattedModifiedDate} property="article:modified_time" />}
-{author && <meta content={author} property="article:author" />}
-<meta content="summary_large_image" name="twitter:card" />
 <meta content="width=device-width, initial-scale=1" name="viewport" />
-<meta content={finalTitle} />
-<link href="/style.css" rel="stylesheet" type="text/css" />
-<link href="https://fonts.googleapis.com" rel="preconnect" />
-<link
-    crossorigin="anonymous"
-    href="https://fonts.gstatic.com"
-    rel="preconnect"
-/>
-<script
-    src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"
-    type="text/javascript"></script>
-<script type="text/javascript">
-    WebFont.load({
-        google: {
-            families: [
-                "Rubik:300,regular,500,600,700,800,900,300italic,italic,500italic,600italic,700italic,800italic,900italic",
-                "Rubik Mono One:regular",
-            ],
-        },
-    });
-</script>
-<script type="text/javascript">
-    !(function (o, c) {
-        var n = c.documentElement,
-            t = " w-mod-";
-        (n.className += t + "js"),
-            ("ontouchstart" in o ||
-                (o.DocumentTouch && c instanceof DocumentTouch)) &&
-                (n.className += t + "touch");
-    })(window, document);
-</script>
-<script src="/script.js" defer></script>
-<link href="/images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-<link href="/images/webclip.png" rel="apple-touch-icon" />
-<style>
-    * {
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-    }
-</style>
+<title>{finalTitle}</title>
+<meta content={finalDescription} name="description" />
+<meta name="google-site-verification" content="Ue-nOWKl8b37dpA_44eTIqresdKx1GF8BO1BEfSXwg4" />
 
 <!-- Canonical URL -->
 <link rel="canonical" href={finalCanonical} />
 
-<!-- Preload Critical Resources -->
-<link rel="preload" href="/style.css" as="style" />
-<link rel="preload" href="/script.js" as="script" />
-<link rel="preload" href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800;900&display=swap" as="style" />
-
-<!-- Stylesheets -->
-<link href="/style.css" rel="stylesheet" type="text/css" />
-<link href="https://fonts.googleapis.com" rel="preconnect" />
-<link crossorigin="anonymous" href="https://fonts.gstatic.com" rel="preconnect" />
-
-<!-- Web Font Loader -->
-<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js" type="text/javascript"></script>
-<script type="text/javascript">
-    WebFont.load({
-        google: {
-            families: [
-                "Rubik:300,regular,500,600,700,800,900,300italic,italic,500italic,600italic,700italic,800italic,900italic",
-                "Rubik Mono One:regular",
-            ],
-        },
-    });
-</script>
-
-<!-- Modernizr -->
-<script type="text/javascript">
-    !(function (o, c) {
-        var n = c.documentElement,
-            t = " w-mod-";
-        (n.className += t + "js"),
-            ("ontouchstart" in o ||
-                (o.DocumentTouch && c instanceof DocumentTouch)) &&
-                (n.className += t + "touch");
-    })(window, document);
-</script>
-
-<!-- Scripts -->
-<script src="/script.js" defer></script>
+<!-- Open Graph / Twitter -->
+<meta content={finalTitle} property="og:title" />
+<meta content={finalDescription} property="og:description" />
+<meta content="./images/Cinematelogotrans.png" property="og:image" />
+<meta content={articleType || "website"} property="og:type" />
+<meta content={finalTitle} property="twitter:title" />
+<meta content={finalDescription} property="twitter:description" />
+<meta content="/images/Cinematelogotrans.png" property="twitter:image" />
+<meta content="summary_large_image" name="twitter:card" />
+{formattedPublishedDate && <meta content={formattedPublishedDate} property="article:published_time" />}
+{formattedModifiedDate && <meta content={formattedModifiedDate} property="article:modified_time" />}
+{author && <meta content={author} property="article:author" />}
 
 <!-- Favicon -->
 <link href="/images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 <link href="/images/webclip.png" rel="apple-touch-icon" />
 
-<!-- Structured Data -->
-{articleType === "article" ? (
-<script type="application/ld+json" set:html={JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "headline": finalTitle,
-  "description": finalDescription,
-  "url": finalCanonical,
-  ...(formattedPublishedDate && { "datePublished": formattedPublishedDate }),
-  ...(formattedModifiedDate && { "dateModified": formattedModifiedDate }),
-  ...(author && { "author": { "@type": "Person", "name": author } }),
-  ...(image && { "image": image }),
-  "publisher": {
-    "@type": "Organization",
-    "name": "Cinematen",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://cinematen.be/images/Cinematelogotrans.png"
-    }
-  }
-})}></script>
-) : (
-<script type="application/ld+json" set:html={JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "Cinematen.be",
-  "url": "https://cinematen.be/",
-  "description": "Film & TV Reviews en Nieuws door Yorrick & Maarten",
-  "publisher": {
-    "@type": "Organization",
-    "name": "Cinematen",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://cinematen.be/images/Cinematelogotrans.png"
-    }
-  }
-})}></script>
-)}
+<!-- Preconnect to font origins -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-<!-- Performance Optimization -->
+<!-- Fonts: only load weights actually used, with display=swap -->
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Rubik+Mono+One&display=swap" rel="stylesheet" />
+
+<!-- Preload logo (above the fold) -->
+<link rel="preload" as="image" href="/images/LogoCleanSmaller.png" type="image/png" />
+
+<!-- Critical CSS -->
 <style>
     * {
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
     }
-</style>
-
-<style>
-    /* Critical CSS voor homepage (boven de vouw) */
     html, body, .page-wrapper, .content, .nieuws-section, .nieuws-title, .container, .w-layout-grid, .content-left, .content-right, .header_content, .nav-container, .nav-content, .main-nav, .menu-toggle, .nav-links, .next-button {
         box-sizing: border-box;
         margin: 0;
@@ -242,10 +113,72 @@ const formattedModifiedDate = formatDateForMeta(modifiedDate);
         font-weight: 500;
         font-size: 20px;
     }
-    /* EINDE CRITICAL CSS */
 </style>
-<!-- Preload en asynchroon laden van style.css -->
-<link rel="preload" href="/style.css" as="style" onload="this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="/style.css"></noscript>
-<!-- Preload logo -->
-<link rel="preload" as="image" href="/images/LogoCleanSmaller.png" type="image/png" />
+
+<!-- Main stylesheet: preload then apply -->
+<link rel="preload" href="/style.css" as="style" />
+<link href="/style.css" rel="stylesheet" />
+
+<!-- Webflow touch detection (deferred) -->
+<script>
+    document.documentElement.className += " w-mod-js";
+    if ("ontouchstart" in window) document.documentElement.className += " w-mod-touch";
+</script>
+
+<!-- Main script (deferred) -->
+<script src="/script.js" defer></script>
+
+<!-- Google Analytics (deferred to not block rendering) -->
+<script>
+    window.addEventListener('load', function() {
+        var s = document.createElement('script');
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=G-KZ3KYRB0T1';
+        s.async = true;
+        document.head.appendChild(s);
+        s.onload = function() {
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-KZ3KYRB0T1');
+        };
+    });
+</script>
+
+<!-- Structured Data -->
+{articleType === "article" ? (
+<script type="application/ld+json" set:html={JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": finalTitle,
+  "description": finalDescription,
+  "url": finalCanonical,
+  ...(formattedPublishedDate && { "datePublished": formattedPublishedDate }),
+  ...(formattedModifiedDate && { "dateModified": formattedModifiedDate }),
+  ...(author && { "author": { "@type": "Person", "name": author } }),
+  ...(image && { "image": image }),
+  "publisher": {
+    "@type": "Organization",
+    "name": "Cinematen",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://cinematen.be/images/Cinematelogotrans.png"
+    }
+  }
+})}></script>
+) : (
+<script type="application/ld+json" set:html={JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Cinematen.be",
+  "url": "https://cinematen.be/",
+  "description": "Film & TV Reviews en Nieuws door Yorrick & Maarten",
+  "publisher": {
+    "@type": "Organization",
+    "name": "Cinematen",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://cinematen.be/images/Cinematelogotrans.png"
+    }
+  }
+})}></script>
+)}
