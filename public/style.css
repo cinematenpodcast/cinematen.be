@@ -4893,14 +4893,14 @@ a {
   justify-content: center; /* Center-align the content */
   align-items: baseline; /* Align content to the text baseline */
   margin-bottom: 0px; /* Space between this and the next line */
-  font-size: 14px; /* Adjust text size */
+  font-size: 24px; /* Match width of CINEMATEN.BE */
   color: #fff; /* Text color */
   font-weight: bold; /* Optional bold style */
-  gap: 10px; /* Consistent spacing between elements */
+  gap: 12px; /* Consistent spacing between elements */
 }
 
 .partner-logo {
-  width: 50px; /* Slightly reduce width for better alignment */
+  width: 90px; /* Scale with larger text for balanced width */
   height: auto; /* Maintain aspect ratio */
   margin: 0 5px; /* Adjust spacing around the logo */
   vertical-align: baseline; /* Align the bottom of the logo with the text baseline */
@@ -4924,22 +4924,19 @@ a {
 /* Mobile devices */
 @media (max-width: 480px) {
   .partner-text {
-    font-size: 15px;
+    font-size: 18px;
     gap: 8px; /* Adjust spacing for smaller screens */
   }
   .partner-logo {
-    width: 30px; /* Adjust logo size for mobile */
+    width: 55px;
+    height: auto;
+    margin: 0px;
   }
   .cinematen-logo-text {
     font-size: 35px;
   }
   .cinematen-tagline {
     font-size: 18px;
-  }
-  .partner-logo {
-    width: 30px;
-    height: auto;
-    margin: 0px;
   }
 }
 
