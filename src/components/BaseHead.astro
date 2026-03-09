@@ -106,27 +106,8 @@ const formattedModifiedDate = formatDateForMeta(modifiedDate);
 <!-- Main stylesheet -->
 <link href="/style.css" rel="stylesheet" />
 
-<!-- Webflow touch detection -->
-<script>
-    document.documentElement.className += " w-mod-js";
-    if ("ontouchstart" in window) document.documentElement.className += " w-mod-touch";
-</script>
-
-<!-- Google Analytics (deferred to not block rendering) -->
-<script>
-    window.addEventListener('load', function() {
-        var s = document.createElement('script');
-        s.src = 'https://www.googletagmanager.com/gtag/js?id=G-KZ3KYRB0T1';
-        s.async = true;
-        document.head.appendChild(s);
-        s.onload = function() {
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-KZ3KYRB0T1');
-        };
-    });
-</script>
+<!-- Webflow + Google Analytics (external; CSP-safe) -->
+<script is:inline src="/scripts/init.js"></script>
 
 <!-- Structured Data -->
 {articleType === "article" ? (
