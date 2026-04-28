@@ -61,7 +61,8 @@ const formattedDateTime = formatDate(frontmatter.date);
             >
                 <div class="container">
                     <a
-    href="javascript:history.back();"
+    href="/nieuws/"
+    onclick="if(history.length > 1){ history.back(); return false; }"
     class="terug-knop w-inline-block"
 >
     <div class="terug-div">
