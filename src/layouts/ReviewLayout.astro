@@ -98,7 +98,8 @@ console.log("Rating:", frontmatter.rating); // Add this line to check the value 
             >
                 <div class="container">
                     <a
-    href="javascript:history.back();"
+    href="/reviews&blogs/"
+    onclick="if(history.length > 1){ history.back(); return false; }"
     class="terug-knop w-inline-block"
 >
     <div class="terug-div">

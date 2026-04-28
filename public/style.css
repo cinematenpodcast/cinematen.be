@@ -3719,6 +3719,8 @@ margin-top: 10px;
 .image-3 {
   margin-top: 15px;
   margin-bottom: 15px;
+  height: auto;
+  width: auto;
 }
 
 @media screen and (max-width: 991px) {
@@ -3883,6 +3885,7 @@ margin-top: 10px;
   .image-3 {
     margin-top: 0;
     width: 25%;
+    height: auto;
   }
 
   .date-time {
@@ -4203,6 +4206,7 @@ margin-top: 10px;
 
   .image-3 {
     width: 25%;
+    height: auto;
   }
 
   .categories-wrapper {
@@ -4524,6 +4528,7 @@ margin-top: 10px;
 
   .image-3 {
     width: 25%;
+    height: auto;
   }
 
   .date-time {
