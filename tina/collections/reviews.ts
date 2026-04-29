@@ -1,5 +1,6 @@
 import type { Collection } from "tinacms";
 import createSlug from "../../src/lib/createSlug";
+import { AutoSlugTitle } from "../components/AutoSlugTitle";
 
 // Function to convert title to slug
 function generateSlugFromTitle(title: string): string {
@@ -13,20 +14,26 @@ export const ReviewsCollection: Collection = {
   path: "src/content/reviews",
   format: "mdx",
   ui: {
+    allowedActions: {
+      create: true,
+      delete: true,
+    },
     router({ document }) {
-      // Use slug from frontmatter if available, otherwise use filename
       const slug = (document as any).slug || document._sys.filename.replace(/\.mdx$/, '');
       return `/reviews&blogs/${slug}`;
     },
     filename: {
       slugify: (values: any) => {
-        // Generate filename from title
         if (values?.title) {
           return generateSlugFromTitle(values.title);
         }
         return values?.slug || 'untitled';
       },
     },
+    defaultItem: () => ({
+      date: new Date().toISOString(),
+      tags: [],
+    }),
   },
   fields: [
     {
@@ -35,6 +42,7 @@ export const ReviewsCollection: Collection = {
       label: "Titel",
       isTitle: true,
       required: true,
+      ui: { component: AutoSlugTitle },
     },
     {
       type: "datetime",
