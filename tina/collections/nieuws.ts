@@ -1,6 +1,5 @@
 import type { Collection } from "tinacms";
 import createSlug from "../../src/lib/createSlug";
-import { AutoSlugTitle } from "../components/AutoSlugTitle";
 
 function generateSlugFromTitle(title: string): string {
   if (!title) return '';
@@ -29,16 +28,10 @@ export const NieuwsCollection: Collection = {
         return values?.slug || 'untitled';
       },
     },
-    defaultItem: () => ({
-      layout: "../../layouts/NieuwsLayout.astro",
-      date: new Date().toISOString(),
-      draft: true,
-      tags: [],
-    }),
   },
   fields: [
     { type: "string", name: "layout", label: "Layout", required: false, ui: { component: "hidden" } },
-    { type: "string", name: "title", label: "Titel", isTitle: true, required: true, ui: { component: AutoSlugTitle } },
+    { type: "string", name: "title", label: "Titel", isTitle: true, required: true },
     { type: "datetime", name: "date", label: "Datum", required: false, ui: { dateFormat: "YYYY-MM-DD" } },
     { type: "string", name: "soort", label: "Soort", required: false },
     { type: "image", name: "thumbnail", label: "Thumbnail Afbeelding", required: false },
