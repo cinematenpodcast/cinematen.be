@@ -1,12 +1,11 @@
 import React, { useEffect, useRef } from 'react';
-import { useForm } from 'tinacms';
 
 interface AutoSlugTitleProps {
   field: any;
   input: any;
+  form: any;
 }
 
-// Function to convert title to slug (same as createSlug)
 function generateSlug(title: string): string {
   if (!title) return '';
   return title
@@ -17,23 +16,19 @@ function generateSlug(title: string): string {
     .toLowerCase();
 }
 
-// Custom component that auto-generates slug from title
-export function AutoSlugTitle({ field, input }: AutoSlugTitleProps) {
-  const form = useForm();
-  const titleValue = form.values.title;
+export function AutoSlugTitle({ field, input, form }: AutoSlugTitleProps) {
   const previousTitleRef = useRef<string>('');
 
   useEffect(() => {
+    const titleValue = input.value;
     if (titleValue && titleValue !== previousTitleRef.current) {
       const newSlug = generateSlug(titleValue);
       previousTitleRef.current = titleValue;
-      
-      // Always update slug when title changes (auto-sync)
       if (newSlug) {
-        form.setFieldValue('slug', newSlug);
+        form.change('slug', newSlug);
       }
     }
-  }, [titleValue, form]);
+  }, [input.value, form]);
 
   return (
     <input
