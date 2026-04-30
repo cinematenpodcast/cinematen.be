@@ -40,7 +40,7 @@ export const NieuwsCollection: Collection = {
     { type: "string", name: "layout", label: "Layout", required: false, ui: { component: "hidden" } },
     { type: "string", name: "title", label: "Titel", isTitle: true, required: true, ui: { component: AutoSlugTitle } },
     { type: "datetime", name: "date", label: "Datum", required: false, ui: { dateFormat: "YYYY-MM-DD" } },
-    { type: "string", name: "soort", label: "Soort", required: false, options: ["Film", "TV", "Overig"] },
+    { type: "string", name: "soort", label: "Soort", required: false },
     { type: "image", name: "thumbnail", label: "Thumbnail Afbeelding", required: false },
     { type: "string", name: "trailer", label: "YouTube Trailer ID", required: false },
     { type: "string", name: "slug", label: "Slug", required: false, ui: { component: "hidden" } },

@@ -14,10 +14,6 @@ export const ReviewsCollection: Collection = {
   path: "src/content/reviews",
   format: "mdx",
   ui: {
-    allowedActions: {
-      create: true,
-      delete: true,
-    },
     router({ document }) {
       const slug = (document as any).slug || document._sys.filename.replace(/\.mdx$/, '');
       return `/reviews&blogs/${slug}`;
