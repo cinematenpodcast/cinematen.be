@@ -1,0 +1,51 @@
+---
+const apkUrl = "https://pub-e59d05717512461aa3ff681769abc6ab.r2.dev/Lets-Go-To-The-Movies-v1.0.apk";
+---
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Let's Go to the Movies – Cinematen</title>
+
+  <meta http-equiv="refresh" content={`0; url=${apkUrl}`} />
+
+  <meta property="og:title" content="Let's Go to the Movies" />
+  <meta property="og:description" content="Plan filmavonden met je vrienden. Bekijk welke films op de planning staan, geef aan wanneer jij kan en Yorrick regelt de rest." />
+  <meta property="og:image" content="https://pub-e59d05717512461aa3ff681769abc6ab.r2.dev/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://cinematen.be/lets-go-app" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="nl_BE" />
+  <meta property="og:site_name" content="Cinematen" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Let's Go to the Movies" />
+  <meta name="twitter:description" content="Plan filmavonden met je vrienden. Bekijk welke films op de planning staan, geef aan wanneer jij kan en Yorrick regelt de rest." />
+  <meta name="twitter:image" content="https://pub-e59d05717512461aa3ff681769abc6ab.r2.dev/og-image.png" />
+
+  <link rel="canonical" href="https://cinematen.be/lets-go-app" />
+  <link href="/images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+
+  <script define:vars={{ apkUrl }}>
+    window.location.replace(apkUrl);
+  </script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #181A2A;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    a { color: #e63946; }
+  </style>
+</head>
+<body>
+  <p>Download start automatisch. <a href={apkUrl}>Klik hier</a> als dat niet werkt.</p>
+</body>
+</html>
