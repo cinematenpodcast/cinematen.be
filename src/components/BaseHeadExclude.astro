@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <meta content="width=device-width, initial-scale=1" name="viewport" />
 <meta name="pagefind-noindex" content="true" />
+<meta name="robots" content="noindex, follow" />
 <meta name="google-site-verification" content="Ue-nOWKl8b37dpA_44eTIqresdKx1GF8BO1BEfSXwg4" />
 <title>Cinematen.be</title>
 <meta
@@ -17,7 +18,7 @@
     content="Cinematen.be houdt je vinger aan de pols met het meest actuele nieuws uit de film- en seriewereld, inclusief de laatste ontwikkelingen uit Hollywood. Ontdek previews, trailers, recensies en exclusieve interviews. Blijf op de hoogte van alles wat actueel is op het grote en kleine scherm."
     property="og:description"
 />
-<meta content="./images/Cinematelogotrans.png" property="og:image" />
+<meta content="https://www.cinematen.be/images/Cinematelogotrans.png" property="og:image" />
 <meta content="website" property="og:type" />
 <meta content="Cinematen.be" property="twitter:title" />
 <meta
@@ -35,8 +36,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-<!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Rubik+Mono+One&display=swap" rel="stylesheet" />
+<!-- Google Fonts: loaded async so the stylesheet request itself doesn't block first paint -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Rubik+Mono+One&display=swap" />
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Rubik+Mono+One&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+<noscript><link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Rubik+Mono+One&display=swap" rel="stylesheet" /></noscript>
 
 <!-- Critical CSS (is:inline prevents Astro scoping) -->
 <style is:inline>
@@ -50,4 +53,4 @@
 <link href="/style.css" rel="stylesheet" />
 
 <!-- Webflow + Google Analytics (external; CSP-safe) -->
-<script is:inline src="/scripts/init.js"></script>
+<script is:inline defer src="/scripts/init.js"></script>
