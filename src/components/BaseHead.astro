@@ -51,8 +51,10 @@ const formattedModifiedDate = formatDateForMeta(modifiedDate);
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="preconnect" href="https://login.wabliefteru.be" />
 
-<!-- Google Fonts (with display=swap, non-blocking for text rendering) -->
-<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Rubik+Mono+One&display=swap" rel="stylesheet" />
+<!-- Google Fonts: loaded async so the stylesheet request itself doesn't block first paint -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Rubik+Mono+One&display=swap" />
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Rubik+Mono+One&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+<noscript><link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Rubik+Mono+One&display=swap" rel="stylesheet" /></noscript>
 
 <!-- Preload LCP image origin logo -->
 <link rel="preload" as="image" href="/images/LogoCleanSmaller.png" type="image/png" />

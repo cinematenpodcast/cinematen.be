@@ -48,8 +48,10 @@ const finalThumbnail = thumbnail ? (thumbnail.startsWith('http') ? thumbnail : `
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-<!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Rubik+Mono+One&display=swap" rel="stylesheet" />
+<!-- Google Fonts: loaded async so the stylesheet request itself doesn't block first paint -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Rubik+Mono+One&display=swap" />
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Rubik+Mono+One&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+<noscript><link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Rubik+Mono+One&display=swap" rel="stylesheet" /></noscript>
 
 <!-- Critical CSS (is:inline prevents Astro scoping) -->
 <style is:inline>

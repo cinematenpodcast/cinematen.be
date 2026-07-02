@@ -134,6 +134,9 @@ const formattedDateTime = formatDate(frontmatter.date);
                                         sizes="(max-width: 479px) 100vw, (max-width: 767px) 77vw, 42vw"
                                         class="blog-image"
                                         alt={frontmatter.title}
+                                        loading="eager"
+                                        decoding="sync"
+                                        fetchpriority="high"
                                     />
                                 </div>
                                 <div
