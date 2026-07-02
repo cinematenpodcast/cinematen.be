@@ -3707,13 +3707,12 @@ margin-top: 10px;
 .nieuws-list {
   grid-column-gap: 40px;
   grid-row-gap: 40px;
-  flex-flow: column;
   grid-template-rows: auto;
   grid-template-columns: 1fr .4fr;
   max-width: 1000px;
   margin-left: auto;
   margin-right: auto;
-  display: flex;
+  display: grid;
 }
 
 .image-3 {

@@ -124,7 +124,7 @@ const formattedModifiedDate = formatDateForMeta(modifiedDate);
   ...(formattedPublishedDate && { "datePublished": formattedPublishedDate }),
   ...(formattedModifiedDate && { "dateModified": formattedModifiedDate }),
   ...(author && { "author": { "@type": "Person", "name": author, "url": "https://www.cinematen.be/#over-ons", "sameAs": ["https://www.instagram.com/cinematen_podcast"] } }),
-  ...(image && { "image": image.startsWith('http') ? image : `https://www.cinematen.be${image}` }),
+  ...(image && { "image": image.startsWith('http') ? image : `https://www.cinematen.be${encodeURI(image)}` }),
   "publisher": {
     "@type": "Organization",
     "name": "Cinematen",

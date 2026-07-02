@@ -105,12 +105,12 @@ console.log("Rating:", frontmatter.rating); // Add this line to check the value 
             "@type": "Rating",
             "ratingValue": frontmatter.rating,
             "bestRating": 5,
-            "worstRating": 0
+            "worstRating": 1
           },
           "itemReviewed": {
             "@type": "Movie",
             "name": frontmatter.title,
-            ...(frontmatter.poster && { "image": frontmatter.poster.startsWith('http') ? frontmatter.poster : `https://www.cinematen.be${frontmatter.poster}` })
+            ...(frontmatter.poster && { "image": frontmatter.poster.startsWith('http') ? frontmatter.poster : `https://www.cinematen.be${encodeURI(frontmatter.poster)}` })
           },
           "publisher": {
             "@type": "Organization",
@@ -122,6 +122,15 @@ console.log("Rating:", frontmatter.rating); // Add this line to check the value 
           }
         })}></script>
         )}
+        <script type="application/ld+json" set:html={JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.cinematen.be/" },
+            { "@type": "ListItem", "position": 2, "name": "Reviews & Blogs", "item": "https://www.cinematen.be/reviews&blogs/" },
+            { "@type": "ListItem", "position": 3, "name": reviewTitle, "item": canonicalURL }
+          ]
+        })}></script>
     </head>
     <body class="body">
         <div class="page-wrapper">
@@ -154,9 +163,11 @@ console.log("Rating:", frontmatter.rating); // Add this line to check the value 
                         <div class="blog-post-container w-clearfix">
                             <img
                                 src={frontmatter.poster}
-                                loading="lazy"
+                                loading="eager"
+                                decoding="sync"
+                                fetchpriority="high"
                                 sizes="(max-width: 479px) 100vw, (max-width: 767px) 23vw, (max-width: 991px) 300px, 400px"
-                                alt=""
+                                alt={frontmatter.title}
                                 class="review-poster"
                             />
                             <div
