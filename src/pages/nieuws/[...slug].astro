@@ -1,66 +1,26 @@
 ---
 import { getCollection } from "astro:content";
 import NieuwsLayout from "../../layouts/NieuwsLayout.astro";
-import client from "../../../tina/__generated__/client";
-import AdminNieuws from "../../../tina/pages/AdminNieuws";
 
 export async function getStaticPaths() {
   const posts = await getCollection("nieuws");
 
-  const paths = [];
-  
-  posts.forEach((post) => {
-    // Ensure post.id doesn't have .mdx extension (should be handled by content.config.ts, but double-check)
+  return posts.map((post) => {
     const cleanId = post.id.replace(/\.mdx$/, '');
-    
-    // Use tinaInfo if available, otherwise construct relativePath from cleanId
-    let relativePath = post.data.tinaInfo?.relativePath;
-    
-    if (!relativePath) {
-      // Add .mdx back for TinaCMS queries (TinaCMS needs the file extension)
-      relativePath = `${cleanId}.mdx`;
-    } else {
-      // Ensure relativePath doesn't have double .mdx
-      if (relativePath.endsWith('.mdx.mdx')) {
-        relativePath = relativePath.replace(/\.mdx\.mdx$/, '.mdx');
-      }
-    }
-    
-    // Add route without .mdx extension (clean URL only - no redirects)
-    paths.push({
-      params: { slug: cleanId },
-      props: {
-        post,
-        getTinaProps: async () =>
-          client.queries.nieuws({
-            relativePath: relativePath,
-          }),
-      },
-    });
+    return { params: { slug: cleanId }, props: { post } };
   });
-  
-  return paths;
 }
 
-const { post, getTinaProps } = Astro.props;
+const { post } = Astro.props;
 
-// Ensure post exists
 if (!post) {
   return Astro.redirect('/nieuws', 404);
 }
 
-let tinaProps;
-try {
-  tinaProps = await getTinaProps();
-} catch (error) {
-  // Live-edit data is a CMS convenience overlay, not required to render the article.
-  // Never let a TinaCloud query failure (e.g. schema propagation delay) break the whole build.
-  console.warn(`[nieuws] Skipping Tina live-edit props for "${post.id}":`, error instanceof Error ? error.message : error);
-  tinaProps = undefined;
-}
 const frontmatter = post.data;
+const { Content } = await post.render();
 ---
 
 <NieuwsLayout frontmatter={frontmatter}>
-  {tinaProps && <AdminNieuws {...tinaProps} client:tina />}
+  <Content />
 </NieuwsLayout>
