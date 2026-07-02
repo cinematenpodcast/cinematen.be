@@ -48,6 +48,11 @@
   ],
   "redirects": [
     {
+      "source": "/nieuws/%F0%9D%99%85%F0%9D%99%96%F0%9D%99%98%F0%9D%99%A0-%F0%9D%98%BD%F0%9D%99%A1%F0%9D%99%96%F0%9D%99%98%F0%9D%99%A0-%F0%9D%99%96%F0%9D%99%96%F0%9D%99%A3%F0%9D%99%9C%F0%9D%99%9A%F0%9D%99%A3%F0%9D%99%A4%F0%9D%99%A2%F0%9D%99%9A%F0%9D%99%A3-%F0%9D%99%AB%F0%9D%99%96%F0%9D%99%A3-%F0%9D%99%88%F0%9D%99%9E%F0%9D%99%A3%F0%9D%99%9A%F0%9D%99%98%F0%9D%99%A7%F0%9D%99%96%F0%9D%99%9B%F0%9D%99%A9-%F0%9D%99%9B%F0%9D%99%9E%F0%9D%99%A1%F0%9D%99%A2",
+      "destination": "/nieuws/jack-black-gecast-in-minecraft-film",
+      "permanent": true
+    },
+    {
       "source": "/nieuws.html",
       "destination": "/nieuws/pages/1",
       "permanent": true
@@ -66,6 +71,22 @@
       "source": "/reviews&blogs",
       "destination": "/reviews&blogs/pages/1",
       "permanent": true
+    },
+    {
+      "source": "/baseof.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/listen",
+      "destination": "/luister",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "destination": "https://www.cinematen.be/:path*",
+      "permanent": true,
+      "has": [{"type": "host", "value": "cinematen.be"}]
     }
   ]
 }

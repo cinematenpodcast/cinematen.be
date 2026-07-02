@@ -1,0 +1,28 @@
+# Cinematen.be — llms.txt
+# Site for AI search engines to understand this website
+
+> Cinematen.be is a Belgian film and TV review and news website in Dutch. Founded by Yorrick and Maarten. We write reviews, news articles, and host a film & TV podcast.
+
+## About
+- Language: Dutch (nl-BE)
+- Topics: film reviews, TV series reviews, movie news, streaming news, trailers, casting news
+- Authors: Yorrick Schoonheydt, Maarten
+- Podcast: Cinematen Podcast (Spotify, Apple Podcasts)
+
+## Key Pages
+- Homepage: https://www.cinematen.be/
+- Nieuws (News): https://www.cinematen.be/nieuws/pages/1
+- Reviews & Blogs: https://www.cinematen.be/reviews&blogs/pages/1
+- Film nieuws: https://www.cinematen.be/nieuws/film/
+- Serie nieuws: https://www.cinematen.be/nieuws/serie/
+- Podcast: https://www.cinematen.be/luister/
+
+## Content Policy
+- All content is original, written in Dutch
+- News articles cover international film and TV industry
+- Reviews include star ratings (0-5 scale)
+- No auto-generated content
+
+## Contact
+- Email: hello@cinematen.be
+- Instagram: https://www.instagram.com/cinematen_podcast

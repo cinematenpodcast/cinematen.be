@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://cinematen.be/sitemap.xml
+Sitemap: https://www.cinematen.be/sitemap.xml

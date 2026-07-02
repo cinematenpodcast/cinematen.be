@@ -1,0 +1,1 @@
+- [SEO Remediation Project](project-seo-remediation.md) — 28 SEO tickets from 2026-07-01 audit, indexation 20%→60% goal

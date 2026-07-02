@@ -11,7 +11,7 @@ import RandomReviews from "../components/RandomReviews.astro";
 const { frontmatter } = Astro.props;
 
 // Generate canonical URL for this review
-const canonicalURL = `https://cinematen.be${Astro.url.pathname}`;
+const canonicalURL = `https://www.cinematen.be${Astro.url.pathname}`;
 
 // Generate title and description for this review
 const reviewTitle = `${frontmatter.title} - ${frontmatter.soort || 'Review'}`;
@@ -77,9 +77,9 @@ console.log("Rating:", frontmatter.rating); // Add this line to check the value 
 
 <html lang="nl">
     <head>
-        <BaseHead 
-            canonicalURL={canonicalURL} 
-            title={reviewTitle} 
+        <BaseHead
+            canonicalURL={canonicalURL}
+            title={reviewTitle}
             description={reviewDescription}
             publishedDate={frontmatter.date}
             modifiedDate={frontmatter.date}
@@ -87,6 +87,41 @@ console.log("Rating:", frontmatter.rating); // Add this line to check the value 
             author={frontmatter.schrijver}
             image={frontmatter.poster}
         />
+        {frontmatter.rating && frontmatter.rating > 0 && (
+        <script type="application/ld+json" set:html={JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Review",
+          "name": reviewTitle,
+          "description": reviewDescription,
+          "url": canonicalURL,
+          ...(frontmatter.date && { "datePublished": new Date(frontmatter.date).toISOString() }),
+          "author": {
+            "@type": "Person",
+            "name": frontmatter.schrijver || "Cinematen",
+            "url": "https://www.cinematen.be/#over-ons",
+            "sameAs": ["https://www.instagram.com/cinematen_podcast"]
+          },
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": frontmatter.rating,
+            "bestRating": 5,
+            "worstRating": 0
+          },
+          "itemReviewed": {
+            "@type": "Movie",
+            "name": frontmatter.title,
+            ...(frontmatter.poster && { "image": frontmatter.poster.startsWith('http') ? frontmatter.poster : `https://www.cinematen.be${frontmatter.poster}` })
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "Cinematen",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://www.cinematen.be/images/Cinematelogotrans.png"
+            }
+          }
+        })}></script>
+        )}
     </head>
     <body class="body">
         <div class="page-wrapper">
@@ -143,8 +178,8 @@ console.log("Rating:", frontmatter.rating); // Add this line to check the value 
                                         </h1>
                                         {frontmatter.rating && frontmatter.rating > 0 && (
                                         <div class="rating-blue">
-                                            {starRatingImages.map(starImage => (
-                                                <img src={starImage} loading="lazy" alt="" class="star-image" />
+                                            {starRatingImages.map((starImage, i) => (
+                                                <img src={starImage} loading="lazy" alt={`Ster ${i+1} van 5`} class="star-image" />
                                             ))}
                                         </div> )}
                                     </div>

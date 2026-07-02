@@ -99,6 +99,7 @@ const nieuws = defineCollection({
     date: z.coerce.date().optional(),
     soort: z.string().nullish(),
     thumbnail: z.string().nullish(),
+    description: z.string().nullish(),
     trailer: z.string().nullish(),
     slug: z.string().nullish(),
     draft: z.boolean().optional(),

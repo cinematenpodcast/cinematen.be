@@ -8,7 +8,7 @@ import vercel from "@astrojs/vercel/serverless";
 import tinaDirective from "./astro-tina-directive/register";
 
 export default defineConfig({
-  site: "https://cinematen.be",
+  site: "https://www.cinematen.be",
   output: "hybrid",
   adapter: vercel(),
 
@@ -30,6 +30,12 @@ export default defineConfig({
         !page.includes('/nieuws/tags/') &&
         !page.includes('/reviews&blogs/tags/') &&
         !page.includes('/nieuws/14days'),
+      serialize(item) {
+        return {
+          ...item,
+          lastmod: new Date().toISOString(),
+        };
+      },
     }),
     pagefind(),
     react(),

@@ -6,10 +6,11 @@ import BaseFooter from "../components/BaseFooter.astro";
 import BaseScript from "../components/BaseScript.astro";
 import BasePodcastBanner from "../components/BasePodcastBanner.astro";
 import RandomReviews from "../components/RandomReviews.astro";
+import RelatedNieuws from "../components/RelatedNieuws.astro";
 const { frontmatter } = Astro.props;
 
 // Generate canonical URL for this news article
-const canonicalURL = `https://cinematen.be${Astro.url.pathname}`;
+const canonicalURL = `https://www.cinematen.be${Astro.url.pathname}`;
 
 // Function to format the date and adjust for timezone
 function formatDate(dateString) {
@@ -43,7 +44,7 @@ const formattedDateTime = formatDate(frontmatter.date);
       <BaseHeadNieuws
           title={frontmatter.title}
           thumbnail={frontmatter.thumbnail}
-          content={frontmatter.summary}
+          description={frontmatter.description || (frontmatter.bodyPreview ? frontmatter.bodyPreview.substring(0, 155) : undefined)}
           canonicalURL={canonicalURL}
           publishedDate={frontmatter.date}
           modifiedDate={frontmatter.date}
@@ -93,7 +94,7 @@ const formattedDateTime = formatDate(frontmatter.date);
                                         width="Auto"
                                         sizes="(max-width: 479px) 100vw, (max-width: 767px) 77vw, 42vw"
                                         class="blog-image"
-                                        alt="thumbnail"
+                                        alt={frontmatter.title}
                                     />
                                 </div>
                                 <div
@@ -126,6 +127,7 @@ const formattedDateTime = formatDate(frontmatter.date);
                     </div>
                 </div>
                 <RandomReviews currentSlug={frontmatter.slug} />
+                <RelatedNieuws currentSlug={frontmatter.slug} soort={frontmatter.soort} />
             </div>
             <BasePodcastBanner />
             <BaseFooter />

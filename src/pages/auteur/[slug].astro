@@ -1,0 +1,73 @@
+---
+import { getCollection } from "astro:content";
+import BaseHead from "../../components/BaseHead.astro";
+import NewNavmenu from "../../components/NewNavmenu.astro";
+import BaseHeader from "../../components/BaseHeader.astro";
+import BaseFooter from "../../components/BaseFooter.astro";
+import BaseScript from "../../components/BaseScript.astro";
+import BasePodcastBanner from "../../components/BasePodcastBanner.astro";
+import BaseNieuwsItem from "../../components/BaseNieuwsItem.astro";
+
+export async function getStaticPaths() {
+  const reviews = await getCollection("reviews");
+
+  // Get unique authors from reviews (schrijver field)
+  const authors = new Set<string>();
+  reviews.forEach(r => { if (r.data.schrijver) authors.add(r.data.schrijver); });
+
+  return Array.from(authors).map(author => ({
+    params: { slug: author.toLowerCase().replace(/\s+/g, '-') },
+    props: { authorName: author },
+  }));
+}
+
+const { authorName } = Astro.props;
+const { slug } = Astro.params;
+
+const reviews = await getCollection("reviews");
+const authorReviews = reviews
+  .filter(r => r.data.schrijver?.toLowerCase() === authorName.toLowerCase())
+  .sort((a, b) => new Date(b.data.date ?? 0).getTime() - new Date(a.data.date ?? 0).getTime());
+
+function getCleanId(id: string) {
+  return id.replace(/\.mdx$/, '');
+}
+
+const canonicalURL = `https://www.cinematen.be/auteur/${slug}/`;
+---
+
+<html lang="nl">
+<head>
+  <BaseHead
+    title={`${authorName} — Reviews op Cinematen.be`}
+    description={`Alle reviews en blogs van ${authorName} op Cinematen.be. Film- en seriereviews met sterbeoordeling.`}
+    canonicalURL={canonicalURL}
+  />
+</head>
+<body class="body">
+  <div class="page-wrapper">
+    <NewNavmenu />
+    <BaseHeader />
+    <div class="content">
+      <div class="container">
+        <h1 class="nieuws-title">Reviews door {authorName}</h1>
+        <p style="color: #a78bfa; margin-bottom: 2rem;">{authorReviews.length} review{authorReviews.length !== 1 ? 's' : ''}</p>
+        <div class="w-layout-grid nieuws-list">
+          {authorReviews.map(post => (
+            <BaseNieuwsItem
+              url={`/reviews&blogs/${getCleanId(post.id)}`}
+              title={post.data.title}
+              thumbnail={post.data.thumbnail || post.data.poster}
+              date={post.data.date}
+              content={post.data.summary || ""}
+            />
+          ))}
+        </div>
+      </div>
+      <BasePodcastBanner />
+    </div>
+    <BaseFooter />
+  </div>
+  <BaseScript />
+</body>
+</html>

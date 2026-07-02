@@ -1,10 +1,10 @@
 ---
-const { title, thumbnail, content, canonicalURL, publishedDate, modifiedDate, author } = Astro.props;
-const defaultCanonical = "https://cinematen.be/";
+const { title, thumbnail, description, canonicalURL, publishedDate, modifiedDate, author } = Astro.props;
+const defaultCanonical = "https://www.cinematen.be/";
 const finalCanonical = canonicalURL || defaultCanonical;
 
 const defaultDescription = "Lees het laatste nieuws uit de film- en seriewereld op Cinematen.be";
-const finalDescription = content || defaultDescription;
+const finalDescription = description || defaultDescription;
 
 const formatDateForMeta = (dateString) => {
     if (!dateString) return null;
@@ -14,6 +14,7 @@ const formatDateForMeta = (dateString) => {
 
 const formattedPublishedDate = formatDateForMeta(publishedDate);
 const formattedModifiedDate = formatDateForMeta(modifiedDate);
+const finalThumbnail = thumbnail ? (thumbnail.startsWith('http') ? thumbnail : `https://www.cinematen.be${thumbnail}`) : "https://www.cinematen.be/images/Cinematelogotrans.png";
 ---
 <meta charset="utf-8" />
 <meta content="width=device-width, initial-scale=1" name="viewport" />
@@ -23,18 +24,20 @@ const formattedModifiedDate = formatDateForMeta(modifiedDate);
 
 <!-- Canonical URL -->
 <link rel="canonical" href={finalCanonical} />
+<link rel="alternate" type="application/rss+xml" title="Cinematen.be Nieuws RSS" href="/rss.xml" />
 
 <!-- Open Graph / Twitter -->
 <meta content={title} property="og:title" />
 <meta content={finalDescription} property="og:description" />
-<meta content={thumbnail} property="og:image" />
+<meta content={finalThumbnail} property="og:image" />
 <meta content="article" property="og:type" />
+<meta content={finalCanonical} property="og:url" />
 {formattedPublishedDate && <meta content={formattedPublishedDate} property="article:published_time" />}
 {formattedModifiedDate && <meta content={formattedModifiedDate} property="article:modified_time" />}
 {author && <meta content={author} property="article:author" />}
 <meta content={title} property="twitter:title" />
 <meta content={finalDescription} property="twitter:description" />
-<meta content={thumbnail} property="twitter:image" />
+<meta content={finalThumbnail} property="twitter:image" />
 <meta content="summary_large_image" name="twitter:card" />
 
 <!-- Favicon -->
@@ -71,14 +74,40 @@ const formattedModifiedDate = formatDateForMeta(modifiedDate);
   "url": finalCanonical,
   ...(formattedPublishedDate && { "datePublished": formattedPublishedDate }),
   ...(formattedModifiedDate && { "dateModified": formattedModifiedDate }),
-  ...(author && { "author": { "@type": "Person", "name": author } }),
-  ...(thumbnail && { "image": thumbnail }),
+  ...(author && { "author": { "@type": "Person", "name": author, "url": "https://www.cinematen.be/#over-ons", "sameAs": ["https://www.instagram.com/cinematen_podcast"] } }),
+  ...(thumbnail && { "image": finalThumbnail }),
   "publisher": {
     "@type": "Organization",
     "name": "Cinematen",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://cinematen.be/images/Cinematelogotrans.png"
+      "url": "https://www.cinematen.be/images/Cinematelogotrans.png"
     }
   }
+})}></script>
+
+<!-- BreadcrumbList -->
+<script type="application/ld+json" set:html={JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://www.cinematen.be/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Nieuws",
+      "item": "https://www.cinematen.be/nieuws/pages/1"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": title,
+      "item": finalCanonical
+    }
+  ]
 })}></script>

@@ -1,9 +1,9 @@
 ---
 const { canonicalURL, title, description, publishedDate, modifiedDate, articleType, author, image } = Astro.props;
-const defaultCanonical = "https://cinematen.be/";
+const defaultCanonical = "https://www.cinematen.be/";
 const finalCanonical = canonicalURL || defaultCanonical;
 
-const defaultTitle = "Film & TV Reviews en Nieuws";
+const defaultTitle = "Film & TV Reviews en Nieuws | Cinematen.be";
 const defaultDescription = "Cinematen.be houdt je vinger aan de pols met het meest actuele nieuws uit de film- en seriewereld, inclusief de laatste ontwikkelingen uit Hollywood. Ontdek previews, trailers, recensies en exclusieve interviews. Blijf op de hoogte van alles wat actueel is op het grote en kleine scherm.";
 
 const finalTitle = title || defaultTitle;
@@ -26,15 +26,17 @@ const formattedModifiedDate = formatDateForMeta(modifiedDate);
 
 <!-- Canonical URL -->
 <link rel="canonical" href={finalCanonical} />
+<link rel="alternate" type="application/rss+xml" title="Cinematen.be Nieuws RSS" href="/rss.xml" />
 
 <!-- Open Graph / Twitter -->
 <meta content={finalTitle} property="og:title" />
 <meta content={finalDescription} property="og:description" />
-<meta content="./images/Cinematelogotrans.png" property="og:image" />
+<meta content="https://www.cinematen.be/images/Cinematelogotrans.png" property="og:image" />
 <meta content={articleType || "website"} property="og:type" />
+<meta content={finalCanonical} property="og:url" />
 <meta content={finalTitle} property="twitter:title" />
 <meta content={finalDescription} property="twitter:description" />
-<meta content="/images/Cinematelogotrans.png" property="twitter:image" />
+<meta content="https://www.cinematen.be/images/Cinematelogotrans.png" property="twitter:image" />
 <meta content="summary_large_image" name="twitter:card" />
 {formattedPublishedDate && <meta content={formattedPublishedDate} property="article:published_time" />}
 {formattedModifiedDate && <meta content={formattedModifiedDate} property="article:modified_time" />}
@@ -119,14 +121,14 @@ const formattedModifiedDate = formatDateForMeta(modifiedDate);
   "url": finalCanonical,
   ...(formattedPublishedDate && { "datePublished": formattedPublishedDate }),
   ...(formattedModifiedDate && { "dateModified": formattedModifiedDate }),
-  ...(author && { "author": { "@type": "Person", "name": author } }),
-  ...(image && { "image": image }),
+  ...(author && { "author": { "@type": "Person", "name": author, "url": "https://www.cinematen.be/#over-ons", "sameAs": ["https://www.instagram.com/cinematen_podcast"] } }),
+  ...(image && { "image": image.startsWith('http') ? image : `https://www.cinematen.be${image}` }),
   "publisher": {
     "@type": "Organization",
     "name": "Cinematen",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://cinematen.be/images/Cinematelogotrans.png"
+      "url": "https://www.cinematen.be/images/Cinematelogotrans.png"
     }
   }
 })}></script>
@@ -135,14 +137,22 @@ const formattedModifiedDate = formatDateForMeta(modifiedDate);
   "@context": "https://schema.org",
   "@type": "WebSite",
   "name": "Cinematen.be",
-  "url": "https://cinematen.be/",
+  "url": "https://www.cinematen.be/",
   "description": "Film & TV Reviews en Nieuws door Yorrick & Maarten",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://www.cinematen.be/search?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  },
   "publisher": {
     "@type": "Organization",
     "name": "Cinematen",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://cinematen.be/images/Cinematelogotrans.png"
+      "url": "https://www.cinematen.be/images/Cinematelogotrans.png"
     }
   }
 })}></script>

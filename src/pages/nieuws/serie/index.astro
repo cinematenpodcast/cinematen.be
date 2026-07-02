@@ -1,0 +1,54 @@
+---
+import { getCollection } from "astro:content";
+import BaseHead from "../../../components/BaseHead.astro";
+import NewNavmenu from "../../../components/NewNavmenu.astro";
+import BaseHeader from "../../../components/BaseHeader.astro";
+import BaseFooter from "../../../components/BaseFooter.astro";
+import BaseScript from "../../../components/BaseScript.astro";
+import BasePodcastBanner from "../../../components/BasePodcastBanner.astro";
+import BaseNieuwsItem from "../../../components/BaseNieuwsItem.astro";
+
+function getCleanId(id) {
+  return id ? id.replace(/\.mdx$/, '') : '';
+}
+
+const allNieuws = await getCollection("nieuws");
+const serieNieuws = allNieuws
+  .filter(p => !p.data.draft && p.data.soort?.toLowerCase() === 'serie')
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+---
+
+<html lang="nl">
+<head>
+  <BaseHead
+    title="Serie Nieuws | Cinematen.be"
+    description="Het laatste serienieuws: nieuwe seizoenen, streaming releases, trailers. Cinematen.be volgt het allemaal."
+    canonicalURL="https://www.cinematen.be/nieuws/serie/"
+  />
+</head>
+<body class="body">
+  <div class="page-wrapper">
+    <NewNavmenu />
+    <BaseHeader />
+    <div class="content">
+      <div class="container">
+        <h1 class="nieuws-title">Serie nieuws</h1>
+        <div class="w-layout-grid nieuws-list">
+          {serieNieuws.map(post => (
+            <BaseNieuwsItem
+              url={`/nieuws/${getCleanId(post.id)}`}
+              title={post.data.title}
+              thumbnail={post.data.thumbnail}
+              date={post.data.date}
+              content={post.data.bodyPreview || ""}
+            />
+          ))}
+        </div>
+      </div>
+      <BasePodcastBanner />
+    </div>
+    <BaseFooter />
+  </div>
+  <BaseScript />
+</body>
+</html>
