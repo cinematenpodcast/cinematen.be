@@ -49,10 +49,18 @@ if (!post) {
   return Astro.redirect('/nieuws', 404);
 }
 
-const tinaProps = await getTinaProps();
+let tinaProps;
+try {
+  tinaProps = await getTinaProps();
+} catch (error) {
+  // Live-edit data is a CMS convenience overlay, not required to render the article.
+  // Never let a TinaCloud query failure (e.g. schema propagation delay) break the whole build.
+  console.warn(`[nieuws] Skipping Tina live-edit props for "${post.id}":`, error instanceof Error ? error.message : error);
+  tinaProps = undefined;
+}
 const frontmatter = post.data;
 ---
 
 <NieuwsLayout frontmatter={frontmatter}>
-  <AdminNieuws {...tinaProps} client:tina />
+  {tinaProps && <AdminNieuws {...tinaProps} client:tina />}
 </NieuwsLayout>
