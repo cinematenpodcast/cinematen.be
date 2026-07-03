@@ -15,6 +15,8 @@ const canonicalURL = `https://www.cinematen.be${Astro.url.pathname}`;
 
 // Generate title and description for this review
 const reviewTitle = `${frontmatter.title} - ${frontmatter.soort || 'Review'}`;
+const soortLower = (frontmatter.soort || "").toLowerCase();
+const itemReviewedType = soortLower.includes("serie") || soortLower.includes("tv") ? "TVSeries" : "Movie";
 const reviewDescription = `Lees onze ${frontmatter.soort ? frontmatter.soort.toLowerCase() : 'review'} van ${frontmatter.title}. Bekijk onze beoordeling en ontdek of deze ${frontmatter.soort ? frontmatter.soort.toLowerCase() : 'content'} de moeite waard is.`;
 
 // Function to format the date and adjust for timezone
@@ -108,7 +110,7 @@ console.log("Rating:", frontmatter.rating); // Add this line to check the value 
             "worstRating": 0.5
           },
           "itemReviewed": {
-            "@type": "Movie",
+            "@type": itemReviewedType,
             "name": frontmatter.title,
             ...(frontmatter.poster && { "image": frontmatter.poster.startsWith('http') ? frontmatter.poster : `https://www.cinematen.be${encodeURI(frontmatter.poster)}` })
           },

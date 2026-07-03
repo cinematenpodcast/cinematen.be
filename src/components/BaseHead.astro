@@ -2,6 +2,12 @@
 const { canonicalURL, title, description, publishedDate, modifiedDate, articleType, author, image } = Astro.props;
 const defaultCanonical = "https://www.cinematen.be/";
 const finalCanonical = canonicalURL || defaultCanonical;
+// The /reviews&blogs/ path segment contains a literal "&", valid in a URL path but
+// invalid unescaped inside an HTML attribute value. Astro doesn't auto-escape it here
+// (only in text nodes), so encode it explicitly for the href/content attributes below.
+// The JSON-LD "url" field further down uses finalCanonical (unescaped) since a literal
+// "&" is fine inside a JSON string.
+const finalCanonicalAttr = finalCanonical.replace(/&/g, "&amp;");
 
 const defaultTitle = "Film & TV Reviews en Nieuws | Cinematen.be";
 const defaultDescription = "Cinematen.be houdt je vinger aan de pols met het meest actuele nieuws uit de film- en seriewereld, inclusief de laatste ontwikkelingen uit Hollywood. Ontdek previews, trailers, recensies en exclusieve interviews. Blijf op de hoogte van alles wat actueel is op het grote en kleine scherm.";
@@ -25,7 +31,7 @@ const formattedModifiedDate = formatDateForMeta(modifiedDate);
 <meta name="google-site-verification" content="Ue-nOWKl8b37dpA_44eTIqresdKx1GF8BO1BEfSXwg4" />
 
 <!-- Canonical URL -->
-<link rel="canonical" href={finalCanonical} />
+<link rel="canonical" href={finalCanonicalAttr} />
 <link rel="alternate" type="application/rss+xml" title="Cinematen.be Nieuws RSS" href="/rss.xml" />
 
 <!-- Open Graph / Twitter -->
@@ -33,7 +39,7 @@ const formattedModifiedDate = formatDateForMeta(modifiedDate);
 <meta content={finalDescription} property="og:description" />
 <meta content="https://www.cinematen.be/images/Cinematelogotrans.png" property="og:image" />
 <meta content={articleType || "website"} property="og:type" />
-<meta content={finalCanonical} property="og:url" />
+<meta content={finalCanonicalAttr} property="og:url" />
 <meta content={finalTitle} property="twitter:title" />
 <meta content={finalDescription} property="twitter:description" />
 <meta content="https://www.cinematen.be/images/Cinematelogotrans.png" property="twitter:image" />
