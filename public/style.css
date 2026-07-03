@@ -3088,6 +3088,12 @@ margin-top: 10px;
 .category-grid .blog-item {
   grid-template-columns: 150px 1fr !important;
 }
+/* Keep the image floor small only in this narrow-column context; everywhere else
+   .blog-image-wrap/.tile-image-wrapper stay at their original 400px so news and
+   review thumbnails match at full (larger) size. */
+.category-grid .blog-image-wrap {
+  min-width: 150px !important;
+}
 /* !important: a static, duplicated Webflow #w-node-* ID (same id on every card
    instance) sets grid-area at higher specificity than any class selector can reach. */
 .category-grid .blog-content {
@@ -3220,7 +3226,7 @@ margin-top: 10px;
 
 .blog-image-wrap {
   border-radius: 10px;
-  min-width: 150px;
+  min-width: 400px;
   overflow: hidden;
   position: relative; /* Add this line */
   width: 100%; /* Add this line */
@@ -3650,7 +3656,7 @@ margin-top: 10px;
 
 .tile-image-wrapper {
   width: 100%;
-  min-width: 150px;
+  min-width: 400px;
   margin: 0 auto;
   position: relative;
 }
