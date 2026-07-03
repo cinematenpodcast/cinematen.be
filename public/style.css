@@ -3072,6 +3072,29 @@ margin-top: 10px;
   display: grid;
   box-shadow: 0 22px 34px rgba(0, 0, 0, .06);
   width: 100%;
+  overflow: hidden;
+}
+
+/* Dedicated, self-contained grid for uniform article archives (category/tag/pagination
+   listings). Does not depend on .nieuws-list's 1fr .4fr ratio, which was designed for a
+   different (asymmetric) layout and collapses .blog-item's inner columns when reused here. */
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 40px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.category-grid .blog-item {
+  grid-template-columns: 150px 1fr !important;
+}
+/* !important: a static, duplicated Webflow #w-node-* ID (same id on every card
+   instance) sets grid-area at higher specificity than any class selector can reach. */
+.category-grid .blog-content {
+  grid-area: auto !important;
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 
 

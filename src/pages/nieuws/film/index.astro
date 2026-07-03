@@ -33,7 +33,7 @@ const filmNieuws = allNieuws
     <div class="content">
       <div class="container">
         <h1 class="nieuws-title">Film nieuws</h1>
-        <div class="w-layout-grid nieuws-list">
+        <div class="w-layout-grid nieuws-list category-grid">
           {filmNieuws.map(post => (
             <BaseNieuwsItem
               url={`/nieuws/${getCleanId(post.id)}`}
