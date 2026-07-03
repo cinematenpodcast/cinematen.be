@@ -1,0 +1,20 @@
+name: Notify on Vercel deployment
+
+on:
+  deployment_status:
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call deploy-status endpoint
+        run: |
+          curl -sf -X POST "https://n8n.cinematen.be/webhook/deploy-status" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "state": "${{ github.event.deployment_status.state }}",
+              "environment": "${{ github.event.deployment_status.environment }}",
+              "url": "${{ github.event.deployment_status.target_url }}",
+              "sha": "${{ github.event.deployment.sha }}",
+              "repository": "${{ github.repository }}"
+            }'
