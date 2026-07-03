@@ -3072,7 +3072,6 @@ margin-top: 10px;
   display: grid;
   box-shadow: 0 22px 34px rgba(0, 0, 0, .06);
   width: 100%;
-  overflow: hidden;
 }
 
 /* Dedicated, self-contained grid for uniform article archives (category/tag/pagination
