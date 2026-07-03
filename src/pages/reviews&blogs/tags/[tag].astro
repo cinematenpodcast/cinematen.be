@@ -21,13 +21,7 @@ export async function getStaticPaths () {
   const allPosts = allPostsRaw.map(post => ({
     url: `/reviews&blogs/${getCleanId(post.id)}`,
     frontmatter: post.data,
-    rawContent: () => {
-      const body = post.data.body;
-      if (typeof body === 'string') {
-        return body.substring(0, 200) + '...';
-      }
-      return "";
-    },
+    rawContent: () => post.data.summary || "",
   }));
 
   // Build tag map
