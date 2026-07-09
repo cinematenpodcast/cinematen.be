@@ -35,7 +35,6 @@ export const NieuwsCollection: Collection = {
     { type: "datetime", name: "date", label: "Datum", required: false, ui: { dateFormat: "YYYY-MM-DD" } },
     { type: "string", name: "soort", label: "Soort", required: false },
     { type: "image", name: "thumbnail", label: "Thumbnail Afbeelding", required: false },
-    { type: "string", name: "description", label: "Meta Beschrijving (SEO)", required: false, ui: { component: "textarea", description: "Max 155 tekens. Verschijnt als snippet in Google. Laat leeg voor automatische preview." } },
     { type: "string", name: "trailer", label: "YouTube Trailer ID", required: false },
     { type: "string", name: "slug", label: "Slug", required: false, ui: { component: "hidden" } },
     { type: "boolean", name: "draft", label: "Draft", required: false },
