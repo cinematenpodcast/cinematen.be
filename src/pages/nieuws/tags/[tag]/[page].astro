@@ -10,7 +10,7 @@ import BaseNieuwsItem from "../../../../components/BaseNieuwsItem.astro";
 import BaseHeadExclude from "../../../../components/BaseHeadExclude.astro";
 
 import { getCollection } from "astro:content";
-import { extractPreviewFromMDX } from "../../../../lib/mdxPreview";
+import { extractPreview } from "../../../../lib/textPreview";
 
 export async function getStaticPaths({ paginate }) {
     const allPostsRaw = (await getCollection("nieuws")).filter(post => !post.data.draft);
@@ -25,7 +25,7 @@ export async function getStaticPaths({ paginate }) {
         return {
             url: `/nieuws/${cleanId}`,
             frontmatter: post.data,
-            rawContent: () => extractPreviewFromMDX("nieuws", cleanId, 200),
+            rawContent: () => extractPreview(post.body, 200),
         };
     });
     

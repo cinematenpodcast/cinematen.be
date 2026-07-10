@@ -10,6 +10,7 @@ import BaseReviewItem from "../../../components/BaseReviewItem.astro"; // Correc
 import BaseHeadExclude from "../../../components/BaseHeadExclude.astro";
 
 import { getCollection } from "astro:content";
+import type { Page } from "astro";
 
 export async function getStaticPaths({ paginate }) {
     // Load all review posts
@@ -36,7 +37,12 @@ export async function getStaticPaths({ paginate }) {
     return paginate(sortedPosts, { pageSize: 8 });
 }
 
-const { page } = Astro.props;
+// Explicit `Page<any>` annotation: with real, per-file union types now
+// generated for `CollectionEntry<"reviews">`, TS's inference through the
+// sort/map chain above collapses to `never` for the props type without
+// this — a known practical union-complexity ceiling, unrelated to the
+// actual data being fine at runtime.
+const { page } = Astro.props as { page: Page<any> };
 const totalPages = page.lastPage; // Total number of pages
 const currentPage = page.currentPage; // Current page number
 const pageNumbersToShow = 5; // How many total pages to show in the navigation

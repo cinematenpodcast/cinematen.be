@@ -7,6 +7,7 @@ import BaseFooter from "../../../components/BaseFooter.astro";
 import BaseScript from "../../../components/BaseScript.astro";
 import BasePodcastBanner from "../../../components/BasePodcastBanner.astro";
 import BaseNieuwsItem from "../../../components/BaseNieuwsItem.astro";
+import { extractPreview } from "../../../lib/textPreview";
 
 function getCleanId(id) {
   return id ? id.replace(/\.mdx$/, '') : '';
@@ -40,7 +41,7 @@ const filmNieuws = allNieuws
               title={post.data.title}
               thumbnail={post.data.thumbnail}
               date={post.data.date}
-              content={post.data.bodyPreview || ""}
+              content={extractPreview(post.body)}
             />
           ))}
         </div>

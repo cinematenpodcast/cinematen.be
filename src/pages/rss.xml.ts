@@ -1,6 +1,7 @@
 import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
 import type { APIContext } from 'astro';
+import { extractPreview } from '../lib/textPreview';
 
 export async function GET(context: APIContext) {
   const nieuws = await getCollection('nieuws');
@@ -16,7 +17,7 @@ export async function GET(context: APIContext) {
     items: sorted.map(post => ({
       title: post.data.title,
       pubDate: post.data.date ?? new Date(),
-      description: post.data.bodyPreview ?? '',
+      description: post.data.summary || extractPreview(post.body),
       link: `/nieuws/${post.id.replace(/\.mdx$/, '')}`,
     })),
     customData: '<language>nl-be</language>',

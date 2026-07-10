@@ -12,13 +12,18 @@ function getCleanId(id) {
 
 // Alle reviews ophalen
 const allReviewsRaw = await getCollection("reviews");
+// `slug` can't live in the collection schema (Astro forbids it for
+// `type: "content"` collections) — Astro's own top-level `post.slug`
+// (derived from the frontmatter `slug:` override, see src/content/config.ts)
+// is used instead of the old `post.data.slug`/`post.frontmatter.slug`.
 const allReviews = allReviewsRaw.map(post => ({
     url: `/reviews&blogs/${getCleanId(post.id)}`,
     frontmatter: post.data,
+    slug: post.slug,
 }));
 
 // Filter de huidige review eruit
-const filteredReviews = allReviews.filter(post => post.frontmatter.slug !== currentSlug);
+const filteredReviews = allReviews.filter(post => post.slug !== currentSlug);
 
 // Shuffle functie
 function shuffle(array) {

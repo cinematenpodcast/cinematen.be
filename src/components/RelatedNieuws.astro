@@ -8,7 +8,11 @@ function getCleanId(id) {
 
 const allNieuws = await getCollection("nieuws");
 const related = allNieuws
-  .filter(p => !p.data.draft && p.data.slug !== currentSlug && p.data.soort === soort)
+  // `slug` can't live in the collection schema (Astro forbids it for
+  // `type: "content"` collections) — Astro's own top-level `p.slug`
+  // (derived from the frontmatter `slug:` override, see src/content/config.ts)
+  // is used instead of the old `p.data.slug`.
+  .filter(p => !p.data.draft && p.slug !== currentSlug && p.data.soort === soort)
   .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
   .slice(0, 3);
 ---
