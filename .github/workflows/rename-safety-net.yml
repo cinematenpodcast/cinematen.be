@@ -64,19 +64,25 @@ jobs:
           else
             BASE="$BEFORE"
           fi
+          # Written outside the checked-out repo (RUNNER_TEMP) so this scratch
+          # file never shows up as an untracked change in `git status` below.
+          CHANGED_FILES_LIST="$RUNNER_TEMP/changed-files.txt"
           git diff --name-only --diff-filter=ACMR "$BASE" "${{ github.sha }}" \
-            -- 'src/content/nieuws/*.mdx' 'src/content/reviews/*.mdx' > changed-files.txt
+            -- 'src/content/nieuws/*.mdx' 'src/content/reviews/*.mdx' > "$CHANGED_FILES_LIST"
           echo "Changed content files in this push:"
-          cat changed-files.txt
-          echo "count=$(wc -l < changed-files.txt | tr -d ' ')" >> "$GITHUB_OUTPUT"
+          cat "$CHANGED_FILES_LIST"
+          echo "count=$(wc -l < "$CHANGED_FILES_LIST" | tr -d ' ')" >> "$GITHUB_OUTPUT"
+          echo "list_path=$CHANGED_FILES_LIST" >> "$GITHUB_OUTPUT"
 
       - name: Check and fix filename/title mismatches
         if: steps.diff.outputs.count != '0'
-        run: node .github/scripts/fix-slug-mismatches.mjs changed-files.txt
+        run: node .github/scripts/fix-slug-mismatches.mjs "${{ steps.diff.outputs.list_path }}"
 
       - name: Commit and push corrected filenames
         run: |
-          if [ -n "$(git status --porcelain)" ]; then
+          # Scoped to the two content dirs, matching the `git add` below, so
+          # this never picks up unrelated untracked files as a false positive.
+          if [ -n "$(git status --porcelain -- src/content/nieuws src/content/reviews)" ]; then
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
             git add -A -- src/content/nieuws src/content/reviews
