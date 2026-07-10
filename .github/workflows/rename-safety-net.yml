@@ -22,7 +22,11 @@ on:
     paths:
       - 'src/content/nieuws/**'
       - 'src/content/reviews/**'
-  workflow_dispatch: {}
+# Deliberately no workflow_dispatch trigger: the changed-files diff below is
+# computed from the push event's "before" SHA, which doesn't exist for a
+# manual dispatch run. Adding manual triggering back would need its own
+# (different) diff base, not the empty-tree fallback used for a genuine
+# first-ever push — don't add it without fixing that first.
 
 permissions:
   contents: write
