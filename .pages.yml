@@ -28,7 +28,7 @@ content:
         type: date
         required: false
         options:
-          format: "YYYY-MM-DD"
+          format: "yyyy-MM-dd"
       - name: soort
         label: Categorie
         type: select
@@ -87,7 +87,7 @@ content:
         type: date
         required: false
         options:
-          format: "YYYY-MM-DD"
+          format: "yyyy-MM-dd"
       - name: schrijver
         label: Schrijver
         type: string
