@@ -1,0 +1,61 @@
+name: Rename safety net
+
+# Keeps each content file's filename in sync with its `title` frontmatter.
+# The public URL is driven by the FILENAME, not any frontmatter `slug` field
+# (see src/pages/reviews&blogs/[...slug].astro) — so if a title is edited
+# after a file is first created, the filename can drift out of sync and the
+# public URL silently stops matching the current title. This workflow is a
+# plain repo-level safety net, independent of Pages CMS, n8n, or manual
+# edits: it runs after any push touching content and fixes the drift if it
+# finds it, regardless of which tool made the commit.
+#
+# To disable WITHOUT reverting or editing this file: set the repo variable
+# RENAME_SAFETY_NET_ENABLED to "false"
+# (repo Settings -> Secrets and variables -> Actions -> Variables tab).
+
+on:
+  push:
+    paths:
+      - 'src/content/nieuws/**'
+      - 'src/content/reviews/**'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  fix-slugs:
+    # Two independent guards:
+    # 1. github.actor check: skip when this job's own previous commit is what
+    #    triggered the run, so it never loops on itself.
+    # 2. vars.RENAME_SAFETY_NET_ENABLED: the disable switch described above.
+    if: github.actor != 'github-actions[bot]' && vars.RENAME_SAFETY_NET_ENABLED != 'false'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install gray-matter (frontmatter parser only, no full project install)
+        run: npm install --no-save gray-matter
+
+      - name: Check and fix filename/title mismatches
+        run: node .github/scripts/fix-slug-mismatches.mjs
+
+      - name: Commit and push corrected filenames
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add -A -- src/content/nieuws src/content/reviews
+            git commit -m "fix: sync content filename to title slug [skip ci]"
+            git push origin "HEAD:${{ github.ref_name }}"
+          else
+            echo "No filename/title mismatches found — nothing to commit."
+          fi
