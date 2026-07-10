@@ -2,15 +2,17 @@
 //
 // The public URL for these MDX files is driven by the FILENAME, not the
 // frontmatter `slug` field (confirmed via src/pages/reviews&blogs/[...slug].astro).
-// This script scans every .mdx file in both collections, recomputes the
-// expected filename from the current `title` frontmatter using the exact
-// same algorithm as src/lib/createSlug.ts, and `git mv`s any file whose
-// filename has drifted from its title.
+// This script takes a list of .mdx files that changed in the triggering push
+// (computed by the workflow via `git diff` against the previous commit),
+// recomputes each file's expected filename from its current `title`
+// frontmatter using the exact same algorithm as src/lib/createSlug.ts, and
+// `git mv`s any file whose filename has drifted from its title.
 //
-// Scans the full folder on every run (not a git-diff of changed files) on
-// purpose — this avoids all the edge cases of diffing across force-pushes,
-// squashed commits, or multi-commit pushes, at the cost of a few extra
-// milliseconds reading ~800 small YAML files. Keep this in sync with
+// Deliberately scoped to only the files that changed in this push, not a
+// full-repo scan — a full scan would also "fix" any pre-existing filename
+// drift elsewhere in the ~800-file collections that nobody asked this push
+// to touch, which is a surprising, oversized blast radius for a safety net
+// that's supposed to react to a single edit. Keep this in sync with
 // src/lib/createSlug.ts if that algorithm ever changes.
 
 import fs from 'node:fs';
@@ -28,60 +30,67 @@ function createSlug(title) {
     .toLowerCase();
 }
 
-const CONTENT_DIRS = ['src/content/nieuws', 'src/content/reviews'];
+const changedFilesListPath = process.argv[2];
+if (!changedFilesListPath) {
+  console.error('Usage: node fix-slug-mismatches.mjs <path-to-changed-files-list>');
+  process.exit(1);
+}
+
+const changedFiles = fs
+  .readFileSync(changedFilesListPath, 'utf8')
+  .split('\n')
+  .map((line) => line.trim())
+  .filter(Boolean);
 
 let renamedCount = 0;
 
-for (const dir of CONTENT_DIRS) {
-  if (!fs.existsSync(dir)) {
-    console.warn(`Skipping ${dir}: directory does not exist`);
+for (const filePath of changedFiles) {
+  if (!filePath.endsWith('.mdx')) continue;
+
+  if (!fs.existsSync(filePath)) {
+    // File was deleted later in the same push, or moved by an earlier step
+    // in this same run — nothing to check.
     continue;
   }
 
-  const filenames = fs
-    .readdirSync(dir, { withFileTypes: true })
-    .filter((entry) => entry.isFile() && entry.name.endsWith('.mdx'))
-    .map((entry) => entry.name);
+  const dir = path.dirname(filePath);
+  const filename = path.basename(filePath);
+  const raw = fs.readFileSync(filePath, 'utf8');
 
-  for (const filename of filenames) {
-    const filePath = path.join(dir, filename);
-    const raw = fs.readFileSync(filePath, 'utf8');
-
-    let parsed;
-    try {
-      parsed = matter(raw);
-    } catch (err) {
-      console.warn(`Skipping ${filePath}: could not parse frontmatter (${err.message})`);
-      continue;
-    }
-
-    const title = parsed.data && parsed.data.title;
-    if (!title || typeof title !== 'string') {
-      console.warn(`Skipping ${filePath}: no string "title" frontmatter found`);
-      continue;
-    }
-
-    const expectedSlug = createSlug(title);
-    const actualSlug = filename.slice(0, -'.mdx'.length);
-
-    if (!expectedSlug) {
-      console.warn(`Skipping ${filePath}: computed slug is empty`);
-      continue;
-    }
-
-    if (expectedSlug === actualSlug) continue;
-
-    const newFilePath = path.join(dir, `${expectedSlug}.mdx`);
-
-    if (fs.existsSync(newFilePath)) {
-      console.warn(`Skipping rename of ${filePath}: target ${newFilePath} already exists`);
-      continue;
-    }
-
-    console.log(`Renaming ${filePath} -> ${newFilePath} (title: "${title}")`);
-    execFileSync('git', ['mv', filePath, newFilePath]);
-    renamedCount++;
+  let parsed;
+  try {
+    parsed = matter(raw);
+  } catch (err) {
+    console.warn(`Skipping ${filePath}: could not parse frontmatter (${err.message})`);
+    continue;
   }
+
+  const title = parsed.data && parsed.data.title;
+  if (!title || typeof title !== 'string') {
+    console.warn(`Skipping ${filePath}: no string "title" frontmatter found`);
+    continue;
+  }
+
+  const expectedSlug = createSlug(title);
+  const actualSlug = filename.slice(0, -'.mdx'.length);
+
+  if (!expectedSlug) {
+    console.warn(`Skipping ${filePath}: computed slug is empty`);
+    continue;
+  }
+
+  if (expectedSlug === actualSlug) continue;
+
+  const newFilePath = path.join(dir, `${expectedSlug}.mdx`);
+
+  if (fs.existsSync(newFilePath)) {
+    console.warn(`Skipping rename of ${filePath}: target ${newFilePath} already exists`);
+    continue;
+  }
+
+  console.log(`Renaming ${filePath} -> ${newFilePath} (title: "${title}")`);
+  execFileSync('git', ['mv', filePath, newFilePath]);
+  renamedCount++;
 }
 
 console.log(`Done. ${renamedCount} file(s) renamed.`);

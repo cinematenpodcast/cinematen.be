@@ -9,6 +9,10 @@ name: Rename safety net
 # edits: it runs after any push touching content and fixes the drift if it
 # finds it, regardless of which tool made the commit.
 #
+# Only checks files that actually changed in the triggering push (via `git
+# diff` against the commit before the push) — not every file in the
+# collections — so it never touches content nobody asked it to touch.
+#
 # To disable WITHOUT reverting or editing this file: set the repo variable
 # RENAME_SAFETY_NET_ENABLED to "false"
 # (repo Settings -> Secrets and variables -> Actions -> Variables tab).
@@ -36,6 +40,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.ref }}
+          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -45,8 +50,25 @@ jobs:
       - name: Install gray-matter (frontmatter parser only, no full project install)
         run: npm install --no-save gray-matter
 
+      - name: Determine changed content files
+        id: diff
+        run: |
+          BEFORE="${{ github.event.before }}"
+          EMPTY_TREE="4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+          if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+            BASE="$EMPTY_TREE"
+          else
+            BASE="$BEFORE"
+          fi
+          git diff --name-only --diff-filter=ACMR "$BASE" "${{ github.sha }}" \
+            -- 'src/content/nieuws/*.mdx' 'src/content/reviews/*.mdx' > changed-files.txt
+          echo "Changed content files in this push:"
+          cat changed-files.txt
+          echo "count=$(wc -l < changed-files.txt | tr -d ' ')" >> "$GITHUB_OUTPUT"
+
       - name: Check and fix filename/title mismatches
-        run: node .github/scripts/fix-slug-mismatches.mjs
+        if: steps.diff.outputs.count != '0'
+        run: node .github/scripts/fix-slug-mismatches.mjs changed-files.txt
 
       - name: Commit and push corrected filenames
         run: |
