@@ -1,0 +1,155 @@
+media: media
+media:
+  - name: media
+    label: Images
+    input: public/images
+    output: /images
+
+content:
+  - name: nieuws
+    label: Nieuws Artikelen
+    type: collection
+    path: src/content/nieuws
+    filename: "{title}.mdx"
+    view:
+      primary: title
+      fields: [title, date, soort, draft]
+      sort: date
+      order: desc
+    fields:
+      - name: layout
+        type: string
+        hidden: true
+        required: false
+      - name: title
+        type: string
+        required: true
+      - name: date
+        type: date
+        required: false
+        options:
+          format: "YYYY-MM-DD"
+      - name: soort
+        label: Categorie
+        type: select
+        required: false
+        options:
+          values:
+            - { name: Film, label: "Film" }
+            - { name: "TV & Series", label: "TV & Series" }
+      - name: thumbnail
+        label: Thumbnail Afbeelding
+        type: image
+        required: false
+        options:
+          path: article-images
+      - name: trailer
+        label: YouTube Trailer ID
+        type: string
+        required: false
+      - name: slug
+        type: string
+        hidden: true
+        required: false
+      - name: draft
+        type: boolean
+        required: false
+      - name: tags
+        type: string
+        list: true
+        required: false
+      - name: summary
+        label: Samenvatting
+        type: text
+        required: false
+      - name: body
+        label: Inhoud
+        type: rich-text
+        required: false
+        options:
+          format: markdown
+
+  - name: reviews
+    label: Reviews & Blogs
+    type: collection
+    path: src/content/reviews
+    filename: "{title}.mdx"
+    view:
+      primary: title
+      fields: [title, date, soort, rating, featured, draft]
+      sort: date
+      order: desc
+    fields:
+      - name: title
+        type: string
+        required: true
+      - name: date
+        type: date
+        required: false
+        options:
+          format: "YYYY-MM-DD"
+      - name: schrijver
+        label: Schrijver
+        type: string
+        required: false
+      - name: soort
+        label: Soort
+        type: select
+        required: false
+        options:
+          values:
+            - { name: "Film review", label: "Film review" }
+            - { name: "TV & Series review", label: "TV & Series review" }
+            - { name: Blog, label: "Blog" }
+      - name: thumbnail
+        label: Thumbnail Afbeelding
+        type: image
+        required: false
+        options:
+          path: blog-images
+      - name: poster
+        label: Poster Afbeelding
+        type: image
+        required: false
+        options:
+          path: blog-images
+      - name: summary
+        label: Samenvatting
+        type: text
+        required: false
+      - name: slug
+        type: string
+        hidden: true
+        required: false
+      - name: rating
+        type: number
+        required: false
+      - name: tags
+        type: string
+        list: true
+        required: false
+      - name: featured
+        type: boolean
+        required: false
+      - name: draft
+        label: Draft
+        type: boolean
+        required: false
+      - name: trailer
+        label: YouTube Trailer ID
+        type: string
+        required: false
+      - name: body
+        label: Inhoud
+        type: rich-text
+        required: false
+        options:
+          format: markdown
+
+settings:
+  commit:
+    identity: user
+    templates:
+      create: "content(create): {path}"
+      update: "content(update): {path}"
+      delete: "content(delete): {path}"
