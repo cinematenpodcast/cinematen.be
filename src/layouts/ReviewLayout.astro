@@ -25,7 +25,9 @@ function formatDate(dateString) {
     if (isNaN(date.getTime())) return ""; // Return empty string if date is invalid
     const options = {
         timeZone: "UTC",
-        hour12: false
+        hour12: false,
+        hour: "numeric",
+        minute: "numeric"
     }; // Set the timezone to UTC
     const formattedDate = date.toLocaleDateString("nl-NL", {
         day: "2-digit",
