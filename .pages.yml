@@ -35,7 +35,7 @@ content:
         options:
           values:
             - { name: Film, label: "Film" }
-            - { name: "TV & Series", label: "TV & Series" }
+            - { name: TV, label: "TV" }
       - name: thumbnail
         label: Thumbnail Afbeelding
         type: image
@@ -97,9 +97,9 @@ content:
         required: false
         options:
           values:
-            - { name: "Film review", label: "Film review" }
-            - { name: "TV & Series review", label: "TV & Series review" }
-            - { name: Blog, label: "Blog" }
+            - { name: Film, label: "Film" }
+            - { name: TV, label: "TV" }
+            - { name: Vlaams, label: "Vlaams" }
       - name: thumbnail
         label: Thumbnail Afbeelding
         type: image

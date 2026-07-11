@@ -14,10 +14,9 @@ function getCleanId(id) {
 }
 
 const allNieuws = await getCollection("nieuws");
-// Post-normalization (PRD Section 3) the canonical value is "TV & Series", not
-// bare "tv" — the old .toLowerCase() === 'tv' check would now match nothing.
+// Categories reduced to just "Film" / "TV" (was "TV & Series") -- see .pages.yml.
 const serieNieuws = allNieuws
-  .filter(p => !p.data.draft && p.data.soort?.toLowerCase() === 'tv & series')
+  .filter(p => !p.data.draft && p.data.soort?.toLowerCase() === 'tv')
   .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
 ---
 
