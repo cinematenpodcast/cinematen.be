@@ -6,8 +6,6 @@ import BaseFooter from "../components/BaseFooter.astro";
 import NewNavmenu from "../components/NewNavmenu.astro";
 import BasePodcastBanner from "../components/BasePodcastBanner.astro";
 import BaseAdBanner from "../components/BaseAdBanner.astro";
-import CategoriesNieuws from "../components/CategoriesNieuws.astro";
-import CategoriesReviews from "../components/CategoriesReviews.astro";
 import BaseNieuwsItem from "../components/BaseNieuwsItem.astro";
 import BasePodcastBlock from "../components/BasePodcastBlock.astro";
 import BaseFeaturedItem from "../components/BaseFeaturedItem.astro";
@@ -16,131 +14,7 @@ import BaseAbout from "../components/BaseAbout.astro";
 import BaseContact from "../components/BaseContact.astro";
 
 import { getCollection } from "astro:content";
-import { readFileSync } from "fs";
-import { join } from "path";
-
-// Function to extract text from TinaCMS rich-text body
-function extractTextFromBody(body) {
-    if (!body) return '';
-    
-    // If it's already a string, return it (strip markdown if needed)
-    if (typeof body === 'string') {
-        // Remove markdown syntax
-        return body
-            .replace(/---[\s\S]*?---/g, '') // Remove frontmatter
-            .replace(/#{1,6}\s+/g, '') // Remove headers
-            .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // Convert links
-            .replace(/\*\*([^*]+)\*\*/g, '$1') // Remove bold
-            .replace(/\*([^*]+)\*/g, '$1') // Remove italic
-            .replace(/\s+/g, ' ') // Normalize whitespace
-            .trim();
-    }
-    
-    // If it's an object with children array (TinaCMS rich-text structure)
-    if (body && typeof body === 'object') {
-        // Check for TinaCMS rich-text structure
-        if (body.children && Array.isArray(body.children)) {
-            const extractText = (node) => {
-                if (!node) return '';
-                
-                // Text node
-                if (node.type === 'text' && node.text) {
-                    return node.text;
-                }
-                
-                // Node with children
-                if (node.children && Array.isArray(node.children)) {
-                    return node.children.map(extractText).filter(Boolean).join(' ');
-                }
-                
-                return '';
-            };
-            
-            const extracted = body.children
-                .map(extractText)
-                .filter(Boolean)
-                .join(' ')
-                .replace(/\s+/g, ' ')
-                .trim();
-            
-            if (extracted) return extracted;
-        }
-        
-        // Try to find text in any nested structure
-        try {
-            const stringified = JSON.stringify(body);
-            // Extract all text values from the JSON
-            const textMatches = stringified.match(/"text"\s*:\s*"([^"]+)"/g);
-            if (textMatches && textMatches.length > 0) {
-                return textMatches
-                    .map(m => {
-                        const match = m.match(/"text"\s*:\s*"([^"]+)"/);
-                        return match ? match[1] : '';
-                    })
-                    .filter(Boolean)
-                    .join(' ')
-                    .replace(/\s+/g, ' ')
-                    .trim();
-            }
-            
-            // Fallback: try to extract any string values that look like content
-            const allStringMatches = stringified.match(/"([^"]{20,})"/g);
-            if (allStringMatches) {
-                // Filter out URLs, paths, etc. and get text-like content
-                const contentStrings = allStringMatches
-                    .map(m => m.replace(/"/g, ''))
-                    .filter(s => 
-                        s.length > 20 && 
-                        !s.startsWith('http') && 
-                        !s.startsWith('/') &&
-                        !s.includes('@') &&
-                        s.match(/[a-zA-Z]{3,}/) // Contains at least one word
-                    );
-                if (contentStrings.length > 0) {
-                    return contentStrings.slice(0, 3).join(' ').substring(0, 200);
-                }
-            }
-        } catch (e) {
-            // Ignore errors
-        }
-    }
-    
-    return '';
-}
-
-// Function to extract text from MDX file for preview (fallback if bodyPreview is not available)
-function extractTextFromMDXFile(slug) {
-    try {
-        // Remove .mdx extension if present, then add it back to ensure correct path
-        const cleanSlug = slug.replace(/\.mdx$/, "");
-        const filePath = join(process.cwd(), "src/content/nieuws", `${cleanSlug}.mdx`);
-        const content = readFileSync(filePath, "utf-8");
-        if (!content || content.trim().length === 0) {
-            return "";
-        }
-        
-        // Remove frontmatter (more robust regex)
-        const withoutFrontmatter = content.replace(/^---[\s\S]*?---\s*\n\n?/m, "");
-        
-        // Remove markdown syntax
-        const text = withoutFrontmatter
-            .replace(/#{1,6}\s+/g, "") // Remove headers
-            .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1") // Convert links
-            .replace(/\*\*([^*]+)\*\*/g, "$1") // Remove bold
-            .replace(/\*([^*]+)\*/g, "$1") // Remove italic
-            .replace(/!\[([^\]]*)\]\([^)]+\)/g, "") // Remove images
-            .replace(/\s+/g, " ") // Normalize whitespace
-            .trim();
-        
-        if (!text || text.length === 0) {
-            return "";
-        }
-        
-        return text.substring(0, 200) + (text.length > 200 ? "..." : "");
-    } catch (e) {
-        return "";
-    }
-}
+import { extractPreview } from "../lib/textPreview";
 
 // Helper function to ensure clean ID without .mdx extension
 function getCleanId(id) {
@@ -148,31 +22,11 @@ function getCleanId(id) {
 }
 
 const allNieuwsPostsRaw = (await getCollection("nieuws")).filter(post => !post.data.draft);
-const allNieuwsPosts = allNieuwsPostsRaw.map((post) => {
-    // Try bodyPreview first, then extract from body, then extract from MDX file directly
-    let contentPreview = post.data.bodyPreview || extractTextFromBody(post.data.body) || "";
-    
-    // If still empty, try reading the MDX file directly
-    if (!contentPreview && post.id) {
-        const isFirstPost = allNieuwsPostsRaw.indexOf(post) === 0;
-        if (isFirstPost) {
-            console.log('\n=== DEBUG EXTRACT FROM FILE ===');
-            console.log('post.id:', post.id);
-            console.log('process.cwd():', process.cwd());
-        }
-        contentPreview = extractTextFromMDXFile(post.id);
-        if (isFirstPost) {
-            console.log('contentPreview after extractTextFromMDXFile:', contentPreview.substring(0, 100));
-            console.log('===============================\n');
-        }
-    }
-    
-    return {
-        url: `/nieuws/${getCleanId(post.id)}`,
-        frontmatter: post.data,
-        rawContent: contentPreview,
-    };
-});
+const allNieuwsPosts = allNieuwsPostsRaw.map((post) => ({
+    url: `/nieuws/${getCleanId(post.id)}`,
+    frontmatter: post.data,
+    rawContent: extractPreview(post.body),
+}));
 
 const allRnbPostsRaw = await getCollection("reviews");
 const allRnbPosts = allRnbPostsRaw.map(post => ({
@@ -259,7 +113,6 @@ function truncateContent(content, maxLength = 200) {
                                                 ))}                                        
                                         </div>
                                     </section>
-                                    <CategoriesNieuws />
                                 </div>
                             </aside>
                         </div>
@@ -307,8 +160,8 @@ function truncateContent(content, maxLength = 200) {
                                                 .filter(post => post.frontmatter.rating !== undefined)
                                                 .filter(post => post.frontmatter.rating !== null)
                                                 .sort((a, b) => {
-                                                    const ratingA = parseFloat(a.frontmatter.rating) || 0;
-                                                    const ratingB = parseFloat(b.frontmatter.rating) || 0;
+                                                    const ratingA = a.frontmatter.rating ?? 0;
+                                                    const ratingB = b.frontmatter.rating ?? 0;
                                                     if (ratingB !== ratingA) {
                                                         return ratingB - ratingA;
                                                     }
@@ -332,7 +185,6 @@ function truncateContent(content, maxLength = 200) {
                                                 ))}
                                         </div>
                                     </section>
-                                    <CategoriesReviews />
                                 </div>
                             </aside>
                         </div>

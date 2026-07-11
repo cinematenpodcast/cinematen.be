@@ -1,0 +1,93 @@
+name: Rename safety net
+
+# Keeps each content file's filename in sync with its `title` frontmatter.
+# The public URL is driven by the FILENAME, not any frontmatter `slug` field
+# (see src/pages/reviews&blogs/[...slug].astro) — so if a title is edited
+# after a file is first created, the filename can drift out of sync and the
+# public URL silently stops matching the current title. This workflow is a
+# plain repo-level safety net, independent of Pages CMS, n8n, or manual
+# edits: it runs after any push touching content and fixes the drift if it
+# finds it, regardless of which tool made the commit.
+#
+# Only checks files that actually changed in the triggering push (via `git
+# diff` against the commit before the push) — not every file in the
+# collections — so it never touches content nobody asked it to touch.
+#
+# To disable WITHOUT reverting or editing this file: set the repo variable
+# RENAME_SAFETY_NET_ENABLED to "false"
+# (repo Settings -> Secrets and variables -> Actions -> Variables tab).
+
+on:
+  push:
+    paths:
+      - 'src/content/nieuws/**'
+      - 'src/content/reviews/**'
+# Deliberately no workflow_dispatch trigger: the changed-files diff below is
+# computed from the push event's "before" SHA, which doesn't exist for a
+# manual dispatch run. Adding manual triggering back would need its own
+# (different) diff base, not the empty-tree fallback used for a genuine
+# first-ever push — don't add it without fixing that first.
+
+permissions:
+  contents: write
+
+jobs:
+  fix-slugs:
+    # Two independent guards:
+    # 1. github.actor check: skip when this job's own previous commit is what
+    #    triggered the run, so it never loops on itself.
+    # 2. vars.RENAME_SAFETY_NET_ENABLED: the disable switch described above.
+    if: github.actor != 'github-actions[bot]' && vars.RENAME_SAFETY_NET_ENABLED != 'false'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install gray-matter (frontmatter parser only, no full project install)
+        run: npm install --no-save gray-matter
+
+      - name: Determine changed content files
+        id: diff
+        run: |
+          BEFORE="${{ github.event.before }}"
+          EMPTY_TREE="4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+          if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+            BASE="$EMPTY_TREE"
+          else
+            BASE="$BEFORE"
+          fi
+          # Written outside the checked-out repo (RUNNER_TEMP) so this scratch
+          # file never shows up as an untracked change in `git status` below.
+          CHANGED_FILES_LIST="$RUNNER_TEMP/changed-files.txt"
+          git diff --name-only --diff-filter=ACMR "$BASE" "${{ github.sha }}" \
+            -- 'src/content/nieuws/*.mdx' 'src/content/reviews/*.mdx' > "$CHANGED_FILES_LIST"
+          echo "Changed content files in this push:"
+          cat "$CHANGED_FILES_LIST"
+          echo "count=$(wc -l < "$CHANGED_FILES_LIST" | tr -d ' ')" >> "$GITHUB_OUTPUT"
+          echo "list_path=$CHANGED_FILES_LIST" >> "$GITHUB_OUTPUT"
+
+      - name: Check and fix filename/title mismatches
+        if: steps.diff.outputs.count != '0'
+        run: node .github/scripts/fix-slug-mismatches.mjs "${{ steps.diff.outputs.list_path }}"
+
+      - name: Commit and push corrected filenames
+        run: |
+          # Scoped to the two content dirs, matching the `git add` below, so
+          # this never picks up unrelated untracked files as a false positive.
+          if [ -n "$(git status --porcelain -- src/content/nieuws src/content/reviews)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add -A -- src/content/nieuws src/content/reviews
+            git commit -m "fix: sync content filename to title slug [skip ci]"
+            git push origin "HEAD:${{ github.ref_name }}"
+          else
+            echo "No filename/title mismatches found — nothing to commit."
+          fi

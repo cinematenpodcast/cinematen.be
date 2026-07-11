@@ -1,8 +1,6 @@
 ---
 import { getCollection } from "astro:content";
 import ReviewLayout from "../../layouts/ReviewLayout.astro";
-import client from "../../../tina/__generated__/client";
-import AdminReview from "../../../tina/pages/AdminReview";
 import { YouTube } from 'astro-embed';
 import EmptySpaceS from "../../components/EmptySpaceS.astro";
 import EmptySpaceM from "../../components/EmptySpaceM.astro";
@@ -11,58 +9,20 @@ import EmptySpaceL from "../../components/EmptySpaceL.astro";
 export async function getStaticPaths() {
   const posts = await getCollection("reviews");
 
-  const paths = [];
-  
-  posts.forEach((post) => {
-    // Ensure post.id doesn't have .mdx extension (should be handled by content.config.ts, but double-check)
-    const cleanId = post.id.replace(/\.mdx$/, '');
-    
-    // Use tinaInfo if available, otherwise construct relativePath from cleanId
-    let relativePath = post.data.tinaInfo?.relativePath;
-    
-    if (!relativePath) {
-      // Add .mdx back for TinaCMS queries (TinaCMS needs the file extension)
-      relativePath = `${cleanId}.mdx`;
-    } else {
-      // Ensure relativePath doesn't have double .mdx
-      if (relativePath.endsWith('.mdx.mdx')) {
-        relativePath = relativePath.replace(/\.mdx\.mdx$/, '.mdx');
-      }
-    }
-    
-    // Add route without .mdx extension (clean URL only - no redirects)
-    paths.push({
-      params: { slug: cleanId },
-      props: {
-        post,
-        getTinaProps: async () =>
-          client.queries.reviews({
-            relativePath: relativePath,
-          }),
-      },
-    });
-  });
-  
-  return paths;
+  return posts.map((post) => ({
+    params: { slug: post.id.replace(/\.mdx$/, '') },
+    props: { post },
+  }));
 }
 
-const { post, getTinaProps } = Astro.props;
+const { post } = Astro.props;
 
 // Ensure post exists
 if (!post) {
   return Astro.redirect('/reviews&blogs', 404);
 }
 
-let tinaProps;
-try {
-  tinaProps = await getTinaProps();
-} catch (error) {
-  // Live-edit data is a CMS convenience overlay, not required to render the article.
-  // Never let a TinaCloud query failure (e.g. schema propagation delay) break the whole build.
-  console.warn(`[reviews] Skipping Tina live-edit props for "${post.id}":`, error instanceof Error ? error.message : error);
-  tinaProps = undefined;
-}
-const frontmatter = post.data;
+const frontmatter = { ...post.data, slug: post.slug };
 
 // Render the MDX content directly for production
 const { Content } = await post.render();

@@ -17,7 +17,7 @@ if (!post) {
   return Astro.redirect('/nieuws', 404);
 }
 
-const frontmatter = post.data;
+const frontmatter = { ...post.data, slug: post.slug };
 const { Content } = await post.render();
 ---
 

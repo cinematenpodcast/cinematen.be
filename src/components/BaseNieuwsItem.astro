@@ -5,7 +5,7 @@ const { title, url, thumbnail, date, content, priority = false } = Astro.props;
 function formatDate(dateString) {
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return ''; // Return empty string if date is invalid
-    const options = { timeZone: 'UTC', hour12: false, hour: 'numeric', minute: 'numeric' }; // Set the timezone to UTC and format the hour and minute without seconds
+    const options = { timeZone: 'UTC', hour12: false, hour: 'numeric', minute: 'numeric' } as const; // Set the timezone to UTC and format the hour and minute without seconds
     const formattedDate = date.toLocaleDateString('nl-NL', { day: '2-digit', month: '2-digit', year: 'numeric' });
     const timePart = date.toLocaleTimeString('nl-NL', options);
     return timePart === '00:00' ? formattedDate : `${formattedDate} ${timePart}`; // Return only date if time is midnight, otherwise combine date and time
