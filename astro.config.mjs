@@ -5,7 +5,6 @@ import sitemap from "@astrojs/sitemap";
 import pagefind from "astro-pagefind";
 import react from "@astrojs/react";
 import vercel from "@astrojs/vercel/serverless";
-import tinaDirective from "./astro-tina-directive/register";
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -80,6 +79,5 @@ export default defineConfig({
     }),
     pagefind(),
     react(),
-    tinaDirective(),
   ],
 });

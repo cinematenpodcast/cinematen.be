@@ -18,6 +18,7 @@ pnpm-debug.log*
 
 # environment variables
 .env
+.env.local
 .env.production
 
 # macOS-specific files
@@ -25,12 +26,5 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
-
-# TinaCMS generated files
-admin/
-tina/__generated__/
-
-# Reference/starter projects (not part of this repo)
-tina-astro-starter-main/
 
 node_modules
