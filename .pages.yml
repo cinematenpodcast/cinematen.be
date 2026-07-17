@@ -27,7 +27,8 @@ content:
         type: date
         required: false
         options:
-          format: "yyyy-MM-dd"
+          time: true
+          format: "yyyy-MM-dd HH:mm"
       - name: soort
         label: Categorie
         type: select
