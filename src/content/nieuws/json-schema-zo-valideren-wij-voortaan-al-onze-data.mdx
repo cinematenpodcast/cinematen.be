@@ -1,0 +1,25 @@
+---
+title: "JSON Schema: Zo valideren wij voortaan al onze data"
+summary: "Wij leggen uit hoe wij JSON Schema gebruiken als declaratieve taal om documenten te annoteren en te valideren. In dit artikel ontdek je hoe wij onze data correct formatteren aan de hand van schema-instanties en waar wij op moeten letten bij het opstellen van objecten om fouten te vermijden."
+date: 2026-07-17 23:29
+soort: 'Film'
+thumbnail: '/images/article-images/MCDBACK_EC114.jpg'
+trailer: ""
+slug: 'json-schema-zo-valideren-wij-voortaan-al-onze-data'
+draft: true
+tags: ["Film"]
+---
+
+JSON Schema is een declaratieve taal waarmee wij JSON-documenten kunnen
+annoteren en valideren. Wij gebruiken dit systeem om onze data de juiste
+structuur te geven. Een voorbeeld van zo’n schema is een instantie met de
+eigenschap “foo”, wat omschreven wordt als een lijst met testwoorden. De items
+in die lijst moeten verplicht tekst zijn.
+
+Wanneer wij een object hebben zoals “foo” met de waarden “bar” en “baz”, dan is
+dat een perfect geformatteerde instantie van dit voorbeeld. Een object waar de
+eigenschappen anders zijn opgebouwd, wordt niet als correct beschouwd. Onze
+output zal volledig worden gecontroleerd op basis van de opgegeven
+schema-instantie. Wij moeten er dus nauwkeurig op toezien dat alle velden in de
+output exact overeenkomen met het schema en dat er nergens een overtollige komma
+blijft staan.
