@@ -24,7 +24,7 @@ export async function getStaticPaths({ paginate }) {
         return {
             url: `/nieuws/${cleanId}`,
             frontmatter: post.data,
-            rawContent: () => extractPreview(post.body, 200),
+            rawContent: () => post.data.summary || extractPreview(post.body, 200),
         };
     });
 

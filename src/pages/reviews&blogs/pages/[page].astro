@@ -9,6 +9,7 @@ import BasePodcastBanner from "../../../components/BasePodcastBanner.astro";
 
 import { getCollection } from "astro:content";
 import type { Page } from "astro";
+import { extractPreview } from "../../../lib/textPreview";
 import { formatCardDate, ratingOutOfFive } from "../../../lib/format";
 
 export async function getStaticPaths({ paginate }) {
@@ -29,7 +30,7 @@ export async function getStaticPaths({ paginate }) {
         const sortedPosts = sortedPostsRaw.map(post => ({
             url: `/reviews&blogs/${getCleanId(post.id)}`,
             frontmatter: post.data,
-            rawContent: post.data.summary || "",
+            rawContent: post.data.summary || extractPreview(post.body),
         }));
 
     // Paginate the sorted array

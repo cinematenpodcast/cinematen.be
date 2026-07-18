@@ -17,8 +17,6 @@ import CategoryBadge from "../components/design-system/CategoryBadge.astro";
 import SocialIcons from "../components/design-system/SocialIcons.astro";
 import HeroCarousel from "../components/design-system/HeroCarousel.tsx";
 import BaseAdBanner from "../components/BaseAdBanner.astro";
-import BasePodcastBanner from "../components/BasePodcastBanner.astro";
-import BasePodcastBlock from "../components/BasePodcastBlock.astro";
 
 import { getCollection } from "astro:content";
 import { extractPreview } from "../lib/textPreview";
@@ -70,7 +68,7 @@ const canonicalURL = "https://www.cinematen.be/";
   <body>
     <div class="cn-page">
       <Header links={getNavLinks("home")} partnerLabel={PARTNER_LABEL}>
-        <img slot="logo" src="/images/LogoCleanSmaller.png" alt="Cinematen" width="140" height="28" />
+        <img slot="logo" src="/images/cinematen-white-horizontal.png" alt="Cinematen.be" width="185" height="28" />
         <img slot="partner-logo" src="/images/kinepolis.png" alt="Kinepolis" width="72" height="22" />
       </Header>
 
@@ -83,15 +81,13 @@ const canonicalURL = "https://www.cinematen.be/";
         <div class="cn-home-news__grid">
           {
             gridPosts.map((p) => (
+              // No CategoryBadge here — the real rendered homepage grid
+              // (Home.dc.html: `homeNews: NEWS.map(n => ({ ...newsCard(n,
+              // 'overlay'), badge: null }))`) explicitly nulls the badge for
+              // this section; the category pill is only used elsewhere
+              // (e.g. Nieuws listing pages).
               <ArticleCard title={p.data.title} href={p.url} excerpt={p.data.summary || p.excerpt} variant="overlay">
                 <img slot="image" src={p.data.thumbnail} alt={p.data.title} loading="lazy" />
-                {p.data.soort && (
-                  <CategoryBadge
-                    slot="badge"
-                    label={`${p.data.soort} nieuws`}
-                    tone={p.data.soort.toLowerCase() === "tv" ? "tv" : "film"}
-                  />
-                )}
                 <span slot="meta">{formatCardDate(p.data.date)}</span>
               </ArticleCard>
             ))
@@ -115,10 +111,52 @@ const canonicalURL = "https://www.cinematen.be/";
               De wekelijkse podcast over film en TV — elke week bespreken wij het laatste film- en
               serienieuws.
             </p>
-            <BasePodcastBanner />
+            <iframe
+              title="Cinematen Podcast op Spotify"
+              class="cn-home-podcast__embed"
+              src="https://open.spotify.com/embed/show/19O8JqKPSbQWek15vG3sig?utm_source=generator&theme=1"
+              width="100%"
+              height="152"
+              frameborder="0"
+              allowfullscreen
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              loading="lazy"
+            ></iframe>
           </div>
           <div class="cn-home-podcast__side">
-            <BasePodcastBlock />
+            <a
+              class="cn-podcast-btn cn-podcast-btn--spotify"
+              href="https://open.spotify.com/show/19O8JqKPSbQWek15vG3sig?si=065cd2ef2c294d09"
+              target="_blank"
+              rel="noopener"
+            >
+              <img src="/images/Spotify_logo_without_text.svg" alt="" width="22" height="22" loading="lazy" />
+              Spotify
+            </a>
+            <a
+              class="cn-podcast-btn cn-podcast-btn--apple"
+              href="https://podcasts.apple.com/us/podcast/cinematen/id1674761868"
+              target="_blank"
+              rel="noopener"
+            >
+              <img src="/images/apple-podcasts-icon.png" alt="" width="22" height="22" loading="lazy" />
+              Apple Podcasts
+            </a>
+            <a
+              class="cn-podcast-btn cn-podcast-btn--rss"
+              href="https://anchor.fm/s/db58cba0/podcast/rss"
+              target="_blank"
+              rel="noopener"
+            >
+              <img src="/images/rss.svg" alt="" width="22" height="22" loading="lazy" />
+              RSS Podcast
+            </a>
+            <div class="cn-home-podcast__partner">
+              <span>Mogelijk gemaakt door</span>
+              <a href="https://www.kinepolis.be/" target="_blank" rel="noopener">
+                <img src="/images/kinepolis.png" alt="Kinepolis" width="64" height="64" loading="lazy" />
+              </a>
+            </div>
           </div>
         </div>
       </section>
@@ -158,7 +196,7 @@ const canonicalURL = "https://www.cinematen.be/";
       </section>
 
       <Footer columns={FOOTER_COLUMNS} bottomLeft={FOOTER_BOTTOM_LEFT}>
-        <img slot="logo" src="/images/LogoCleanSmaller.png" alt="Cinematen" width="160" height="32" />
+        <img slot="logo" src="/images/cinematen-white-horizontal.png" alt="Cinematen.be" width="172" height="26" />
         <Fragment slot="tagline">{FOOTER_TAGLINE}</Fragment>
         <Fragment slot="social-icons">
           <SocialIcons />
@@ -267,9 +305,75 @@ const canonicalURL = "https://www.cinematen.be/";
     margin: 0 0 24px;
     max-width: 65ch;
   }
+  .cn-home-podcast__embed {
+    border-radius: 12px;
+    border: none;
+    display: block;
+  }
   .cn-home-podcast__side {
     flex: 1;
     min-width: 220px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .cn-podcast-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    border-radius: var(--radius-full);
+    color: #fff;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 15px;
+    text-decoration: none;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+  }
+  .cn-podcast-btn:hover {
+    opacity: 0.88;
+  }
+  .cn-podcast-btn:active {
+    transform: translateY(1px);
+  }
+  .cn-podcast-btn:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+  }
+  .cn-podcast-btn img {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+  }
+  .cn-podcast-btn--spotify {
+    background: #1db954;
+  }
+  .cn-podcast-btn--apple {
+    background: var(--accent-purple);
+  }
+  .cn-podcast-btn--rss {
+    background: #ee802f;
+  }
+  .cn-home-podcast__partner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    padding: 20px 0;
+    border-top: 1px solid var(--outline-variant);
+  }
+  .cn-home-podcast__partner span {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--on-surface-variant);
+  }
+  .cn-home-podcast__partner img {
+    display: block;
+    border-radius: var(--radius-sm);
   }
 
   .cn-home-reviews {

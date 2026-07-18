@@ -132,7 +132,14 @@ const hasMeta = Astro.slots.has("meta");
     font-size: var(--text-body-md-size);
     color: var(--on-surface-variant);
     margin: 0 0 16px;
-    flex-grow: 1;
+    /* No flex-grow here: CSS Grid rows stretch every card to the tallest
+       card's height (grid default align-items: stretch), so this box, its
+       flex ancestors, and -webkit-line-clamp interact the same way the
+       overlay variant's excerpt did (see that variant's comment below) —
+       flex-grow lets the box stretch past 3 lines' worth of height and the
+       clamp only limits lines *within whatever height it's given*, so text
+       overflows/clips mid-word instead of truncating with "…". `.cn-article__meta`'s
+       `margin-top: auto` already pins it to the bottom without this. */
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
@@ -176,7 +183,13 @@ const hasMeta = Astro.slots.has("meta");
     border-top: none;
   }
   .cn-article--overlay .cn-article__excerpt {
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 1;
+    /* Without this, flex-grow stretches the box to fill the card's fixed
+       360px height, and -webkit-line-clamp only clips at N lines when the
+       box isn't being force-stretched taller by its flex parent — with
+       flex-grow active it silently renders far more than N lines instead
+       of truncating. */
+    flex-grow: 0;
   }
   .cn-article--overlay .cn-article__meta {
     border-top: none;

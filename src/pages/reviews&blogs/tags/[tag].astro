@@ -6,6 +6,7 @@ import CategoryBadge from "../../../components/design-system/CategoryBadge.astro
 import ReviewsFilterChips from "../../../components/ReviewsFilterChips.astro";
 import BasePodcastBanner from "../../../components/BasePodcastBanner.astro";
 import { getCollection } from "astro:content";
+import { extractPreview } from "../../../lib/textPreview";
 import { formatCardDate, ratingOutOfFive } from "../../../lib/format";
 
 export async function getStaticPaths () {
@@ -19,7 +20,7 @@ export async function getStaticPaths () {
   const allPosts = allPostsRaw.map(post => ({
     url: `/reviews&blogs/${getCleanId(post.id)}`,
     frontmatter: post.data,
-    rawContent: () => post.data.summary || "",
+    rawContent: () => post.data.summary || extractPreview(post.body),
   }));
 
   // Build tag map

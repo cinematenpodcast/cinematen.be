@@ -31,7 +31,7 @@ export async function getStaticPaths({ paginate }) {
     const mappedPosts = sortedPosts.map(post => ({
         url: `/nieuws/${getCleanId(post.id)}`,
         frontmatter: post.data,
-        rawContent: extractPreview(post.body),
+        rawContent: post.data.summary || extractPreview(post.body),
     }));
 
     // Paginate the sorted array

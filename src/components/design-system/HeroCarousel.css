@@ -71,6 +71,12 @@
   letter-spacing: -0.01em;
   color: #fff;
   margin: 0 0 16px;
+  /* Fixed-height hero box (600px) must never grow or overlap the section
+     below it, regardless of headline length — clip to 3 lines instead. */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 .cn-hero__desc {
   font-family: var(--font-sans);
@@ -79,16 +85,24 @@
   color: var(--on-surface-variant);
   margin: 0 0 32px;
   max-width: 520px;
+  /* Same reasoning as .cn-hero__title — cap runaway description length. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 .cn-hero__cta {
   align-self: flex-start;
   font-family: var(--font-sans);
-  font-weight: 600;
+  font-weight: 700;
   font-size: 15px;
   padding: 12px 24px;
   border-radius: var(--radius-full);
-  background: var(--primary);
-  color: var(--on-primary);
+  /* Reference (cinematen-data.js ctaEl) is explicit white/dark-navy, not the
+     --primary/--on-primary tokens (#adc6ff/#002e6a) — those read as a pale
+     blue pill with dark-blue text, not the intended white button. */
+  background: #fff;
+  color: #0a1128;
   text-decoration: none;
   transition: opacity 0.15s ease;
 }

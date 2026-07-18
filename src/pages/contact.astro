@@ -39,9 +39,9 @@ const navLinks = getNavLinks("contact");
     <Header links={navLinks} partnerLabel={PARTNER_LABEL}>
       <img
         slot="logo"
-        src="/images/LogoCleanSmaller.png"
-        alt="Cinematen"
-        width="26"
+        src="/images/cinematen-white-horizontal.png"
+        alt="Cinematen.be"
+        width="185"
         height="28"
         style="height:28px;width:auto;"
       />
@@ -68,11 +68,11 @@ const navLinks = getNavLinks("contact");
     <Footer columns={FOOTER_COLUMNS} bottomLeft={FOOTER_BOTTOM_LEFT}>
       <img
         slot="logo"
-        src="/images/LogoCleanSmaller.png"
-        alt="Cinematen"
-        width="37"
-        height="40"
-        style="height:40px;width:auto;"
+        src="/images/cinematen-white-horizontal.png"
+        alt="Cinematen.be"
+        width="172"
+        height="26"
+        style="height:26px;width:auto;"
       />
       <Fragment slot="tagline">{FOOTER_TAGLINE}</Fragment>
       <Fragment slot="social-icons"><SocialIcons /></Fragment>
@@ -100,8 +100,19 @@ const navLinks = getNavLinks("contact");
       .cn-contact__form-shell h2 {
         display: none;
       }
+      /* The actual white card wasn't `.section-contact-form`/
+         `.background-color-gradient-blue1` (those only ever set
+         background-image/text-align, never a background-color) — it's
+         `.form-wrapper-2` in public/style.css: `background-color: #fff`,
+         `border-top-left-radius/border-bottom-right-radius: 3rem`,
+         `box-shadow`, `padding: 3rem`. Overridden here instead of touching
+         the shared monolith. */
       .cn-contact__form-shell .form-wrapper-2 {
         width: 100%;
+        background: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
       }
       .cn-contact__form-shell form#email-form {
         display: flex;

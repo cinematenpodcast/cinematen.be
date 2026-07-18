@@ -31,7 +31,7 @@ const filmNieuws = allNieuws
     <NieuwsFilterChips active="film" />
     <div class="cn-listing__grid">
       {filmNieuws.map(post => (
-        <ArticleCard title={post.data.title} href={`/nieuws/${getCleanId(post.id)}`} excerpt={extractPreview(post.body)}>
+        <ArticleCard title={post.data.title} href={`/nieuws/${getCleanId(post.id)}`} excerpt={post.data.summary || extractPreview(post.body)}>
           <img slot="image" src={post.data.thumbnail} alt={post.data.title} loading="lazy" />
           <CategoryBadge slot="badge" label="Film nieuws" tone="film" />
           <span slot="meta">{formatCardDate(post.data.date)}</span>
