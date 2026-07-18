@@ -87,7 +87,8 @@ content:
         type: date
         required: false
         options:
-          format: "yyyy-MM-dd"
+          time: true
+          format: "yyyy-MM-dd HH:mm"
       - name: schrijver
         label: Schrijver
         type: string
@@ -139,6 +140,10 @@ content:
         label: YouTube Trailer ID
         type: string
         required: false
+      - name: spotify
+        label: Spotify Url
+        type: string
+        required: false        
       - name: body
         label: Inhoud
         type: rich-text
