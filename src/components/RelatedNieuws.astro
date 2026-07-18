@@ -1,5 +1,13 @@
 ---
+// Restyled onto the shared design system (was a standalone light-theme card
+// grid, clashing with the redesigned dark article page). Same query/data
+// logic as before — only the markup/CSS changed, to match Artikel.dc.html's
+// "Misschien ook interessant" section.
 import { getCollection } from "astro:content";
+import ArticleCard from "./design-system/ArticleCard.astro";
+import CategoryBadge from "./design-system/CategoryBadge.astro";
+import { formatCardDate } from "../lib/format";
+
 const { currentSlug, soort } = Astro.props;
 
 function getCleanId(id) {
@@ -18,30 +26,53 @@ const related = allNieuws
 ---
 
 {related.length > 0 && (
-  <section class="related-nieuws">
-    <h2 class="related-nieuws-title">Meer {soort} nieuws</h2>
-    <div class="related-nieuws-row">
-      {related.map(p => (
-        <a href={`/nieuws/${getCleanId(p.id)}`} class="related-nieuws-card">
-          {p.data.thumbnail && <img src={p.data.thumbnail} alt={p.data.title} class="related-nieuws-img" />}
-          <div class="related-nieuws-info">
-            <p class="related-nieuws-cat">{p.data.soort}</p>
-            <h3 class="related-nieuws-ttl">{p.data.title}</h3>
-          </div>
-        </a>
-      ))}
+  <section class="cn-related">
+    <div class="cn-related__inner">
+      <h2>Misschien ook interessant</h2>
+      <div class="cn-related__grid">
+        {related.map(p => (
+          <ArticleCard title={p.data.title} href={`/nieuws/${getCleanId(p.id)}`} excerpt={p.data.summary}>
+            {p.data.thumbnail && <img slot="image" src={p.data.thumbnail} alt={p.data.title} loading="lazy" />}
+            {p.data.soort && (
+              <CategoryBadge slot="badge" label={`${p.data.soort} nieuws`} tone={p.data.soort.toLowerCase() === "tv" ? "tv" : "film"} />
+            )}
+            <span slot="meta">{formatCardDate(p.data.date)}</span>
+          </ArticleCard>
+        ))}
+      </div>
     </div>
   </section>
 )}
 
 <style>
-.related-nieuws { padding: 2rem 1rem; max-width: 1200px; margin: 0 auto; }
-.related-nieuws-title { text-align: center; margin-bottom: 1.5rem; color: #2d3370; font-size: 1.5rem; }
-.related-nieuws-row { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; }
-.related-nieuws-card { flex: 1 1 250px; max-width: 320px; background: #fff; border-radius: 12px; box-shadow: 0 22px 34px rgba(0, 0, 0, .06); overflow: hidden; text-decoration: none; color: inherit; display: block; transition: transform 0.18s; }
-.related-nieuws-card:hover { transform: translateY(-2px); }
-.related-nieuws-img { width: 100%; height: 160px; object-fit: cover; display: block; }
-.related-nieuws-info { padding: 1rem; }
-.related-nieuws-cat { font-size: 0.8rem; color: #6c5ce7; margin: 0 0 0.5rem; }
-.related-nieuws-ttl { font-size: 1rem; margin: 0; line-height: 1.4; color: #2d3370; }
+  .cn-related {
+    background: var(--surface-container-lowest);
+    padding: 64px 0;
+    border-top: 1px solid var(--outline-variant);
+  }
+  .cn-related__inner {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: 0 var(--space-margin-desktop);
+  }
+  .cn-related__inner h2 {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 30px;
+    color: var(--on-surface);
+    margin: 0 0 32px;
+  }
+  .cn-related__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-gutter);
+  }
+  @media (max-width: 900px) {
+    .cn-related__inner {
+      padding: 0 var(--space-margin-mobile);
+    }
+    .cn-related__grid {
+      grid-template-columns: 1fr;
+    }
+  }
 </style>

@@ -1,0 +1,75 @@
+---
+/**
+ * Chip — rounded filter/toggle pill (e.g. "Alles / Film nieuws / TV nieuws"
+ * filter rows on listing pages). Static-rendered; wire click/selection
+ * behavior at the page level.
+ *
+ * Ported from _ds_bundle.js `components/core/Chip.jsx`.
+ * Replaces: none currently in this repo — new primitive, used wherever a
+ * Nieuws/Reviews listing page needs a category filter row.
+ *
+ * Props:
+ *   active?  boolean            — selected/current state (default false)
+ *   href?    string             — render as <a href> (URL-driven filtering)
+ *   as?      'button' | 'a'     — force the tag; inferred from `href` if omitted
+ *   class?   string             — extra class(es) merged onto the root
+ *   ...rest  any extra attributes (e.g. data-value, name) pass straight
+ *            through to the rendered element.
+ * Slots:
+ *   default — chip label text
+ */
+interface Props {
+  active?: boolean;
+  href?: string;
+  as?: "button" | "a";
+  class?: string;
+  [key: string]: unknown;
+}
+
+const { active = false, href, as, class: className, ...rest } = Astro.props as Props;
+const Tag = as ?? (href ? "a" : "button");
+---
+
+<Tag
+  class:list={["cn-chip", { "cn-chip--active": active }, className]}
+  href={Tag === "a" ? href : undefined}
+  type={Tag === "button" ? "button" : undefined}
+  aria-pressed={Tag === "button" ? active : undefined}
+  aria-current={Tag === "a" && active ? "true" : undefined}
+  {...rest}
+>
+  <slot />
+</Tag>
+
+<style>
+  .cn-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 8px 20px;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    border: 1px solid var(--outline-variant);
+    background: var(--surface-container);
+    color: var(--on-surface);
+  }
+  .cn-chip:hover {
+    background: var(--surface-container-high);
+  }
+  .cn-chip:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+  .cn-chip.cn-chip--active {
+    background: var(--primary);
+    color: var(--on-primary);
+    border-color: transparent;
+  }
+</style>

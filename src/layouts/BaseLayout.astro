@@ -1,200 +1,330 @@
 ---
+// Homepage — redesigned per `Home.dc.html` (Claude Design export) onto the
+// shared design-system components. Content/data architecture is unchanged:
+// still reads the `nieuws`/`reviews` collections directly, still keeps
+// BaseAdBanner + BasePodcastBanner + BasePodcastBlock (out of scope to
+// redesign, kept exactly as components — only their placement/wrapper
+// changed). The old embedded About/Contact sections are removed: Contact now
+// lives on its own page (`/contact`, owned by the other frontend-developer
+// agent on this branch) and — by the same logic, since Home.dc.html has no
+// About section either — About moves to `/over-ons` (same agent). Flagged
+// explicitly since only Contact's removal was spelled out in the brief.
 import BaseHead from "../components/BaseHead.astro";
-import BaseHeader from "../components/BaseHeader.astro";
-// import BaseScript from "../components/BaseScript.astro";
-import BaseFooter from "../components/BaseFooter.astro";
-import NewNavmenu from "../components/NewNavmenu.astro";
-import BasePodcastBanner from "../components/BasePodcastBanner.astro";
+import Header from "../components/design-system/Header.astro";
+import Footer from "../components/design-system/Footer.astro";
+import ArticleCard from "../components/design-system/ArticleCard.astro";
+import CategoryBadge from "../components/design-system/CategoryBadge.astro";
+import SocialIcons from "../components/design-system/SocialIcons.astro";
+import HeroCarousel from "../components/design-system/HeroCarousel.tsx";
 import BaseAdBanner from "../components/BaseAdBanner.astro";
-import BaseNieuwsItem from "../components/BaseNieuwsItem.astro";
+import BasePodcastBanner from "../components/BasePodcastBanner.astro";
 import BasePodcastBlock from "../components/BasePodcastBlock.astro";
-import BaseFeaturedItem from "../components/BaseFeaturedItem.astro";
-import BaseReviewItem from "../components/BaseReviewItem.astro";
-import BaseAbout from "../components/BaseAbout.astro";
-import BaseContact from "../components/BaseContact.astro";
 
 import { getCollection } from "astro:content";
 import { extractPreview } from "../lib/textPreview";
+import { formatCardDate, ratingOutOfFive } from "../lib/format";
+import { getNavLinks, FOOTER_COLUMNS, FOOTER_BOTTOM_LEFT, FOOTER_TAGLINE, PARTNER_LABEL } from "../lib/siteNav";
 
-// Helper function to ensure clean ID without .mdx extension
-function getCleanId(id) {
-    return id ? id.replace(/\.mdx$/, '') : '';
+function getCleanId(id: string) {
+  return id ? id.replace(/\.mdx$/, "") : "";
 }
 
-const allNieuwsPostsRaw = (await getCollection("nieuws")).filter(post => !post.data.draft);
-const allNieuwsPosts = allNieuwsPostsRaw.map((post) => ({
+const allNieuwsRaw = (await getCollection("nieuws")).filter((p) => !p.data.draft);
+const allNieuws = allNieuwsRaw
+  .map((post) => ({
     url: `/nieuws/${getCleanId(post.id)}`,
-    frontmatter: post.data,
-    rawContent: extractPreview(post.body),
+    data: post.data,
+    excerpt: extractPreview(post.body),
+  }))
+  .sort((a, b) => new Date(b.data.date ?? 0).getTime() - new Date(a.data.date ?? 0).getTime());
+
+const heroPosts = allNieuws.slice(0, 4);
+const gridPosts = allNieuws.slice(0, 9);
+
+const allReviewsRaw = (await getCollection("reviews")).filter((p) => !p.data.draft);
+const reviewPosts = allReviewsRaw
+  .map((post) => ({ url: `/reviews&blogs/${getCleanId(post.id)}`, data: post.data }))
+  .sort((a, b) => new Date(b.data.date ?? 0).getTime() - new Date(a.data.date ?? 0).getTime())
+  .slice(0, 6);
+
+const heroSlides = heroPosts.map((p) => ({
+  image: {
+    src: p.data.thumbnail || "/images/Cinematelogotrans.png",
+    alt: p.data.title,
+  },
+  eyebrow: p.data.soort ? `${p.data.soort} nieuws` : undefined,
+  eyebrowColor: p.data.soort?.toLowerCase() === "tv" ? "var(--accent-purple)" : "var(--accent-blue)",
+  title: p.data.title,
+  description: p.data.summary || p.excerpt,
+  ctaLabel: "Lees meer",
+  ctaHref: p.url,
 }));
 
-const allRnbPostsRaw = await getCollection("reviews");
-const allRnbPosts = allRnbPostsRaw.map(post => ({
-    url: `/reviews&blogs/${getCleanId(post.id)}`,
-    frontmatter: post.data,
-    rawContent: () => post.body || "",
-}));
-
-// Generate canonical URL for homepage
-const canonicalURL = `https://www.cinematen.be${Astro.url.pathname}`;
-
-// Function to truncate content to 200 characters with "..."
-function truncateContent(content, maxLength = 200) {
-    if (!content || typeof content !== 'string') return '';
-    // Strip HTML tags and normalize whitespace
-    const text = content.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
-    if (text.length <= maxLength) return text;
-    return text.substring(0, maxLength).trim() + '...';
-}
-
+const canonicalURL = "https://www.cinematen.be/";
 ---
 
 <html lang="nl">
-    <head>
-        <BaseHead canonicalURL={canonicalURL} />
-    </head>
-    <body class="body">
-        <div class="page-wrapper">
-            <NewNavmenu />
-            <BaseHeader />
-            <main class="content">
-                <section class="nieuws-section">
-                    <h1 class="nieuws-title">Film & TV nieuws</h1>
-                    <div class="container">
-                        <div class="w-layout-grid blog-grid">
-                            <div class="content-left">
-                                {allNieuwsPosts
-                                    .sort((a, b) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime())
-                                    .slice(0, 5)
-                                    .map((post, index) => (
-                                        <article>
-                                            <BaseNieuwsItem
-                                                key={post.url}
-                                                url={post.url}
-                                                title={post.frontmatter.title}
-                                                thumbnail={post.frontmatter.thumbnail}
-                                                date={post.frontmatter.date}
-                                                content={post.rawContent || ""}
-                                                priority={index === 0}
-                                            />
-                                        </article>
-                                    ))}
-                                <nav>
-                                    <a href="/nieuws" class="next-button">
-                                        <div class="title-medium">Meer nieuws</div>
-                                    </a>
-                                </nav>
-                            </div>
-                            <aside class="content-right">
-                                <div class="stick-wrapper">
-                                    <BaseAdBanner />
-                                    <BasePodcastBlock />
-                                    <section class="featured-articles">
-                                        <h2 class="title-large xtra">Uitgelicht</h2>
-                                        <div class="featured-block">
-                                            {allRnbPosts
-                                                .filter(post => post.frontmatter.featured)
-                                                .sort((a, b) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime())
-                                                .slice(0, 5)
-                                                .map((post) => (
-                                                    <article>
-                                                        <BaseFeaturedItem
-                                                            key={post.url}
-                                                            url={post.url}
-                                                            title={post.frontmatter.title}
-                                                            thumbnail={post.frontmatter.thumbnail}
-                                                            date={post.frontmatter.date}
-                                                            featured={post.frontmatter.featured}
-                                                            rating={post.frontmatter.rating}
-                                                            asLink={true}
-                                                            square={true}
-                                                        />
-                                                    </article>
-                                                ))}                                        
-                                        </div>
-                                    </section>
-                                </div>
-                            </aside>
-                        </div>
-                    </div>
-                </section>
-                {/* Desktop banner - shown between sections */}
-                <div class="ad-banner-desktop">
-                    <BaseAdBanner />
-                </div>
-                <BasePodcastBanner />
-                <section class="reviews-section">
-                    <div class="container">
-                        <h2 class="nieuws-title" style="margin-top: 0; line-height: 1.1;">Reviews & Blogs</h2>
-                        <div class="w-layout-grid blog-grid">
-                            <div class="content-left">
-                                {allRnbPosts
-                                    .sort((a, b) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime())
-                                    .slice(0, 5)
-                                    .map((post) => (
-                                        <article>
-                                            <BaseReviewItem
-                                                key={post.url}
-                                                url={post.url}
-                                                schrijver={post.frontmatter.schrijver}
-                                                title={post.frontmatter.title}
-                                                thumbnail={post.frontmatter.thumbnail}
-                                                date={post.frontmatter.date}
-                                                summary={post.frontmatter.summary}
-                                                rating={post.frontmatter.rating}
-                                            />
-                                        </article>
-                                    ))}
-                                <nav>
-                                    <a href="/reviews&blogs" class="next-button">
-                                        <div class="title-medium">Meer Reviews & Blogs</div>
-                                    </a>
-                                </nav>           
-                            </div>
-                            <aside class="content-right">
-                                <div class="stick-wrapper">
-                                    <section class="featured-articles">
-                                        <h2 class="title-large xtra">Cinematen Top 5</h2>
-                                        <div class="featured-block">
-                                            {allRnbPosts
-                                                .filter(post => post.frontmatter.rating !== undefined)
-                                                .filter(post => post.frontmatter.rating !== null)
-                                                .sort((a, b) => {
-                                                    const ratingA = a.frontmatter.rating ?? 0;
-                                                    const ratingB = b.frontmatter.rating ?? 0;
-                                                    if (ratingB !== ratingA) {
-                                                        return ratingB - ratingA;
-                                                    }
-                                                    return new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime();
-                                                })
-                                                .slice(0, 5)
-                                                .map((post) => (
-                                                    <article>
-                                                        <BaseFeaturedItem
-                                                            key={post.url}
-                                                            url={post.url}
-                                                            title={post.frontmatter.title}
-                                                            thumbnail={post.frontmatter.thumbnail}
-                                                            date={post.frontmatter.date}
-                                                            featured={post.frontmatter.featured}
-                                                            rating={post.frontmatter.rating}
-                                                            asLink={true}
-                                                            square={true}
-                                                        />
-                                                    </article>
-                                                ))}
-                                        </div>
-                                    </section>
-                                </div>
-                            </aside>
-                        </div>
-                    </div>
-                </section>
-            </main>
-            <BaseAbout id="over-ons"/>
-            <BaseContact />
-            <BaseFooter />
+  <head>
+    <BaseHead canonicalURL={canonicalURL} />
+  </head>
+  <body>
+    <div class="cn-page">
+      <Header links={getNavLinks("home")} partnerLabel={PARTNER_LABEL}>
+        <img slot="logo" src="/images/LogoCleanSmaller.png" alt="Cinematen" width="140" height="28" />
+        <img slot="partner-logo" src="/images/kinepolis.png" alt="Kinepolis" width="72" height="22" />
+      </Header>
+
+      <HeroCarousel client:load slides={heroSlides} autoplayMs={9000} />
+
+      <section class="cn-home-news">
+        <div class="cn-home-news__head">
+          <h2>Film &amp; TV nieuws</h2>
         </div>
-        {/* BaseScript verwijderd voor performance op homepage */}
-    </body>
+        <div class="cn-home-news__grid">
+          {
+            gridPosts.map((p) => (
+              <ArticleCard title={p.data.title} href={p.url} excerpt={p.data.summary || p.excerpt} variant="overlay">
+                <img slot="image" src={p.data.thumbnail} alt={p.data.title} loading="lazy" />
+                {p.data.soort && (
+                  <CategoryBadge
+                    slot="badge"
+                    label={`${p.data.soort} nieuws`}
+                    tone={p.data.soort.toLowerCase() === "tv" ? "tv" : "film"}
+                  />
+                )}
+                <span slot="meta">{formatCardDate(p.data.date)}</span>
+              </ArticleCard>
+            ))
+          }
+        </div>
+        <div class="cn-home-news__more">
+          <a href="/nieuws" class="cn-btn-outline">Meer nieuws</a>
+        </div>
+      </section>
+
+      <div class="cn-home-adslot">
+        <BaseAdBanner />
+      </div>
+
+      <section class="cn-home-podcast" id="podcast">
+        <div class="cn-home-podcast__inner">
+          <div class="cn-home-podcast__main">
+            <span class="cn-eyebrow">Nu te beluisteren</span>
+            <h3>Cinematen Podcast</h3>
+            <p>
+              De wekelijkse podcast over film en TV — elke week bespreken wij het laatste film- en
+              serienieuws.
+            </p>
+            <BasePodcastBanner />
+          </div>
+          <div class="cn-home-podcast__side">
+            <BasePodcastBlock />
+          </div>
+        </div>
+      </section>
+
+      <section class="cn-home-reviews">
+        <div class="cn-home-reviews__inner">
+          <h2>Blogs &amp; Reviews</h2>
+          <p>Diepgaande analyses en de nieuwste recensies.</p>
+          <div class="cn-home-reviews__grid">
+            {
+              reviewPosts.map((p) => {
+                const rating = ratingOutOfFive(p.data.rating);
+                return (
+                  <ArticleCard title={p.data.title} href={p.url} excerpt={p.data.summary ?? undefined} variant="default">
+                    <img slot="image" src={p.data.thumbnail || p.data.poster} alt={p.data.title} loading="lazy" />
+                    {rating ? (
+                      <CategoryBadge slot="badge" label={rating} tone="neutral" />
+                    ) : (
+                      p.data.soort && (
+                        <CategoryBadge
+                          slot="badge"
+                          label={p.data.soort}
+                          tone={p.data.soort.toLowerCase() === "tv" ? "tv" : "film"}
+                        />
+                      )
+                    )}
+                    <span slot="meta">
+                      {formatCardDate(p.data.date)}
+                      {p.data.schrijver ? ` · ${p.data.schrijver}` : ""}
+                    </span>
+                  </ArticleCard>
+                );
+              })
+            }
+          </div>
+        </div>
+      </section>
+
+      <Footer columns={FOOTER_COLUMNS} bottomLeft={FOOTER_BOTTOM_LEFT}>
+        <img slot="logo" src="/images/LogoCleanSmaller.png" alt="Cinematen" width="160" height="32" />
+        <Fragment slot="tagline">{FOOTER_TAGLINE}</Fragment>
+        <Fragment slot="social-icons">
+          <SocialIcons />
+        </Fragment>
+      </Footer>
+    </div>
+  </body>
 </html>
+
+<style>
+  .cn-page {
+    min-height: 100dvh;
+    background: var(--surface);
+    color: var(--on-surface);
+  }
+
+  .cn-home-news {
+    max-width: var(--container-max);
+    margin: -80px auto 0;
+    position: relative;
+    z-index: 5;
+    padding: 0 var(--space-margin-desktop) 48px;
+  }
+  .cn-home-news__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+  .cn-home-news__head h2 {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: var(--text-headline-lg-mobile-size);
+    color: var(--on-surface);
+    margin: 0;
+  }
+  .cn-home-news__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-gutter);
+  }
+  .cn-home-news__more {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+  }
+  .cn-btn-outline {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--on-surface);
+    background: var(--surface-container);
+    border: 1px solid var(--outline-variant);
+    border-radius: var(--radius-full);
+    padding: 14px 32px;
+    text-decoration: none;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+  .cn-btn-outline:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+
+  .cn-home-adslot {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: 0 var(--space-margin-desktop);
+  }
+
+  .cn-home-podcast {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: 48px var(--space-margin-desktop) 64px;
+  }
+  .cn-home-podcast__inner {
+    background: var(--surface-container);
+    border-radius: var(--radius-2xl);
+    padding: 48px;
+    display: flex;
+    gap: 48px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .cn-home-podcast__main {
+    flex: 2;
+    min-width: 340px;
+  }
+  .cn-eyebrow {
+    font-family: var(--font-sans);
+    color: var(--accent-blue);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: 13px;
+  }
+  .cn-home-podcast__main h3 {
+    font-family: var(--font-sans);
+    font-weight: 800;
+    font-size: 36px;
+    color: var(--on-surface);
+    margin: 8px 0;
+  }
+  .cn-home-podcast__main p {
+    font-family: var(--font-sans);
+    color: var(--on-surface-variant);
+    margin: 0 0 24px;
+    max-width: 65ch;
+  }
+  .cn-home-podcast__side {
+    flex: 1;
+    min-width: 220px;
+  }
+
+  .cn-home-reviews {
+    background: var(--surface-container-lowest);
+    padding: 64px 0;
+    border-top: 1px solid var(--outline-variant);
+  }
+  .cn-home-reviews__inner {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: 0 var(--space-margin-desktop);
+  }
+  .cn-home-reviews__inner h2 {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: var(--text-headline-lg-mobile-size);
+    color: var(--on-surface);
+    margin: 0 0 8px;
+  }
+  .cn-home-reviews__inner > p {
+    font-family: var(--font-sans);
+    color: var(--on-surface-variant);
+    margin: 0 0 32px;
+  }
+  .cn-home-reviews__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+
+  @media (max-width: 1024px) {
+    .cn-home-news__grid,
+    .cn-home-reviews__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 900px) {
+    .cn-home-podcast__inner {
+      padding: 32px;
+    }
+  }
+  @media (max-width: 720px) {
+    .cn-home-news {
+      margin-top: -48px;
+      padding: 0 var(--space-margin-mobile) 32px;
+    }
+    .cn-home-adslot,
+    .cn-home-podcast,
+    .cn-home-reviews__inner {
+      padding-left: var(--space-margin-mobile);
+      padding-right: var(--space-margin-mobile);
+    }
+    .cn-home-news__grid,
+    .cn-home-reviews__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,4 +1,8 @@
 ---
+// Same design-system tokens import as BaseHead.astro — this head partial
+// (used on the Nieuws article detail pages) was missing it.
+import "../styles/design-system/index.css";
+
 const { title, thumbnail, description, canonicalURL, publishedDate, modifiedDate, author } = Astro.props;
 const defaultCanonical = "https://www.cinematen.be/";
 const finalCanonical = canonicalURL || defaultCanonical;

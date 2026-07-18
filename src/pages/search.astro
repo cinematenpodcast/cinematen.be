@@ -1,36 +1,116 @@
 ---
-// Import necessary components
-import BaseHead from "../components/BaseHead.astro";
-import BaseHeader from "../components/BaseHeader.astro";
-import BaseScript from "../components/BaseScript.astro";
-import BaseFooter from "../components/BaseFooter.astro";
-import BaseNavmenu from "../components/BaseNavmenu.astro";
-import BasePodcastBanner from "../components/BasePodcastBanner.astro";
-import BaseReviewItem from "../components/BaseReviewItem.astro"; // Corrected component name from Niews to Nieuws
-import SearchField from "../components/SearchField.astro";
+// Search — chrome/layout redesigned per `Search.dc.html`. The pagefind
+// wiring itself (SearchField.astro: astro-pagefind + @pagefind/default-ui
+// dynamic import, query-param sync) is untouched — only the surrounding
+// header/footer/container changed. Pagefind UI's own result cards can't be
+// swapped for ArticleCard (they're rendered client-side by the pagefind-ui
+// bundle from its search index, not from Astro/this page's props), so
+// instead this page re-skins pagefind-ui's own CSS custom properties to
+// match the design tokens — the officially supported theming path for that
+// widget, per its docs.
 import BaseHeadExclude from "../components/BaseHeadExclude.astro";
-
+import Header from "../components/design-system/Header.astro";
+import Footer from "../components/design-system/Footer.astro";
+import SocialIcons from "../components/design-system/SocialIcons.astro";
+import BasePodcastBanner from "../components/BasePodcastBanner.astro";
+import SearchField from "../components/SearchField.astro";
+import { getNavLinks, FOOTER_COLUMNS, FOOTER_BOTTOM_LEFT, FOOTER_TAGLINE, PARTNER_LABEL } from "../lib/siteNav";
 ---
 
 <html lang="nl">
     <head>
         <BaseHeadExclude/>
     </head>
-    <body class="body">
-        <div class="page-wrapper">
-            <BaseNavmenu />
-            <BaseHeader />
-            <div class="content">
-                <div class="container">
-                    <h1 class="nieuws-title">Zoeken</h1>
-                    <SearchField />
-                    <div class="search-container">
-                        <input type="text" placeholder="Search..." class="search-bar">
-                    </div>
-                </div>
-            <BasePodcastBanner />
+    <body>
+        <div class="cn-page">
+            <Header links={getNavLinks(null)} partnerLabel={PARTNER_LABEL}>
+                <img slot="logo" src="/images/LogoCleanSmaller.png" alt="Cinematen" width="140" height="28" />
+                <img slot="partner-logo" src="/images/kinepolis.png" alt="Kinepolis" width="72" height="22" />
+            </Header>
+
+            <main class="cn-search">
+                <h1>Zoeken</h1>
+                <p class="cn-search__intro">Zoek in al het nieuws, reviews en blogs van Cinematen.be.</p>
+                <SearchField />
+            </main>
+
+            <div class="cn-search__podcast">
+                <BasePodcastBanner />
+            </div>
+
+            <Footer columns={FOOTER_COLUMNS} bottomLeft={FOOTER_BOTTOM_LEFT}>
+                <img slot="logo" src="/images/LogoCleanSmaller.png" alt="Cinematen" width="160" height="32" />
+                <Fragment slot="tagline">{FOOTER_TAGLINE}</Fragment>
+                <Fragment slot="social-icons">
+                    <SocialIcons />
+                </Fragment>
+            </Footer>
         </div>
-        <BaseFooter />
     </body>
-    <BaseScript />
 </html>
+
+<style>
+    .cn-page {
+        min-height: 100dvh;
+        background: var(--surface);
+        color: var(--on-surface);
+    }
+    .cn-search {
+        max-width: var(--container-max);
+        margin: 0 auto;
+        padding: 48px var(--space-margin-desktop) 64px;
+    }
+    .cn-search h1 {
+        font-family: var(--font-sans);
+        font-weight: 700;
+        font-size: 40px;
+        color: var(--on-surface);
+        margin: 0 0 12px;
+    }
+    .cn-search__intro {
+        font-family: var(--font-sans);
+        font-size: 18px;
+        line-height: 1.6;
+        color: var(--on-surface-variant);
+        margin: 0 0 40px;
+        max-width: 700px;
+    }
+    .cn-search__podcast {
+        max-width: var(--container-max);
+        margin: 0 auto;
+        padding: 0 var(--space-margin-desktop) 64px;
+    }
+
+    /* Re-skin pagefind-ui via its own supported CSS custom properties
+       (see @pagefind/default-ui/css/ui.css) instead of fighting its
+       built-in class specificity. */
+    .cn-search :global(.pagefind-ui) {
+        --pagefind-ui-scale: 1;
+        --pagefind-ui-primary: var(--primary);
+        --pagefind-ui-text: var(--on-surface);
+        --pagefind-ui-background: var(--surface-container-low);
+        --pagefind-ui-border: var(--outline-variant);
+        --pagefind-ui-tag: var(--surface-container-high);
+        --pagefind-ui-border-width: 1px;
+        --pagefind-ui-border-radius: 12px;
+        --pagefind-ui-font: var(--font-sans);
+    }
+    .cn-search :global(.pagefind-ui__result-link) {
+        color: var(--on-surface);
+    }
+    .cn-search :global(.pagefind-ui__result-link:hover) {
+        color: var(--primary);
+    }
+
+    @media (max-width: 720px) {
+        .cn-search {
+            padding: 32px var(--space-margin-mobile) 48px;
+        }
+        .cn-search h1 {
+            font-size: 32px;
+        }
+        .cn-search__podcast {
+            padding: 0 var(--space-margin-mobile) 48px;
+        }
+    }
+</style>

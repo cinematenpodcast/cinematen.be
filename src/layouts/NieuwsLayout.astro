@@ -1,14 +1,22 @@
 ---
+// Nieuws article detail — redesigned per `Artikel.dc.html`.
+// Wrapped by src/pages/nieuws/[...slug].astro (untouched, still passes
+// `frontmatter` + slotted MDX `<Content />`). Same data/meta pipeline as
+// before (BaseHeadNieuws, RandomReviews, RelatedNieuws, BasePodcastBanner) —
+// only the visual chrome around the article body changed.
 import BaseHeadNieuws from "../components/BaseHeadNieuws.astro";
-import NewNavmenu from "../components/NewNavmenu.astro";
-import BaseHeader from "../components/BaseHeader.astro";
-import BaseFooter from "../components/BaseFooter.astro";
-import BaseScript from "../components/BaseScript.astro";
+import Header from "../components/design-system/Header.astro";
+import Footer from "../components/design-system/Footer.astro";
+import SocialIcons from "../components/design-system/SocialIcons.astro";
+import CategoryBadge from "../components/design-system/CategoryBadge.astro";
 import BasePodcastBanner from "../components/BasePodcastBanner.astro";
 import RandomReviews from "../components/RandomReviews.astro";
 import RelatedNieuws from "../components/RelatedNieuws.astro";
 import { readFileSync } from "fs";
 import { join } from "path";
+import { formatCardDate } from "../lib/format";
+import { getNavLinks, FOOTER_COLUMNS, FOOTER_BOTTOM_LEFT, FOOTER_TAGLINE, PARTNER_LABEL } from "../lib/siteNav";
+
 const { frontmatter } = Astro.props;
 
 // Fallback meta-description source for the (still-common, pre-backfill) case
@@ -48,37 +56,12 @@ const metaDescription =
   extractDescriptionFromMDX(frontmatter.slug) ||
   undefined;
 
-// Function to format the date and adjust for timezone
-function formatDate(dateString) {
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) return ""; // Return empty string if date is invalid
-    const options = {
-        timeZone: "UTC",
-        hour12: false,
-        hour: "numeric",
-        minute: "numeric"
-    } as const; // Set the timezone to UTC
-    const formattedDate = date.toLocaleDateString("nl-NL", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-    });
-    const timePart = date.toLocaleTimeString("nl-NL", options);
-    return timePart === "00:00"
-        ? formattedDate
-        : `${formattedDate} ${timePart}`; // Return only date if time is midnight, otherwise combine date and time
-}
-
-// Format the date
-const formattedDateTime = formatDate(frontmatter.date);
-
-
-
+const displayDate = formatCardDate(frontmatter.date);
+const soortLower = (frontmatter.soort || "").toLowerCase();
 ---
 
 <html lang="nl">
     <head>
-        
       <BaseHeadNieuws
           title={frontmatter.title}
           thumbnail={frontmatter.thumbnail}
@@ -88,91 +71,165 @@ const formattedDateTime = formatDate(frontmatter.date);
           modifiedDate={frontmatter.date}
           author="Yorrick"
         />
-      
     </head>
-    <body class="body">
-        <div class="page-wrapper">
-            <NewNavmenu />
-            <BaseHeader />
-            <div
-                data-w-id="75dba001-0326-9ad8-ca3e-3734b81d7ff9"
-                class="content"
-            >
-                <div class="container">
-                    <a
-    href="/nieuws/"
-    onclick="if(history.length > 1){ history.back(); return false; }"
-    class="terug-knop w-inline-block"
->
-    <div class="terug-div">
-        <img
-            src="https://assets-global.website-files.com/6613d9d7c23cff2286422b25/66145e1f24aa75e6e8efe154_pijl.svg"
-            loading="lazy"
-            width="10"
-            alt=""
-            class="image-4"
-        />
-        <div class="terugknop-text">
-            Terug
-        </div>
-    </div>
-</a>
-                    <div class="content-left">
-                        <div class="blog-post-container">
-                            <div
-                                id="w-node-_834894ef-45d4-3601-08c4-adde27664434-01535055"
-                                class="blog-header"
-                            >
-                                <div
-                                    id="w-node-b6eeaddc-234a-634b-164b-ca588e2dae68-01535055"
-                                    class="blog-image-wrap"
-                                >
-                                    <img
-                                        src={frontmatter.thumbnail}
-                                        width="Auto"
-                                        sizes="(max-width: 479px) 100vw, (max-width: 767px) 77vw, 42vw"
-                                        class="blog-image"
-                                        alt={frontmatter.title}
-                                        loading="eager"
-                                        decoding="sync"
-                                        fetchpriority="high"
-                                    />
-                                </div>
-                                <div
-                                    id="w-node-b6eeaddc-234a-634b-164b-ca588e2dae6a-01535055"
-                                    class="blog-title"
-                                >
-                                    <h3 class="heading-h2 nieuws-cat">
-                                        {frontmatter.soort} nieuws
-                                    </h3>
-                                    <h1 class="heading-h2 blog-title">
-                                        {frontmatter.title}
-                                    </h1>
-                                    <!-- Check if formattedDateTime is not empty before rendering -->
-                                    {
-                                        formattedDateTime && (
-                                            <p class="paragraph-detials-small">
-                                                {formattedDateTime}
-                                            </p>
-                                        )
-                                    }
-                                </div>
-                            </div>
-                            <div
-                                id="w-node-_2957b33b-ee9d-a9a8-80b3-56ea90e637f9-01535055"
-                                class="blog-text w-richtext"
-                            >
-                                <slot />
-                            </div>
+    <body>
+        <div class="cn-page">
+            <Header links={getNavLinks("nieuws")} partnerLabel={PARTNER_LABEL}>
+                <img slot="logo" src="/images/LogoCleanSmaller.png" alt="Cinematen" width="140" height="28" />
+                <img slot="partner-logo" src="/images/kinepolis.png" alt="Kinepolis" width="72" height="22" />
+            </Header>
+
+            <main>
+                <section class="cn-article-hero">
+                    <div class="cn-article-hero__media" aria-hidden="true">
+                        <img src={frontmatter.thumbnail} alt="" loading="eager" decoding="sync" fetchpriority="high" />
+                        <div class="cn-article-hero__scrim"></div>
+                    </div>
+                    <div class="cn-article-hero__content">
+                        <h1>{frontmatter.title}</h1>
+                        <div class="cn-article-hero__meta">
+                            {frontmatter.soort && (
+                                <CategoryBadge label={`${frontmatter.soort} nieuws`} tone={soortLower === "tv" ? "tv" : "film"} />
+                            )}
+                            {displayDate && <span class="cn-article-hero__date">{displayDate}</span>}
                         </div>
                     </div>
-                </div>
+                </section>
+
+                <article class="cn-article-prose">
+                    <slot />
+                </article>
+
                 <RandomReviews currentSlug={frontmatter.slug} />
                 <RelatedNieuws currentSlug={frontmatter.slug} soort={frontmatter.soort} />
-            </div>
-            <BasePodcastBanner />
-            <BaseFooter />
+
+                <div class="cn-article-podcast">
+                    <BasePodcastBanner />
+                </div>
+            </main>
+
+            <Footer columns={FOOTER_COLUMNS} bottomLeft={FOOTER_BOTTOM_LEFT}>
+                <img slot="logo" src="/images/LogoCleanSmaller.png" alt="Cinematen" width="160" height="32" />
+                <Fragment slot="tagline">{FOOTER_TAGLINE}</Fragment>
+                <Fragment slot="social-icons">
+                    <SocialIcons />
+                </Fragment>
+            </Footer>
         </div>
-        <BaseScript />
     </body>
 </html>
+
+<style>
+    .cn-page {
+        min-height: 100dvh;
+        background: var(--surface);
+        color: var(--on-surface);
+    }
+
+    .cn-article-hero {
+        position: relative;
+        width: 100%;
+        min-height: 60vh;
+        display: flex;
+        align-items: flex-end;
+        padding-bottom: 32px;
+    }
+    .cn-article-hero__media {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+    }
+    .cn-article-hero__media img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .cn-article-hero__scrim {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(13, 23, 48, 0.95) 0%, rgba(13, 23, 48, 0.3) 55%, transparent 100%);
+    }
+    .cn-article-hero__content {
+        position: relative;
+        z-index: 1;
+        max-width: var(--container-max);
+        margin: 0 auto;
+        padding: 0 var(--space-margin-desktop) 48px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .cn-article-hero__content h1 {
+        font-family: var(--font-sans);
+        font-weight: 800;
+        letter-spacing: -0.01em;
+        font-size: 52px;
+        line-height: 1.05;
+        color: var(--on-surface);
+        margin: 0 0 24px;
+        max-width: 820px;
+    }
+    .cn-article-hero__meta {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    .cn-article-hero__date {
+        font-family: var(--font-sans);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--on-surface-variant);
+    }
+
+    .cn-article-prose {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 48px var(--space-margin-mobile) 64px;
+        font-family: var(--font-sans);
+        font-size: 18px;
+        line-height: 1.6;
+        color: var(--on-surface);
+    }
+    .cn-article-prose :global(p:first-of-type) {
+        font-weight: 700;
+        color: var(--primary);
+    }
+    .cn-article-prose :global(h2) {
+        font-size: 24px;
+        font-weight: 600;
+        margin: 40px 0 16px;
+        color: var(--on-surface);
+    }
+    .cn-article-prose :global(p) {
+        margin: 0 0 24px;
+    }
+    .cn-article-prose :global(a) {
+        color: var(--accent-blue);
+    }
+    .cn-article-prose :global(img) {
+        max-width: 100%;
+        height: auto;
+        border-radius: var(--radius-lg);
+    }
+
+    .cn-article-podcast {
+        max-width: var(--container-max);
+        margin: 0 auto;
+        padding: 0 var(--space-margin-desktop) 64px;
+    }
+
+    @media (max-width: 720px) {
+        .cn-article-hero__content {
+            padding: 0 var(--space-margin-mobile) 32px;
+        }
+        .cn-article-hero__content h1 {
+            font-size: 32px;
+        }
+        .cn-article-podcast {
+            padding: 0 var(--space-margin-mobile) 48px;
+        }
+    }
+</style>

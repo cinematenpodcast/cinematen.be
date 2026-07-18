@@ -1,4 +1,10 @@
 ---
+// New design-system tokens + self-hosted fonts (Rubik + Rubik Mono One).
+// Ported verbatim from the Claude Design redesign export — see
+// src/styles/design-system/USAGE.md. Loaded alongside the existing
+// /style.css monolith (not a replacement yet); pages migrate incrementally.
+import "../styles/design-system/index.css";
+
 const { canonicalURL, title, description, publishedDate, modifiedDate, articleType, author, image } = Astro.props;
 const defaultCanonical = "https://www.cinematen.be/";
 const finalCanonical = canonicalURL || defaultCanonical;

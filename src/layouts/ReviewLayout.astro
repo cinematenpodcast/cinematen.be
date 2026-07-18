@@ -1,12 +1,18 @@
 ---
+// Review/blog detail — redesigned per `Review.dc.html`.
+// Wrapped by src/pages/reviews&blogs/[...slug].astro (untouched, still
+// passes `frontmatter` + slotted MDX `<Content />`). Same SEO/schema.org
+// pipeline and component inclusions as before (BasePodcastBanner, RandomReviews)
+// — only the visual chrome around the article body changed.
 import BaseHead from "../components/BaseHead.astro";
-import NewNavmenu from "../components/NewNavmenu.astro";
-import BaseHeader from "../components/BaseHeader.astro";
-import BaseFooter from "../components/BaseFooter.astro";
-import BaseScript from "../components/BaseScript.astro";
+import Header from "../components/design-system/Header.astro";
+import Footer from "../components/design-system/Footer.astro";
+import SocialIcons from "../components/design-system/SocialIcons.astro";
+import CategoryBadge from "../components/design-system/CategoryBadge.astro";
 import BasePodcastBanner from "../components/BasePodcastBanner.astro";
 import RandomReviews from "../components/RandomReviews.astro";
-
+import { formatCardDate, ratingOutOfFive } from "../lib/format";
+import { getNavLinks, FOOTER_COLUMNS, FOOTER_BOTTOM_LEFT, FOOTER_TAGLINE, PARTNER_LABEL } from "../lib/siteNav";
 
 const { frontmatter } = Astro.props;
 
@@ -19,65 +25,12 @@ const soortLower = (frontmatter.soort || "").toLowerCase();
 const itemReviewedType = soortLower.includes("serie") || soortLower.includes("tv") ? "TVSeries" : "Movie";
 const reviewDescription = `Lees onze ${frontmatter.soort ? frontmatter.soort.toLowerCase() : 'review'} van ${frontmatter.title}. Bekijk onze beoordeling en ontdek of deze ${frontmatter.soort ? frontmatter.soort.toLowerCase() : 'content'} de moeite waard is.`;
 
-// Function to format the date and adjust for timezone
-function formatDate(dateString) {
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) return ""; // Return empty string if date is invalid
-    const options = {
-        timeZone: "UTC",
-        hour12: false,
-        hour: "numeric",
-        minute: "numeric"
-    } as const; // Set the timezone to UTC
-    const formattedDate = date.toLocaleDateString("nl-NL", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-    });
-    const timePart = date.toLocaleTimeString("nl-NL", options);
-    return timePart === "00:00"
-        ? formattedDate
-        : `${formattedDate} ${timePart}`; // Return only date if time is midnight, otherwise combine date and time
-}
-
-// Format the date
-const formattedDateTime = formatDate(frontmatter.date);
-
-// Function to generate star rating images based on the rating
-function generateStarRating(rating) {
-    const fullStar = "/images/star-full.png";
-    const halfStar = "/images/star-half.png";
-    const emptyStar = "/images/star-empty.png";
-
-    const stars = [];
-    let remainingRating = rating;
-
-    for (let i = 0; i < 5; i++) {
-        if (remainingRating >= 1) {
-            stars.push(fullStar);
-            remainingRating--;
-        } else if (remainingRating > 0) {
-            stars.push(halfStar);
-            remainingRating = 0;
-        } else {
-            stars.push(emptyStar);
-        }
-    }
-
-    return stars;
-}
-
-// Ensure rating is a number
-const parsedRating = parseFloat(frontmatter.rating);
-// Ensure rating is within the range of 0 to 5
-const validatedRating = isNaN(parsedRating) ? 0 : Math.min(Math.max(parsedRating, 0), 5);
-// Generate star rating images
-const starRatingImages = generateStarRating(validatedRating);
-
-console.log("Rating:", frontmatter.rating); // Add this line to check the value of rating
-
+const displayDate = formatCardDate(frontmatter.date);
+// Real `rating` is stored on a 0–5 scale (see src/lib/format.ts) — the
+// schema.org Review markup below keeps that native scale (bestRating: 5)
+// rather than inventing a /10 conversion the static design mock assumed.
+const ratingLabel = ratingOutOfFive(frontmatter.rating);
 ---
-
 
 <html lang="nl">
     <head>
@@ -136,92 +89,232 @@ console.log("Rating:", frontmatter.rating); // Add this line to check the value 
           ]
         })}></script>
     </head>
-    <body class="body">
-        <div class="page-wrapper">
-            <NewNavmenu />
-            <BaseHeader />
-            <div
-                data-w-id="75dba001-0326-9ad8-ca3e-3734b81d7ff9"
-                class="content"
-            >
-                <div class="container">
-                    <a
-    href="/reviews&blogs/"
-    onclick="if(history.length > 1){ history.back(); return false; }"
-    class="terug-knop w-inline-block"
->
-    <div class="terug-div">
-        <img
-            src="https://assets-global.website-files.com/6613d9d7c23cff2286422b25/66145e1f24aa75e6e8efe154_pijl.svg"
-            loading="lazy"
-            width="10"
-            alt=""
-            class="image-4"
-        />
-        <div class="terugknop-text">
-            Terug
-        </div>
-    </div>
-</a>
-                    <div class="content-left">
-                        <div class="blog-post-container w-clearfix">
-                            <img
-                                src={frontmatter.poster}
-                                loading="eager"
-                                decoding="sync"
-                                fetchpriority="high"
-                                sizes="(max-width: 479px) 100vw, (max-width: 767px) 23vw, (max-width: 991px) 300px, 400px"
-                                alt={frontmatter.title}
-                                class="review-poster"
-                            />
-                            <div
-                                id="w-node-_069f2f58-921b-4412-13ba-a31b655496e4-9b14680e"
-                                class="review-content-block"
-                            >
-                                <div
-                                    id="w-node-_069f2f58-921b-4412-13ba-a31b655496e7-9b14680e"
-                                    class="review-title"
-                                >
-                                    <div class="review-header-bottom">
-                                        <h3 class="heading-h2 review-topic">
-                                            {frontmatter.soort} door {
-                                                frontmatter.schrijver
-                                            }
-                                        </h3>
-                                        <h1 class="heading-h2 review-title">
-                                            {frontmatter.title}
-                                        </h1>
-                                        {frontmatter.rating && frontmatter.rating > 0 && (
-                                        <div class="rating-blue">
-                                            {starRatingImages.map((starImage, i) => (
-                                                <img src={starImage} loading="lazy" alt={`Ster ${i+1} van 5`} class="star-image" />
-                                            ))}
-                                        </div> )}
-                                    </div>
-                                    {
-                                        formattedDateTime && (
-                                            <p class="paragraph-detials-small">
-                                                {formattedDateTime}
-                                            </p>
-                                        )
-                                    }
-                                    </div>
-                                </div>
-                                <div
-                                    id="w-node-_069f2f58-921b-4412-13ba-a31b655496ee-9b14680e"
-                                    class="review-text w-richtext"
-                                >
-                                    <slot />
+    <body>
+        <div class="cn-page">
+            <Header links={getNavLinks("reviews")} partnerLabel={PARTNER_LABEL}>
+                <img slot="logo" src="/images/LogoCleanSmaller.png" alt="Cinematen" width="140" height="28" />
+                <img slot="partner-logo" src="/images/kinepolis.png" alt="Kinepolis" width="72" height="22" />
+            </Header>
+
+            <main>
+                <section class="cn-review-hero">
+                    <div class="cn-review-hero__media" aria-hidden="true">
+                        <img src={frontmatter.thumbnail || frontmatter.poster} alt="" loading="eager" decoding="sync" fetchpriority="high" />
+                        <div class="cn-review-hero__scrim"></div>
+                    </div>
+                    <div class="cn-review-hero__content">
+                        <div class="cn-review-hero__row">
+                            <div class="cn-review-hero__text">
+                                <CategoryBadge label="REVIEW" tone={soortLower === "tv" ? "tv" : "film"} />
+                                <h1>{frontmatter.title}</h1>
+                                <div class="cn-review-hero__meta">
+                                    {displayDate && <span>{displayDate}</span>}
+                                    {frontmatter.schrijver && <span class="cn-review-hero__author">Door {frontmatter.schrijver}</span>}
                                 </div>
                             </div>
+                            {frontmatter.poster && (
+                                <div class="cn-review-hero__poster-wrap">
+                                    <img class="cn-review-hero__poster" src={frontmatter.poster} alt={`${frontmatter.title} poster`} />
+                                    {ratingLabel && (
+                                        <div class="cn-review-hero__rating">
+                                            <span class="cn-review-hero__rating-num">{ratingLabel}</span>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                         </div>
                     </div>
-                </div>
+                </section>
+
+                <article class="cn-article-prose">
+                    <slot />
+                </article>
+
                 <RandomReviews currentSlug={frontmatter.slug} />
-                <BasePodcastBanner />
-                <BaseFooter />
-            </div>
-            <BaseScript />
+
+                <div class="cn-article-podcast">
+                    <BasePodcastBanner />
+                </div>
+            </main>
+
+            <Footer columns={FOOTER_COLUMNS} bottomLeft={FOOTER_BOTTOM_LEFT}>
+                <img slot="logo" src="/images/LogoCleanSmaller.png" alt="Cinematen" width="160" height="32" />
+                <Fragment slot="tagline">{FOOTER_TAGLINE}</Fragment>
+                <Fragment slot="social-icons">
+                    <SocialIcons />
+                </Fragment>
+            </Footer>
         </div>
     </body>
 </html>
+
+<style>
+    .cn-page {
+        min-height: 100dvh;
+        background: var(--surface);
+        color: var(--on-surface);
+    }
+
+    .cn-review-hero {
+        position: relative;
+        width: 100%;
+        min-height: 66vh;
+        display: flex;
+        align-items: flex-end;
+        padding-bottom: 48px;
+    }
+    .cn-review-hero__media {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+    }
+    .cn-review-hero__media img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .cn-review-hero__scrim {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(13, 23, 48, 0.95) 0%, rgba(13, 23, 48, 0.3) 55%, transparent 100%);
+    }
+    .cn-review-hero__content {
+        position: relative;
+        z-index: 1;
+        max-width: var(--container-max);
+        margin: 0 auto;
+        padding: 0 var(--space-margin-desktop) 48px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .cn-review-hero__row {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 32px;
+        flex-wrap: wrap;
+    }
+    .cn-review-hero__text {
+        flex: 0 1 400px;
+        min-width: 280px;
+    }
+    .cn-review-hero__text h1 {
+        font-family: var(--font-sans);
+        font-weight: 800;
+        letter-spacing: -0.01em;
+        font-size: 52px;
+        line-height: 1.05;
+        color: var(--on-surface);
+        margin: 16px 0 24px;
+    }
+    .cn-review-hero__meta {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        flex-wrap: wrap;
+        font-family: var(--font-sans);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--on-surface-variant);
+    }
+    .cn-review-hero__author {
+        background: var(--surface-container-high);
+        color: var(--on-surface);
+        border-radius: var(--radius-full);
+        padding: 4px 12px;
+    }
+    .cn-review-hero__poster-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 19px;
+        flex-shrink: 0;
+    }
+    .cn-review-hero__poster {
+        width: 260px;
+        max-width: 40vw;
+        aspect-ratio: 2 / 3;
+        object-fit: cover;
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-lg);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        display: block;
+    }
+    .cn-review-hero__rating {
+        display: flex;
+        align-items: baseline;
+        gap: 6px;
+        background: rgba(10, 17, 40, 0.72);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: var(--radius-lg);
+        padding: 9px 22px;
+        line-height: 1;
+    }
+    .cn-review-hero__rating-num {
+        font-family: var(--font-sans);
+        font-weight: 800;
+        font-size: 26px;
+        color: var(--on-surface);
+    }
+
+    .cn-article-prose {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 48px var(--space-margin-mobile) 64px;
+        font-family: var(--font-sans);
+        font-size: 18px;
+        line-height: 1.6;
+        color: var(--on-surface);
+    }
+    .cn-article-prose :global(p:first-of-type) {
+        font-weight: 700;
+        color: var(--primary);
+    }
+    .cn-article-prose :global(h2),
+    .cn-article-prose :global(h3) {
+        font-size: 24px;
+        font-weight: 600;
+        margin: 40px 0 16px;
+        color: var(--on-surface);
+    }
+    .cn-article-prose :global(p) {
+        margin: 0 0 24px;
+    }
+    .cn-article-prose :global(a) {
+        color: var(--accent-blue);
+    }
+    .cn-article-prose :global(img) {
+        max-width: 100%;
+        height: auto;
+        border-radius: var(--radius-lg);
+    }
+
+    .cn-article-podcast {
+        max-width: var(--container-max);
+        margin: 0 auto;
+        padding: 0 var(--space-margin-desktop) 64px;
+    }
+
+    @media (max-width: 720px) {
+        .cn-review-hero__content {
+            padding: 0 var(--space-margin-mobile) 32px;
+        }
+        .cn-review-hero__text h1 {
+            font-size: 32px;
+        }
+        .cn-review-hero__poster {
+            width: 140px;
+            max-width: 34vw;
+        }
+        .cn-review-hero__rating-num {
+            font-size: 18px;
+        }
+        .cn-article-podcast {
+            padding: 0 var(--space-margin-mobile) 48px;
+        }
+    }
+</style>

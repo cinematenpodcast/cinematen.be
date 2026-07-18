@@ -1,0 +1,9 @@
+/* Cinematen Design System — token entry point.
+ * Ported pixel-perfect from the Claude Design redesign export (_ds bundle).
+ * Import this ONCE globally (see src/components/BaseHead.astro) — do not
+ * duplicate the import per-page/per-component.
+ */
+@import "./fonts.css";
+@import "./tokens/colors.css";
+@import "./tokens/typography.css";
+@import "./tokens/spacing.css";

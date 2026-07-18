@@ -1,93 +1,167 @@
 ---
+// TermsLayout — shared chrome for the legal pages (privacypolicy.md,
+// termsofservice.md, cookiebeleid.md). Restyled onto the design-system
+// Header/Footer + typography tokens; markdown body content (h2/p/ul/strong)
+// is styled via scoped :global() descendant selectors since the rendered
+// markdown lands inside <slot /> without its own component boundary.
 import BaseHead from "../components/BaseHead.astro";
-import NewNavmenu from "../components/NewNavmenu.astro";
-import BaseHeader from "../components/BaseHeader.astro";
-import BaseFooter from "../components/BaseFooter.astro";
 import BaseScript from "../components/BaseScript.astro";
-const { frontmatter } = Astro.props;
+import Header from "../components/design-system/Header.astro";
+import Footer from "../components/design-system/Footer.astro";
+import SocialIcons from "../components/design-system/SocialIcons.astro";
+import {
+  getNavLinks,
+  FOOTER_COLUMNS,
+  FOOTER_BOTTOM_LEFT,
+  FOOTER_TAGLINE,
+  PARTNER_LABEL,
+} from "../lib/siteNav";
 
-// Generate canonical URL
+const { frontmatter } = Astro.props;
 const canonicalURL = `https://www.cinematen.be${Astro.url.pathname}`;
+const navLinks = getNavLinks(null);
 ---
 
-<html lang="en">
-    <head>
-        <BaseHead
-            title={frontmatter.title}
-            description={frontmatter.summary}
-            canonicalURL={canonicalURL}
-        />
-    </head>
-    <body class="body">
-        <div class="page-wrapper">
-            <NewNavmenu />
-            <BaseHeader />
-            <div
-                data-w-id="75dba001-0326-9ad8-ca3e-3734b81d7ff9"
-                class="content"
-            >
-                <div class="container">
-                    <div class="content-left">
-                        <div class="blog-post-container" style="width: 100%">
-                            <div
-                                id="w-node-b6eeaddc-234a-634b-164b-ca588e2dae6a-01535055"
-                                class="blog-title"
-                            >
-                                <h1 class="heading-h2 blog-title">
-                                    {frontmatter.title}
-                                </h1>
-                            </div>
-                            <div
-                                id="w-node-_2957b33b-ee9d-a9a8-80b3-56ea90e637f9-01535055"
-                                class="blog-text w-richtext"
-                            >
-                                <slot />     
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <BaseFooter />
-        </div>
-        <BaseScript />
-        <style is:global>
-            /* Override default rich text figure width for this specific layout on mobile */
-            @media screen and (max-width: 767px) {
-                .w-richtext figure,
-                .w-richtext .w-richtext-figure-type-image,
-                .w-richtext figure.w-richtext-figure-type-image {
-                    max-width: 100% !important;
-                    width: 100% !important;
-                    margin-left: 0 !important;
-                    margin-right: 0 !important;
-                }
-                
-                .w-richtext figure img,
-                .w-richtext img {
-                    width: 100% !important;
-                    max-width: 100% !important;
-                    height: auto !important;
-                }
+<html lang="nl">
+  <head>
+    <BaseHead
+      title={frontmatter.title}
+      description={frontmatter.summary}
+      canonicalURL={canonicalURL}
+    />
+  </head>
+  <body class="cn-legal-body">
+    <Header links={navLinks} partnerLabel={PARTNER_LABEL}>
+      <img
+        slot="logo"
+        src="/images/LogoCleanSmaller.png"
+        alt="Cinematen"
+        width="26"
+        height="28"
+        style="height:28px;width:auto;"
+      />
+      <img
+        slot="partner-logo"
+        src="/images/kinepolis.png"
+        alt="Kinepolis Antwerpen"
+        width="28"
+        height="28"
+        style="height:28px;width:auto;display:block;"
+      />
+    </Header>
 
-                .blog-post-container {
-                    padding-left: 20px !important;
-                    padding-right: 20px !important;
-                    width: 100% !important;
-                    box-sizing: border-box !important;
-                }
-                
-                /* Fix any potential overflow or constraint from parent containers */
-                .content-left {
-                     width: 100% !important;
-                }
+    <main class="cn-legal">
+      <h1 class="cn-legal__title">{frontmatter.title}</h1>
+      {
+        frontmatter.lastUpdated && (
+          <p class="cn-legal__updated">
+            Laatst bijgewerkt: {frontmatter.lastUpdated}
+          </p>
+        )
+      }
+      <div class="cn-legal__body">
+        <slot />
+      </div>
+    </main>
 
-                /* Ensure long URLs break on mobile */
-                .blog-text {
-                    word-break: break-word;
-                    overflow-wrap: break-word;
-                }
-            }
-        </style>
-    </body>
+    <Footer columns={FOOTER_COLUMNS} bottomLeft={FOOTER_BOTTOM_LEFT}>
+      <img
+        slot="logo"
+        src="/images/LogoCleanSmaller.png"
+        alt="Cinematen"
+        width="37"
+        height="40"
+        style="height:40px;width:auto;"
+      />
+      <Fragment slot="tagline">{FOOTER_TAGLINE}</Fragment>
+      <Fragment slot="social-icons"><SocialIcons /></Fragment>
+    </Footer>
+
+    <BaseScript />
+
+    <style>
+      .cn-legal-body {
+        margin: 0;
+        background: var(--surface);
+      }
+      .cn-legal {
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 64px var(--space-margin-desktop) 80px;
+      }
+      .cn-legal__title {
+        font-family: var(--font-sans);
+        font-weight: var(--font-headline-weight);
+        font-size: 44px;
+        color: var(--on-surface);
+        margin: 0 0 8px;
+      }
+      .cn-legal__updated {
+        font-family: var(--font-sans);
+        font-size: 14px;
+        color: var(--on-surface-variant);
+        margin: 0 0 40px;
+      }
+      .cn-legal__body :global(h2) {
+        font-family: var(--font-sans);
+        font-size: 22px;
+        font-weight: 700;
+        margin: 36px 0 12px;
+        color: var(--on-surface);
+      }
+      .cn-legal__body :global(p),
+      .cn-legal__body :global(li) {
+        font-family: var(--font-sans);
+        font-size: 16px;
+        line-height: 1.7;
+        color: var(--on-surface-variant);
+        margin: 0 0 14px;
+      }
+      .cn-legal__body :global(ul) {
+        margin: 0 0 14px;
+        padding-left: 20px;
+      }
+      .cn-legal__body :global(strong) {
+        color: var(--on-surface);
+      }
+      .cn-legal__body :global(a) {
+        color: var(--accent-blue);
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
+      .cn-legal__body :global(a:hover) {
+        color: var(--primary);
+      }
+      .cn-legal__body :global(a:focus-visible) {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+      }
+      .cn-legal__body :global(table) {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0 0 24px;
+        font-size: 14px;
+      }
+      .cn-legal__body :global(th),
+      .cn-legal__body :global(td) {
+        text-align: left;
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--outline-variant);
+        color: var(--on-surface-variant);
+      }
+      .cn-legal__body :global(th) {
+        color: var(--on-surface);
+        font-weight: 700;
+      }
+
+      @media (max-width: 640px) {
+        .cn-legal {
+          padding: 48px var(--space-margin-mobile) 64px;
+        }
+        .cn-legal__title {
+          font-size: 32px;
+        }
+      }
+    </style>
+  </body>
 </html>
-

@@ -1,0 +1,33 @@
+---
+/**
+ * Shared category-chip row for the Nieuws listing family (`Nieuws.dc.html`
+ * shows "Alles / Film nieuws / TV nieuws"). Maps 1:1 onto three existing real
+ * routes — /nieuws (all), /nieuws/film (soort: Film), /nieuws/serie
+ * (soort: TV) — no new routes/filtering logic introduced.
+ *
+ * Used on: /nieuws/pages/:n, /nieuws/tags/:tag/:n, /nieuws/film,
+ * /nieuws/serie, /nieuws/14days — same three chips everywhere, only the
+ * `active` prop changes, so every listing variant looks consistent.
+ */
+import Chip from "./design-system/Chip.astro";
+
+interface Props {
+  active?: "all" | "film" | "tv" | null;
+}
+const { active = null } = Astro.props as Props;
+---
+
+<div class="cn-filter-row">
+  <Chip as="a" href="/nieuws/pages/1" active={active === "all"}>Alles</Chip>
+  <Chip as="a" href="/nieuws/film" active={active === "film"}>Film nieuws</Chip>
+  <Chip as="a" href="/nieuws/serie" active={active === "tv"}>TV nieuws</Chip>
+</div>
+
+<style>
+  .cn-filter-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+  }
+</style>

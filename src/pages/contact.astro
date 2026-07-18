@@ -1,0 +1,225 @@
+---
+// Contact page — new design-system chrome (Header/Footer) wrapping the
+// existing BaseContact.astro form UNCHANGED (action/method/field names
+// must not change per redesign scope). Visual restyle only, via global
+// CSS overrides scoped under .cn-contact__form-shell — BaseContact.astro
+// itself is not edited.
+//
+// Nav/footer data comes from src/lib/siteNav.ts (shared with the parallel
+// frontend-developer agent's Home/Nieuws/Reviews pages) so the header links,
+// footer columns and social icons are identical site-wide rather than a
+// second, drifting copy of the same arrays.
+import BaseHead from "../components/BaseHead.astro";
+import BaseScript from "../components/BaseScript.astro";
+import BaseContact from "../components/BaseContact.astro";
+import Header from "../components/design-system/Header.astro";
+import Footer from "../components/design-system/Footer.astro";
+import SocialIcons from "../components/design-system/SocialIcons.astro";
+import {
+  getNavLinks,
+  FOOTER_COLUMNS,
+  FOOTER_BOTTOM_LEFT,
+  FOOTER_TAGLINE,
+  PARTNER_LABEL,
+} from "../lib/siteNav";
+
+const canonicalURL = "https://www.cinematen.be/contact";
+const navLinks = getNavLinks("contact");
+---
+
+<html lang="nl">
+  <head>
+    <BaseHead
+      title="Contact | Cinematen.be"
+      description="Vraag, compliment, suggestie of feedback? Neem contact op met Cinematen.be."
+      canonicalURL={canonicalURL}
+    />
+  </head>
+  <body class="cn-contact-body">
+    <Header links={navLinks} partnerLabel={PARTNER_LABEL}>
+      <img
+        slot="logo"
+        src="/images/LogoCleanSmaller.png"
+        alt="Cinematen"
+        width="26"
+        height="28"
+        style="height:28px;width:auto;"
+      />
+      <img
+        slot="partner-logo"
+        src="/images/kinepolis.png"
+        alt="Kinepolis Antwerpen"
+        width="28"
+        height="28"
+        style="height:28px;width:auto;display:block;"
+      />
+    </Header>
+
+    <main class="cn-contact">
+      <h1 class="cn-contact__title">Contacteer ons!</h1>
+      <p class="cn-contact__subtitle">
+        Vraag, compliment, suggestie of feedback? Laat het ons weten.
+      </p>
+      <div class="cn-contact__form-shell">
+        <BaseContact />
+      </div>
+    </main>
+
+    <Footer columns={FOOTER_COLUMNS} bottomLeft={FOOTER_BOTTOM_LEFT}>
+      <img
+        slot="logo"
+        src="/images/LogoCleanSmaller.png"
+        alt="Cinematen"
+        width="37"
+        height="40"
+        style="height:40px;width:auto;"
+      />
+      <Fragment slot="tagline">{FOOTER_TAGLINE}</Fragment>
+      <Fragment slot="social-icons"><SocialIcons /></Fragment>
+    </Footer>
+
+    <BaseScript />
+
+    <style is:global>
+      /* Contact page: visual overrides for the legacy BaseContact.astro
+         markup. BaseContact.astro's form action/method/field names are not
+         touched — only presentation is retouched via these descendant
+         selectors, scoped under .cn-contact__form-shell. */
+      .cn-contact__form-shell .section-contact-form {
+        background: none !important;
+        padding: 0 !important;
+      }
+      .cn-contact__form-shell .page-padding,
+      .cn-contact__form-shell .container-medium,
+      .cn-contact__form-shell .padding-vertical {
+        padding: 0 !important;
+        max-width: none !important;
+      }
+      /* Redundant heading — page supplies its own <h1> above; avoid a
+         duplicate "Contacteer ons!" in the a11y tree. */
+      .cn-contact__form-shell h2 {
+        display: none;
+      }
+      .cn-contact__form-shell .form-wrapper-2 {
+        width: 100%;
+      }
+      .cn-contact__form-shell form#email-form {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .cn-contact__form-shell .form-field-wrapper {
+        width: 100%;
+      }
+      .cn-contact__form-shell .form-input-2 {
+        width: 100%;
+        box-sizing: border-box;
+        background: var(--surface-container);
+        border: 1px solid var(--outline-variant);
+        border-radius: var(--radius-md);
+        padding: 14px 16px;
+        font-family: var(--font-sans);
+        font-size: 15px;
+        color: var(--on-surface);
+      }
+      .cn-contact__form-shell .form-input-2::placeholder {
+        color: var(--on-surface-variant);
+      }
+      .cn-contact__form-shell .form-input-2:focus {
+        outline: 2px solid var(--primary);
+        outline-offset: 1px;
+        border-color: var(--primary);
+      }
+      .cn-contact__form-shell .form-input-2.is-text-area {
+        resize: vertical;
+        min-height: 140px;
+      }
+      .cn-contact__form-shell input.button-2.is-form-submit {
+        align-self: center;
+        background: var(--primary);
+        color: #0a1128;
+        border: none;
+        border-radius: var(--radius-lg);
+        padding: 14px 32px;
+        font-family: var(--font-sans);
+        font-weight: 700;
+        font-size: 16px;
+        cursor: pointer;
+        margin-top: 8px;
+        transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .cn-contact__form-shell input.button-2.is-form-submit:hover {
+        background: var(--primary-fixed);
+      }
+      .cn-contact__form-shell input.button-2.is-form-submit:active {
+        transform: translateY(1px);
+      }
+      .cn-contact__form-shell input.button-2.is-form-submit:focus-visible {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+      }
+      .cn-contact__form-shell .margin-top.margin-large:last-child {
+        margin-top: 32px;
+        padding-top: 24px;
+        border-top: 1px solid var(--outline-variant);
+        text-align: center;
+      }
+      .cn-contact__form-shell a.button-2 {
+        display: inline-block !important;
+        width: auto !important;
+        background: var(--surface-container) !important;
+        border: 1px solid var(--outline-variant) !important;
+        border-radius: var(--radius-full) !important;
+        padding: 14px 32px !important;
+        font-family: var(--font-sans);
+        font-weight: 700;
+        font-size: 15px;
+        color: var(--on-surface) !important;
+        transition: border-color 0.15s ease;
+      }
+      .cn-contact__form-shell a.button-2:hover {
+        border-color: var(--primary) !important;
+      }
+      .cn-contact__form-shell a.button-2:focus-visible {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+      }
+    </style>
+
+    <style>
+      .cn-contact-body {
+        margin: 0;
+        background: var(--surface);
+      }
+      .cn-contact {
+        max-width: 640px;
+        margin: 0 auto;
+        padding: 64px var(--space-margin-desktop) 80px;
+      }
+      .cn-contact__title {
+        font-family: var(--font-sans);
+        font-weight: var(--font-headline-weight);
+        font-size: 44px;
+        color: var(--on-surface);
+        margin: 0 0 12px;
+        text-align: center;
+      }
+      .cn-contact__subtitle {
+        font-family: var(--font-sans);
+        font-size: 16px;
+        line-height: 1.6;
+        color: var(--on-surface-variant);
+        margin: 0 0 40px;
+        text-align: center;
+      }
+      @media (max-width: 640px) {
+        .cn-contact {
+          padding: 48px var(--space-margin-mobile) 64px;
+        }
+        .cn-contact__title {
+          font-size: 32px;
+        }
+      }
+    </style>
+  </body>
+</html>

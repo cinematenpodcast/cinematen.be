@@ -1,0 +1,356 @@
+---
+/**
+ * Header — sticky top nav bar with desktop link row + burger-triggered
+ * mobile drawer. The desktop row collapses into the burger via a CONTAINER
+ * query (max-width: 720px of the header's own inner box, not the viewport),
+ * so this works correctly at any embed width.
+ *
+ * Ported from _ds_bundle.js `components/navigation/Header.jsx`. The drawer
+ * open/close state was React `useState` in the source; here it's plain
+ * vanilla JS (via the bundled, non-inline <script> below) since Astro
+ * components don't hydrate — this keeps the header dependency-free (no
+ * React/client:* directive needed for a simple show/hide toggle). The
+ * <script> tag below is processed by Astro into an external module file,
+ * so it's 'self'-origin and CSP-safe under vercel.json's script-src
+ * (no inline-script hash needed).
+ *
+ * Replaces: BaseHeader.astro + NewNavmenu.astro (this single component owns
+ * both the logo/nav bar AND the mobile drawer).
+ *
+ * Props:
+ *   links             Array<{ label: string; href: string; active?: boolean; icon?: string }>
+ *                      `icon` is raw inline SVG markup (rendered via
+ *                      set:html — developer-authored, not user input),
+ *                      shown only inside the mobile drawer, matching source.
+ *   partnerLabel?      e.g. "Partner van" — label shown next to/above the
+ *                      partner logo slot (desktop bar + drawer)
+ *   mobileCopyright?   small text pinned to the bottom of the drawer
+ * Slots:
+ *   logo          (required) — brand mark; rendered in both the bar and the
+ *                 drawer (Astro slots can render in multiple places).
+ *   partner-logo  (optional) — partner/sponsor logo (e.g. Kinepolis).
+ */
+interface HeaderLink {
+  label: string;
+  href: string;
+  active?: boolean;
+  icon?: string;
+}
+interface Props {
+  links: HeaderLink[];
+  partnerLabel?: string;
+  mobileCopyright?: string;
+}
+
+const { links, partnerLabel, mobileCopyright } = Astro.props;
+const hasPartner = Astro.slots.has("partner-logo");
+---
+
+<header class="cn-header" data-cn-header>
+  <div class="cn-header__inner">
+    <a href="/" class="cn-header__logo-link">
+      <slot name="logo" />
+    </a>
+    <nav class="cn-header__nav" aria-label="Hoofdmenu">
+      {links.map((link) => (
+        <a
+          href={link.href}
+          class:list={["cn-header__link", { "cn-header__link--active": link.active }]}
+          aria-current={link.active ? "page" : undefined}
+        >
+          {link.label}
+        </a>
+      ))}
+    </nav>
+    {hasPartner && (
+      <div class="cn-header__partner">
+        {partnerLabel && <span class="cn-header__partner-label">{partnerLabel}</span>}
+        <slot name="partner-logo" />
+      </div>
+    )}
+    <button
+      class="cn-header__burger"
+      type="button"
+      aria-label="Menu"
+      aria-expanded="false"
+      aria-controls="cn-drawer"
+      data-cn-burger
+    >
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<div class="cn-drawer-overlay" id="cn-drawer" data-cn-overlay hidden>
+  <div class="cn-drawer" role="dialog" aria-modal="true" aria-label="Menu">
+    <div class="cn-drawer__top">
+      <div class="cn-drawer__logo">
+        <slot name="logo" />
+      </div>
+      <button class="cn-drawer__close" type="button" aria-label="Sluiten" data-cn-close>✕</button>
+    </div>
+    {links.map((link) => (
+      <a
+        href={link.href}
+        class:list={["cn-drawer__link", { "cn-drawer__link--active": link.active }]}
+        aria-current={link.active ? "page" : undefined}
+      >
+        {link.icon && <Fragment set:html={link.icon} />}
+        {link.label}
+      </a>
+    ))}
+    {hasPartner && (
+      <Fragment>
+        <div class="cn-drawer__divider"></div>
+        <div class="cn-drawer__partner-label">{partnerLabel || "Partner van"}</div>
+        <div class="cn-drawer__partner-logo">
+          <slot name="partner-logo" />
+        </div>
+      </Fragment>
+    )}
+    {mobileCopyright && <div class="cn-drawer__footer">{mobileCopyright}</div>}
+  </div>
+</div>
+
+<style>
+  .cn-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(13, 23, 48, 0.8);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--outline-variant);
+  }
+  .cn-header__inner {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: 0 var(--space-margin-desktop);
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    container-type: inline-size;
+  }
+  .cn-header__logo-link {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    text-decoration: none;
+  }
+  .cn-header__logo-link :global(img),
+  .cn-header__logo-link :global(svg) {
+    height: 28px;
+    display: block;
+    flex-shrink: 0;
+  }
+  .cn-header__nav {
+    display: flex;
+    gap: 4px;
+    min-width: 0;
+  }
+  .cn-header__link {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--on-surface-variant);
+    padding: 10px 12px;
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .cn-header__link:hover {
+    color: var(--on-surface);
+  }
+  .cn-header__link:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+  .cn-header__link--active {
+    color: var(--on-surface);
+    border-bottom-color: var(--accent-blue);
+  }
+  .cn-header__partner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: var(--on-surface-variant);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .cn-header__burger {
+    display: none;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: 1px solid var(--outline-variant);
+    border-radius: var(--radius-md);
+    color: var(--on-surface);
+    cursor: pointer;
+  }
+  .cn-header__burger:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+
+  /* Collapse nav into a hamburger once it no longer fits — measured against
+     the header's own width via a container query, not the viewport.
+     Layout becomes a 3-slot mobile top bar: burger left, logo centered,
+     partner icon-only right. */
+  @container (max-width: 720px) {
+    .cn-header__nav {
+      display: none;
+    }
+    .cn-header__inner {
+      padding: 0 16px;
+    }
+    .cn-header__burger {
+      display: flex;
+      order: -2;
+    }
+    .cn-header__logo-link {
+      order: -1;
+      flex: 1;
+      justify-content: center;
+    }
+    .cn-header__partner {
+      order: 1;
+    }
+    .cn-header__partner-label {
+      display: none;
+    }
+  }
+
+  .cn-drawer-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 200;
+  }
+  .cn-drawer-overlay:not([hidden]) {
+    display: flex;
+  }
+  .cn-drawer {
+    width: 320px;
+    max-width: 82vw;
+    height: 100%;
+    background: var(--surface-container-high);
+    padding: 28px 20px 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    border-radius: 0 20px 20px 0;
+    overflow-y: auto;
+    font-family: var(--font-sans);
+  }
+  .cn-drawer__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .cn-drawer__logo :global(img),
+  .cn-drawer__logo :global(svg) {
+    height: 24px;
+    display: block;
+  }
+  .cn-drawer__close {
+    background: none;
+    border: none;
+    color: var(--on-surface);
+    font-size: 22px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px;
+  }
+  .cn-drawer__close:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+  .cn-drawer__link {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 16px;
+    border-radius: var(--radius-lg);
+    color: var(--on-surface);
+    text-decoration: none;
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+  .cn-drawer__link :global(svg) {
+    flex-shrink: 0;
+    opacity: 0.85;
+  }
+  .cn-drawer__link:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+  .cn-drawer__link--active {
+    background: var(--surface-container-highest);
+  }
+  .cn-drawer__divider {
+    border-top: 1px solid var(--outline-variant);
+    margin: 16px 0;
+  }
+  .cn-drawer__partner-label {
+    text-align: center;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--on-surface-variant);
+    margin-bottom: 12px;
+  }
+  .cn-drawer__partner-logo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+  .cn-drawer__footer {
+    margin-top: auto;
+    text-align: center;
+    font-size: 12px;
+    color: var(--on-surface-variant);
+    padding-top: 16px;
+  }
+</style>
+
+<script>
+  // Astro bundles this into an external module — 'self'-origin, no inline-script
+  // CSP hash required. Scoped to this component's own markup via data-attributes
+  // rather than global class names to avoid collisions with legacy nav scripts.
+  const header = document.querySelector<HTMLElement>("[data-cn-header]");
+  const overlay = document.querySelector<HTMLElement>("[data-cn-overlay]");
+  const burger = document.querySelector<HTMLButtonElement>("[data-cn-burger]");
+  const closeBtn = document.querySelector<HTMLButtonElement>("[data-cn-close]");
+
+  function openDrawer() {
+    overlay?.removeAttribute("hidden");
+    burger?.setAttribute("aria-expanded", "true");
+  }
+  function closeDrawer() {
+    overlay?.setAttribute("hidden", "");
+    burger?.setAttribute("aria-expanded", "false");
+  }
+
+  burger?.addEventListener("click", openDrawer);
+  closeBtn?.addEventListener("click", closeDrawer);
+  overlay?.addEventListener("click", (e) => {
+    if (e.target === overlay) closeDrawer();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeDrawer();
+  });
+</script>

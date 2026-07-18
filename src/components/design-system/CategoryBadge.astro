@@ -1,0 +1,50 @@
+---
+/**
+ * CategoryBadge — small uppercase pill for a category/rating label.
+ *
+ * New primitive, not part of the original _ds_bundle export — added here
+ * because every `.dc.html` reference page uses an inline-styled badge
+ * (soort/"REVIEW"/rating chip) that has no shared component of its own in
+ * the foundation set. Kept tiny and local to this redesign pass rather than
+ * expanding the shared design-system contract.
+ *
+ * Used inside ArticleCard's `badge` slot and article/review hero sections.
+ *
+ * Props:
+ *   label  string, required
+ *   tone?  'film' | 'tv' | 'neutral'   (default 'neutral') — background color
+ */
+interface Props {
+  label: string;
+  tone?: "film" | "tv" | "neutral";
+}
+
+const { label, tone = "neutral" } = Astro.props;
+---
+
+<span class:list={["cn-badge", `cn-badge--${tone}`]}>{label}</span>
+
+<style>
+  .cn-badge {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--accent-blue);
+    border-radius: var(--radius-sm);
+    padding: 5px 10px;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+  .cn-badge--tv {
+    background: var(--accent-purple);
+  }
+  .cn-badge--neutral {
+    background: rgba(10, 17, 40, 0.72);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+  }
+</style>

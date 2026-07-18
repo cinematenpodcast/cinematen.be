@@ -1,102 +1,49 @@
 ---
 layout: ../layouts/TermsLayout.astro
-title: "Privacy Policy"
-summary: "Privacy Policy for Postiz"
+title: "Privacybeleid"
+summary: "Privacybeleid van Cinematen.be — hoe wij persoonsgegevens verzamelen en verwerken in overeenstemming met de AVG/GDPR."
+lastUpdated: "17 juli 2026"
 ---
 
-**Last Updated:** December 7, 2025
+Cinematen.be ("wij", "ons") hecht veel belang aan uw privacy. Dit privacybeleid legt uit welke persoonsgegevens wij verzamelen wanneer u onze website bezoekt, en hoe wij daarmee omgaan in overeenstemming met de Algemene Verordening Gegevensbescherming (AVG/GDPR).
 
-## 1. Introduction
+## 1. Wie zijn wij
 
-Welcome to **Postiz** (operated by **Cinematen**).
+Cinematen.be is een Belgisch platform voor film- en tv-nieuws, reviews en een wekelijkse podcast. Voor vragen over dit beleid kunt u ons contacteren via **info@cinematen.be**.
 
-Postiz ("us", "we", or "our") operates the **Postiz** web application (hereinafter referred to as "Service").
+## 2. Welke gegevens verzamelen wij
 
-Our Privacy Policy governs your visit to **cinematen.be/postiz** (or related URLs), and explains how we collect, safeguard and disclose information that results from your use of our Service.
+- **Contact- en nieuwsbriefgegevens:** naam en e-mailadres, enkel wanneer u ons zelf contacteert of zich inschrijft op een nieuwsbrief.
+- **Gebruiksgegevens:** geanonimiseerde bezoekstatistieken (bezochte pagina's, browsertype, ongeveer tijdstip van bezoek) via analytische cookies.
+- **Gegevens via ingesloten content:** wanneer u de Spotify-podcastspeler op onze site gebruikt, kan Spotify eigen cookies plaatsen — zie ons Cookiebeleid.
 
-We use your data to provide and improve the Service. By using the Service, you agree to the collection and use of information in accordance with this policy.
+## 3. Waarvoor gebruiken wij deze gegevens
 
-## 2. Information Collection and Use
+- Om onze website en podcast-content aan te bieden en te verbeteren.
+- Om te antwoorden op vragen die u ons stuurt.
+- Om, enkel met uw toestemming, een nieuwsbrief te versturen.
+- Om geanonimiseerde statistieken te verzamelen over het gebruik van de site.
 
-We collect several different types of information for various purposes to provide and improve our Service to you.
+## 4. Delen van gegevens
 
-### Types of Data Collected
+Wij verkopen uw persoonsgegevens nooit aan derden. Gegevens kunnen enkel gedeeld worden met dienstverleners die ons ondersteunen bij het uitbaten van de website (bijvoorbeeld hosting- of analyseproviders), en enkel voor zover noodzakelijk voor die dienstverlening. Onze partner Kinepolis ontvangt geen persoonsgegevens van bezoekers via deze site.
 
-**Personal Data**
-While using our Service, we may ask you to provide us with certain personally identifiable information that can be used to contact or identify you ("Personal Data"). Personally identifiable information may include, but is not limited to:
-*   Email address
-*   First name and last name
-*   TikTok Account Information (via API integration)
-*   Cookies and Usage Data
+## 5. Bewaartermijn
 
-**TikTok Data**
-To provide our scheduling service, we require access to your TikTok account via the official TikTok API. We collect and process:
-*   Your TikTok profile information (username, avatar) to identify your account.
-*   Video content and captions you upload for scheduling.
-*   Access tokens required to authenticate and post on your behalf.
+Wij bewaren persoonsgegevens niet langer dan noodzakelijk voor de doeleinden waarvoor ze werden verzameld, en verwijderen ze nadien op een veilige manier.
 
-**Usage Data**
-We may also collect information that your browser sends whenever you visit our Service or when you access Service by or through a mobile device ("Usage Data").
+## 6. Uw rechten
 
-## 3. Use of Data
+U heeft het recht op inzage, verbetering, verwijdering en overdraagbaarheid van uw persoonsgegevens, en het recht om uw toestemming voor verwerking te allen tijde in te trekken. Om deze rechten uit te oefenen, contacteert u ons via **info@cinematen.be**. U heeft ook het recht om een klacht in te dienen bij de Belgische Gegevensbeschermingsautoriteit ([gegevensbeschermingsautoriteit.be](https://www.gegevensbeschermingsautoriteit.be)).
 
-Postiz uses the collected data for various purposes:
-*   To provide and maintain our Service.
-*   To allow you to schedule and post videos to TikTok.
-*   To notify you about changes to our Service.
-*   To allow you to participate in interactive features of our Service when you choose to do so.
-*   To provide customer support.
-*   To gather analysis or valuable information so that we can improve our Service.
-*   To monitor the usage of our Service.
-*   To detect, prevent and address technical issues.
+## 7. Beveiliging
 
-## 4. Retention of Data
+Wij nemen redelijke technische en organisatorische maatregelen om uw gegevens te beschermen tegen verlies, misbruik of ongeoorloofde toegang. Geen enkele methode van gegevensoverdracht via internet is echter 100% veilig.
 
-We will retain your Personal Data only for as long as is necessary for the purposes set out in this Privacy Policy. We will retain and use your Personal Data to the extent necessary to comply with our legal obligations, resolve disputes, and enforce our legal agreements and policies.
+## 8. Wijzigingen aan dit beleid
 
-Video content uploaded for scheduling is stored temporarily until it is successfully posted to TikTok or deleted by you.
+Wij kunnen dit privacybeleid van tijd tot tijd aanpassen. De datum van de laatste bijwerking staat steeds boven aan deze pagina vermeld.
 
-## 5. Transfer of Data
+## 9. Contact
 
-Your information, including Personal Data, may be transferred to – and maintained on – computers located outside of your state, province, country or other governmental jurisdiction where the data protection laws may differ from those of your jurisdiction.
-
-## 6. Disclosure of Data
-
-We may disclose your Personal Data in the good faith belief that such action is necessary to:
-*   To comply with a legal obligation.
-*   To protect and defend the rights or property of Cinematen/Postiz.
-*   To prevent or investigate possible wrongdoing in connection with the Service.
-*   To protect the personal safety of users of the Service or the public.
-*   To protect against legal liability.
-
-## 7. Service Providers
-
-We may employ third party companies and individuals to facilitate our Service ("Service Providers"), provide the Service on our behalf, perform Service-related services or assist us in analyzing how our Service is used.
-
-These third parties have access to your Personal Data only to perform these tasks on our behalf and are obligated not to disclose or use it for any other purpose.
-
-## 8. TikTok API Services
-
-Our Service uses TikTok API Services. By using our Service, you are agreeing to be bound by the [TikTok Terms of Service](https://www.tiktok.com/legal/terms-of-service) and [TikTok Privacy Policy](https://www.tiktok.com/legal/privacy-policy). We do not share your personal data with TikTok except as required to perform the actions you request (scheduling and posting videos).
-
-## 9. Security of Data
-
-The security of your data is important to us but remember that no method of transmission over the Internet or method of electronic storage is 100% secure. While we strive to use commercially acceptable means to protect your Personal Data, we cannot guarantee its absolute security.
-
-## 10. Links to Other Sites
-
-Our Service may contain links to other sites that are not operated by us. If you click a third party link, you will be directed to that third party's site. We strongly advise you to review the Privacy Policy of every site you visit.
-
-## 11. Children's Privacy
-
-Our Service does not address anyone under the age of 18 ("Children"). We do not knowingly collect personally identifiable information from anyone under the age of 18.
-
-## 12. Changes to This Privacy Policy
-
-We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page.
-
-## 13. Contact Us
-
-If you have any questions about this Privacy Policy, please contact us:
-*   By email: **info@cinematen.be**
-
+Voor vragen over dit privacybeleid kunt u ons bereiken via **info@cinematen.be**.

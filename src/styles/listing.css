@@ -1,0 +1,74 @@
+/* Shared listing-page classes for the Nieuws + Reviews & Blogs families.
+ * Global (not Astro-scoped) on purpose: every listing route file renders its
+ * own <h1>/<p>/grid markup directly (route files stay independent per the
+ * redesign brief), so a shared global stylesheet avoids seven copies of the
+ * same <style> block drifting out of sync. Imported once via ListingShell.astro. */
+
+.cn-listing__inner {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 48px var(--space-margin-desktop) 64px;
+}
+.cn-listing__inner h1 {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 40px;
+  color: var(--on-surface);
+  margin: 0 0 16px;
+}
+.cn-listing__intro {
+  font-family: var(--font-sans);
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--on-surface-variant);
+  max-width: 700px;
+  margin: 0 0 32px;
+}
+.cn-listing__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-gutter);
+  margin-bottom: 48px;
+}
+.cn-listing__pagination {
+  margin-bottom: 40px;
+  display: flex;
+  justify-content: center;
+}
+.cn-listing__empty {
+  text-align: center;
+  padding: 64px 0;
+  color: var(--on-surface-variant);
+  font-family: var(--font-sans);
+  font-size: 16px;
+}
+.cn-listing__podcast {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--space-margin-desktop) 64px;
+}
+
+@media (max-width: 1200px) {
+  .cn-listing__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 900px) {
+  .cn-listing__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .cn-listing__inner {
+    padding: 32px var(--space-margin-mobile) 48px;
+  }
+  .cn-listing__inner h1 {
+    font-size: 32px;
+  }
+  .cn-listing__grid {
+    grid-template-columns: 1fr;
+  }
+  .cn-listing__podcast {
+    padding: 0 var(--space-margin-mobile) 48px;
+  }
+}

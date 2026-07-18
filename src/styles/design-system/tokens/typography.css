@@ -1,0 +1,40 @@
+/* Cinematen Design System — typography tokens
+ * Ported verbatim (values unchanged) from the Claude Design redesign export:
+ * _ds/cinematen-design-system-.../tokens/typography.css
+ * @font-face declarations live in ../fonts.css (self-hosted) instead of here.
+ */
+:root{
+/* --font-display is the CINEMATEN wordmark face — logo/brand-mark use ONLY.
+   Never use it for headers/headlines; those use --font-sans (Rubik) at a heavy weight (800). */
+--font-display:'Rubik Mono One','Rubik',sans-serif;
+--font-sans:'Rubik',sans-serif;
+--font-headline-weight:800;
+
+/* Display / headline scale — marquee voice, wears the mono display face */
+--text-headline-display-size:64px;
+--text-headline-display-line:1.1;
+--text-headline-display-tracking:-0.01em;
+
+--text-headline-lg-size:40px;
+--text-headline-lg-line:1.2;
+--text-headline-lg-tracking:-0.005em;
+
+--text-headline-lg-mobile-size:32px;
+--text-headline-lg-mobile-line:1.2;
+
+--text-headline-md-size:24px;
+--text-headline-md-line:1.3;
+--text-headline-md-weight:600;
+
+/* Body scale — Rubik variable, regular weights */
+--text-body-lg-size:18px;
+--text-body-lg-line:1.6;
+
+--text-body-md-size:16px;
+--text-body-md-line:1.6;
+
+--text-label-caps-size:12px;
+--text-label-caps-line:1;
+--text-label-caps-tracking:0.1em;
+--text-label-caps-weight:700;
+}

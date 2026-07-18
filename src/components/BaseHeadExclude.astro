@@ -1,5 +1,9 @@
 ---
-
+// New design-system tokens + self-hosted fonts, same import BaseHead.astro
+// carries — this head partial (used on noindex pagination/tag/search pages)
+// was missing it, which would starve those redesigned pages of the CSS
+// custom properties the new components render with.
+import "../styles/design-system/index.css";
 ---
 <meta charset="utf-8" />
 <meta content="width=device-width, initial-scale=1" name="viewport" />

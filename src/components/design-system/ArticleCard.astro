@@ -1,0 +1,224 @@
+---
+/**
+ * ArticleCard — media card for nieuws/review listings and grids.
+ *
+ * Ported from _ds_bundle.js `components/cards/ArticleCard.jsx`.
+ * Replaces: BaseNieuwsItem.astro, BaseFeaturedItem.astro, BaseReviewItem.astro.
+ *
+ * Variants:
+ *   default  — grid card: 16:9 media, badge over top-left, body below.
+ *   overlay  — full-bleed media with bottom scrim, text sits over the image
+ *              (hero-style grid, e.g. "Uitgelicht"/featured rails).
+ *   row      — compact horizontal list item (112x84 media); excerpt is
+ *              omitted entirely, matching the source (sidebar/"related" lists).
+ *
+ * Props:
+ *   title     string, required
+ *   href      string, required — the whole card is a single <a>
+ *   excerpt?  string — rendered in 'default'/'overlay' only, never in 'row'
+ *   variant?  'default' | 'overlay' | 'row'   (default 'default')
+ * Slots:
+ *   image  (default/unnamed, required) — pass an <img> or Astro <Image>;
+ *          sized by the media box (16:9 aspect-ratio for default/overlay,
+ *          fixed 112x84 for 'row'). Add width/height or use Astro's <Image>
+ *          for real dimensions — this component only constrains the box.
+ *   badge  (optional) — category/rating badge. Positioned absolute
+ *          top-left over the media in default/overlay; inline before the
+ *          title in 'row'.
+ *   meta   (optional) — date / read-time / rating row, rendered under the
+ *          excerpt with a hairline top border in 'default' (no border in
+ *          'overlay'/'row', matching source).
+ */
+interface Props {
+  title: string;
+  href: string;
+  excerpt?: string;
+  variant?: "default" | "overlay" | "row";
+}
+
+const { title, href, excerpt, variant = "default" } = Astro.props;
+const overlay = variant === "overlay";
+const row = variant === "row";
+const hasBadge = Astro.slots.has("badge");
+const hasMeta = Astro.slots.has("meta");
+---
+
+<a
+  class:list={["cn-article", { "cn-article--overlay": overlay, "cn-article--row": row }]}
+  href={href}
+>
+  <div class="cn-article__media">
+    <slot name="image" />
+    {overlay && <div class="cn-article__scrim" aria-hidden="true" />}
+    {hasBadge && !row && (
+      <div class="cn-article__badge">
+        <slot name="badge" />
+      </div>
+    )}
+  </div>
+  <div class="cn-article__body">
+    {row && hasBadge && <slot name="badge" />}
+    <h3 class="cn-article__title">{title}</h3>
+    {excerpt && !row && <p class="cn-article__excerpt">{excerpt}</p>}
+    {hasMeta && (
+      <div class="cn-article__meta">
+        <slot name="meta" />
+      </div>
+    )}
+  </div>
+</a>
+
+<style>
+  .cn-article {
+    background: var(--surface-container-low);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--outline-variant);
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+    text-decoration: none;
+    color: inherit;
+  }
+  .cn-article:hover {
+    border-color: var(--primary);
+    transform: translateY(-2px);
+  }
+  .cn-article:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+  .cn-article__media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: var(--surface-container-high);
+  }
+  .cn-article__media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+  .cn-article:hover .cn-article__media :global(img) {
+    transform: scale(1.05);
+  }
+  .cn-article__badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+  }
+  .cn-article__body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+  .cn-article__title {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: var(--text-headline-md-size);
+    line-height: var(--text-headline-md-line);
+    color: var(--on-surface);
+    margin: 0 0 12px;
+  }
+  .cn-article:hover .cn-article__title {
+    color: var(--primary);
+  }
+  .cn-article__excerpt {
+    font-family: var(--font-sans);
+    font-size: var(--text-body-md-size);
+    color: var(--on-surface-variant);
+    margin: 0 0 16px;
+    flex-grow: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .cn-article__meta {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--on-surface-variant);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid var(--outline-variant);
+  }
+
+  .cn-article--overlay {
+    position: relative;
+    height: 360px;
+    justify-content: flex-end;
+  }
+  .cn-article--overlay .cn-article__media {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    aspect-ratio: auto;
+  }
+  .cn-article__scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, var(--surface-container-low) 0%, rgba(30, 32, 36, 0.6) 45%, rgba(30, 32, 36, 0) 100%);
+  }
+  .cn-article--overlay .cn-article__body {
+    position: relative;
+    z-index: 1;
+    padding: 20px;
+    background: none;
+    border-top: none;
+  }
+  .cn-article--overlay .cn-article__excerpt {
+    -webkit-line-clamp: 2;
+  }
+  .cn-article--overlay .cn-article__meta {
+    border-top: none;
+    padding-top: 0;
+  }
+
+  .cn-article--row {
+    flex-direction: row;
+    background: none;
+    border: none;
+    border-radius: var(--radius-lg);
+    gap: 16px;
+    padding: 8px;
+  }
+  .cn-article--row:hover {
+    border-color: transparent;
+    transform: none;
+    background: var(--surface-container-low);
+  }
+  .cn-article--row .cn-article__media {
+    width: 112px;
+    height: 84px;
+    flex-shrink: 0;
+    border-radius: var(--radius-md);
+    aspect-ratio: auto;
+  }
+  .cn-article--row .cn-article__body {
+    padding: 4px 0;
+    justify-content: center;
+  }
+  .cn-article--row .cn-article__title {
+    font-size: 15px;
+    line-height: 1.3;
+    margin: 0 0 6px;
+    -webkit-line-clamp: 2;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .cn-article--row .cn-article__meta {
+    border-top: none;
+    padding-top: 0;
+    margin-top: 0;
+  }
+</style>

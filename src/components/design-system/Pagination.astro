@@ -1,0 +1,152 @@
+---
+/**
+ * Pagination — numbered page control with prev/next arrows, current-page
+ * highlight, and ellipsis-collapsing for long ranges.
+ *
+ * Ported from _ds_bundle.js `components/navigation/Pagination.jsx` (visuals/
+ * states), with the page-window generator generalized — the source bundle's
+ * default (`[1,2,3,'…',totalPages]`) was a fixed demo array, not real
+ * pagination logic, so it's replaced with a real first/last/current±1
+ * windowing algorithm that collapses to the same visual pattern.
+ * Replaces: BasePagination.astro.
+ *
+ * Props:
+ *   page        number, required — current page, 1-indexed
+ *   totalPages  number, required
+ *   hrefBase?   string — URL template containing a ":page" token, e.g.
+ *               "/nieuws/page/:page". When given, renders <a href> links
+ *               (matches this site's hybrid/SSR page-per-URL routing in
+ *               astro.config.mjs). When omitted, renders
+ *               <button data-page="N"> instead — wire your own click
+ *               handling (e.g. client-rendered/filtered results).
+ * Slots: none
+ */
+interface Props {
+  page: number;
+  totalPages: number;
+  hrefBase?: string;
+}
+
+const { page, totalPages, hrefBase } = Astro.props;
+
+function hrefFor(n: number) {
+  return hrefBase ? hrefBase.replace(":page", String(n)) : undefined;
+}
+
+// Always show first + last + current ± 1; collapse everything else to "…".
+function buildPages(current: number, total: number): (number | "…")[] {
+  if (total <= 1) return [1];
+  const pages = new Set<number>([1, total, current]);
+  if (current - 1 >= 1) pages.add(current - 1);
+  if (current + 1 <= total) pages.add(current + 1);
+  const sorted = [...pages].filter((p) => p >= 1 && p <= total).sort((a, b) => a - b);
+  const result: (number | "…")[] = [];
+  sorted.forEach((p, i) => {
+    if (i > 0 && p - (sorted[i - 1] as number) > 1) result.push("…");
+    result.push(p);
+  });
+  return result;
+}
+
+const pages = buildPages(page, totalPages);
+const prevDisabled = page <= 1;
+const nextDisabled = page >= totalPages;
+---
+
+<nav class="cn-pagination" aria-label="Paginering">
+  {hrefBase ? (
+    <a
+      class="cn-page"
+      href={prevDisabled ? undefined : hrefFor(page - 1)}
+      aria-disabled={prevDisabled}
+      aria-label="Vorige pagina"
+    >‹</a>
+  ) : (
+    <button class="cn-page" type="button" disabled={prevDisabled} data-page={page - 1} aria-label="Vorige pagina">‹</button>
+  )}
+
+  {pages.map((p) =>
+    p === "…" ? (
+      <span class="cn-page cn-page--ellipsis" aria-hidden="true">…</span>
+    ) : hrefBase ? (
+      <a
+        class:list={["cn-page", { "cn-page--active": p === page }]}
+        href={hrefFor(p)}
+        aria-current={p === page ? "page" : undefined}
+      >{p}</a>
+    ) : (
+      <button
+        class:list={["cn-page", { "cn-page--active": p === page }]}
+        type="button"
+        data-page={p}
+        aria-current={p === page ? "page" : undefined}
+      >{p}</button>
+    )
+  )}
+
+  {hrefBase ? (
+    <a
+      class="cn-page"
+      href={nextDisabled ? undefined : hrefFor(page + 1)}
+      aria-disabled={nextDisabled}
+      aria-label="Volgende pagina"
+    >›</a>
+  ) : (
+    <button class="cn-page" type="button" disabled={nextDisabled} data-page={page + 1} aria-label="Volgende pagina">›</button>
+  )}
+</nav>
+
+<style>
+  .cn-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+  }
+  .cn-page {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    background: var(--surface-container);
+    border: 1px solid var(--outline-variant);
+    color: var(--on-surface);
+    cursor: pointer;
+    text-decoration: none;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+  .cn-page:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+  }
+  .cn-page:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+  .cn-page--active {
+    background: var(--primary);
+    color: var(--on-primary);
+    border-color: transparent;
+  }
+  .cn-page--active:hover {
+    color: var(--on-primary);
+  }
+  .cn-page:disabled,
+  .cn-page[aria-disabled="true"] {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  .cn-page--ellipsis {
+    background: none;
+    border: none;
+    cursor: default;
+    color: var(--on-surface-variant);
+  }
+</style>

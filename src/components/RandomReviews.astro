@@ -1,9 +1,13 @@
 ---
-import BaseFeaturedItem from "./BaseFeaturedItem.astro";
+// Restyled onto the shared design system (was a standalone light-theme card
+// row, clashing with the redesigned dark article/review pages). Same
+// query/shuffle logic as before — only the markup/CSS changed.
+import { getCollection } from "astro:content";
+import ArticleCard from "./design-system/ArticleCard.astro";
+import CategoryBadge from "./design-system/CategoryBadge.astro";
+import { formatCardDate, ratingOutOfFive } from "../lib/format";
 
 const { currentSlug } = Astro.props;
-
-import { getCollection } from "astro:content";
 
 // Helper function to ensure clean ID without .mdx extension
 function getCleanId(id) {
@@ -16,11 +20,13 @@ const allReviewsRaw = await getCollection("reviews");
 // `type: "content"` collections) — Astro's own top-level `post.slug`
 // (derived from the frontmatter `slug:` override, see src/content/config.ts)
 // is used instead of the old `post.data.slug`/`post.frontmatter.slug`.
-const allReviews = allReviewsRaw.map(post => ({
+const allReviews = allReviewsRaw
+  .filter(post => !post.data.draft)
+  .map(post => ({
     url: `/reviews&blogs/${getCleanId(post.id)}`,
-    frontmatter: post.data,
+    data: post.data,
     slug: post.slug,
-}));
+  }));
 
 // Filter de huidige review eruit
 const filteredReviews = allReviews.filter(post => post.slug !== currentSlug);
@@ -41,93 +47,56 @@ const randomReviews = shuffle(filteredReviews).slice(0, 3);
 ---
 
 {randomReviews.length > 0 && (
-  <section class="random-reviews">
-    <h2 class="random-reviews-title" style="text-align:center;margin-bottom:32px;">Misschien ben je ook wel geïnteresseerd in...</h2>
-    <div class="random-reviews-row">
-      {randomReviews.map((post) => (
-        <a href={post.url} class="random-review-card"> 
-          <BaseFeaturedItem
-            title={post.frontmatter.title}
-            thumbnail={post.frontmatter.thumbnail || post.frontmatter.poster}
-            rating={post.frontmatter.rating}
-            square={true}
-          />
-        </a>
-      ))}
+  <section class="cn-random-reviews">
+    <div class="cn-random-reviews__inner">
+      <h2>Misschien ben je ook wel geïnteresseerd in&hellip;</h2>
+      <div class="cn-random-reviews__grid">
+        {randomReviews.map((post) => {
+          const rating = ratingOutOfFive(post.data.rating);
+          return (
+            <ArticleCard title={post.data.title} href={post.url} excerpt={post.data.summary ?? undefined}>
+              <img slot="image" src={post.data.thumbnail || post.data.poster} alt={post.data.title} loading="lazy" />
+              {rating ? (
+                <CategoryBadge slot="badge" label={rating} tone="neutral" />
+              ) : (
+                post.data.soort && (
+                  <CategoryBadge slot="badge" label={post.data.soort} tone={post.data.soort.toLowerCase() === "tv" ? "tv" : "film"} />
+                )
+              )}
+              <span slot="meta">{formatCardDate(post.data.date)}</span>
+            </ArticleCard>
+          );
+        })}
+      </div>
     </div>
   </section>
 )}
 
 <style>
-.random-reviews-row {
-  display: flex;
-  gap: 32px;
-  justify-content: center;
-  align-items: stretch;
-  margin-bottom: 48px;
-}
-.random-review-card {
-  flex: 1 1 0;
-  min-width: 400px;
-  max-width: 400px;
-  margin: 0 12px;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: stretch;
-  background: #fff;
-  padding: 12px 8px 16px 8px;
-  box-sizing: border-box;
-  height: 100%;
-  border-radius: 18px;
-  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.04);
-  transition: box-shadow 0.2s cubic-bezier(.4,0,.2,1), transform 0.18s cubic-bezier(.4,0,.2,1);
-}
-.random-review-card:hover {
-  box-shadow: 0 6px 24px 0 rgba(30,40,90,0.13);
-  transform: translateY(-2px) scale(1.025);
-  z-index: 2;
-}
-.random-review-card:hover .featured-item-horizontal,
-.random-review-card:hover .featured-item-horizontal * {
-  transition: none !important;
-  pointer-events: none;
-}
-.random-reviews-title {
-  margin-bottom: 32px;
-}
-.small-featured-image {
-  max-width: 100%;
-  height: auto;
-  display: block;
-  margin: 0 auto 16px auto;
-}
-.title-small {
-  font-size: 1.1rem;
-  font-weight: 600;
-  text-align: center;
-  word-break: break-word;
-  overflow-wrap: break-word;
-  max-width: 95%;
-  margin: 0 auto;
-  line-height: 1.2;
-  min-height: 2.6em;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-@media (max-width: 900px) {
-  .random-reviews-row {
-    flex-direction: column;
-    align-items: center;
-    gap: 24px;
+  .cn-random-reviews {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: 0 var(--space-margin-desktop) 32px;
   }
-  .random-review-card {
-    width: 90vw;
-    min-width: 0;
-    max-width: 390px;
-    margin: 0 auto 16px auto;
-    box-sizing: border-box;
+  .cn-random-reviews__inner h2 {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 24px;
+    color: var(--on-surface);
+    text-align: center;
+    margin: 0 0 32px;
   }
-}
-</style> 
+  .cn-random-reviews__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-gutter);
+  }
+  @media (max-width: 900px) {
+    .cn-random-reviews {
+      padding: 0 var(--space-margin-mobile) 24px;
+    }
+    .cn-random-reviews__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

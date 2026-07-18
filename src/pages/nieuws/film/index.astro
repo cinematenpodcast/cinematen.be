@@ -1,13 +1,12 @@
 ---
 import { getCollection } from "astro:content";
-import BaseHead from "../../../components/BaseHead.astro";
-import NewNavmenu from "../../../components/NewNavmenu.astro";
-import BaseHeader from "../../../components/BaseHeader.astro";
-import BaseFooter from "../../../components/BaseFooter.astro";
-import BaseScript from "../../../components/BaseScript.astro";
+import ListingShell from "../../../layouts/ListingShell.astro";
+import ArticleCard from "../../../components/design-system/ArticleCard.astro";
+import CategoryBadge from "../../../components/design-system/CategoryBadge.astro";
+import NieuwsFilterChips from "../../../components/NieuwsFilterChips.astro";
 import BasePodcastBanner from "../../../components/BasePodcastBanner.astro";
-import BaseNieuwsItem from "../../../components/BaseNieuwsItem.astro";
 import { extractPreview } from "../../../lib/textPreview";
+import { formatCardDate } from "../../../lib/format";
 
 function getCleanId(id) {
   return id ? id.replace(/\.mdx$/, '') : '';
@@ -19,37 +18,28 @@ const filmNieuws = allNieuws
   .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
 ---
 
-<html lang="nl">
-<head>
-  <BaseHead
-    title="Film Nieuws | Cinematen.be"
-    description="Het laatste filmnews: blockbusters, releases, trailers en meer. Cinematen.be houdt je op de hoogte."
-    canonicalURL="https://www.cinematen.be/nieuws/film/"
-  />
-</head>
-<body class="body">
-  <div class="page-wrapper">
-    <NewNavmenu />
-    <BaseHeader />
-    <div class="content">
-      <div class="container">
-        <h1 class="nieuws-title">Film nieuws</h1>
-        <div class="w-layout-grid nieuws-list category-grid">
-          {filmNieuws.map(post => (
-            <BaseNieuwsItem
-              url={`/nieuws/${getCleanId(post.id)}`}
-              title={post.data.title}
-              thumbnail={post.data.thumbnail}
-              date={post.data.date}
-              content={extractPreview(post.body)}
-            />
-          ))}
-        </div>
-      </div>
-      <BasePodcastBanner />
+<ListingShell
+  navActive="nieuws"
+  useExcludeHead={false}
+  title="Film Nieuws | Cinematen.be"
+  description="Het laatste filmnews: blockbusters, releases, trailers en meer. Cinematen.be houdt je op de hoogte."
+  canonicalURL="https://www.cinematen.be/nieuws/film/"
+>
+  <div class="cn-listing__inner">
+    <h1>Film nieuws</h1>
+    <p class="cn-listing__intro">Het laatste filmnieuws: blockbusters, releases, trailers en meer.</p>
+    <NieuwsFilterChips active="film" />
+    <div class="cn-listing__grid">
+      {filmNieuws.map(post => (
+        <ArticleCard title={post.data.title} href={`/nieuws/${getCleanId(post.id)}`} excerpt={extractPreview(post.body)}>
+          <img slot="image" src={post.data.thumbnail} alt={post.data.title} loading="lazy" />
+          <CategoryBadge slot="badge" label="Film nieuws" tone="film" />
+          <span slot="meta">{formatCardDate(post.data.date)}</span>
+        </ArticleCard>
+      ))}
     </div>
-    <BaseFooter />
   </div>
-  <BaseScript />
-</body>
-</html>
+  <div class="cn-listing__podcast">
+    <BasePodcastBanner />
+  </div>
+</ListingShell>

@@ -1,0 +1,29 @@
+/* Cinematen Design System — self-hosted fonts
+ * Source: Claude Design redesign export, assets/fonts/
+ *
+ * Rubik      — variable weight 300–900. Used for ALL UI text, body copy, and
+ *               headlines (headlines use weight 800, see --font-headline-weight
+ *               in tokens/typography.css).
+ * Rubik Mono One — CINEMATEN wordmark / logo use ONLY. Never use for headers,
+ *               headlines, or body text (see readme "Visual foundations").
+ *
+ * Files copied verbatim into /public/fonts/ so they're self-hosted (avoids a
+ * third-party font origin and any CSP script-src/style-src change — font-src
+ * already allows 'self' + data: in vercel.json).
+ */
+
+@font-face {
+  font-family: 'Rubik';
+  src: url('/fonts/Rubik-VariableFont_wght.ttf') format('truetype-variations');
+  font-weight: 300 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Rubik Mono One';
+  src: url('/fonts/RubikMonoOne-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}

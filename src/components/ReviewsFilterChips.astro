@@ -1,0 +1,43 @@
+---
+/**
+ * Shared category-chip row for the Reviews & Blogs listing family.
+ *
+ * `Reviews.dc.html` mocks a 3-way "Alles / Reviews / Blogs" split, but the
+ * real `reviews` collection schema has no `kind: review|blog` field to drive
+ * that — only a free-form `tags` array. The pre-redesign
+ * reviews&blogs/index.astro and tags/[tag].astro pages already exposed a
+ * real tag-based category rail (Film/TV/Blog/Vlaams/Reality/Actie/Horror/
+ * Comedy) wired to the existing /reviews&blogs/tags/:tag route — this reuses
+ * that real taxonomy instead of inventing a fake binary split, just restyled
+ * with the new Chip component. Flagged as a data-mapping decision.
+ */
+import Chip from "./design-system/Chip.astro";
+
+const TAGS = ["Film", "TV", "Blog", "Vlaams", "Reality", "Actie", "Horror", "Comedy"];
+
+interface Props {
+  activeTag?: string | null;
+}
+const { activeTag = null } = Astro.props as Props;
+const normalizedActive = activeTag?.toLowerCase() ?? null;
+---
+
+<div class="cn-filter-row">
+  <Chip as="a" href="/reviews&blogs/pages/1" active={activeTag === null}>Alles</Chip>
+  {
+    TAGS.map((tag) => (
+      <Chip as="a" href={`/reviews&blogs/tags/${tag.toLowerCase()}`} active={normalizedActive === tag.toLowerCase()}>
+        {tag}
+      </Chip>
+    ))
+  }
+</div>
+
+<style>
+  .cn-filter-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+  }
+</style>

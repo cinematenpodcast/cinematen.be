@@ -1,0 +1,77 @@
+---
+/**
+ * Shared page chrome for the Nieuws + Reviews & Blogs listing families
+ * (index/pagination/tag/category pages) — Header + Footer wiring on the new
+ * design system, factored out of ~7 near-identical page files so they stay
+ * visually consistent. Route files themselves are untouched; this is a new
+ * internal layout, not a route.
+ *
+ * `useExcludeHead` picks BaseHeadExclude (noindex, generic title — used by
+ * every paginated/tag listing, matching their pre-redesign behavior) vs
+ * BaseHead (indexable, real title/description/canonical — used by the two
+ * soort-based category pages /nieuws/film and /nieuws/serie, which already
+ * had real SEO metadata before this redesign).
+ */
+import BaseHead from "../components/BaseHead.astro";
+import BaseHeadExclude from "../components/BaseHeadExclude.astro";
+import Header from "../components/design-system/Header.astro";
+import Footer from "../components/design-system/Footer.astro";
+import SocialIcons from "../components/design-system/SocialIcons.astro";
+import { getNavLinks, FOOTER_COLUMNS, FOOTER_BOTTOM_LEFT, FOOTER_TAGLINE, PARTNER_LABEL, type NavKey } from "../lib/siteNav";
+import "../styles/listing.css";
+
+interface Props {
+  navActive: NavKey;
+  useExcludeHead?: boolean;
+  title?: string;
+  description?: string;
+  canonicalURL?: string;
+}
+
+const { navActive, useExcludeHead = true, title, description, canonicalURL } = Astro.props;
+---
+
+<html lang="nl">
+  <head>
+    {
+      useExcludeHead ? (
+        <BaseHeadExclude />
+      ) : (
+        <BaseHead title={title} description={description} canonicalURL={canonicalURL} />
+      )
+    }
+  </head>
+  <body>
+    <div class="cn-page">
+      <Header links={getNavLinks(navActive)} partnerLabel={PARTNER_LABEL}>
+        <img slot="logo" src="/images/LogoCleanSmaller.png" alt="Cinematen" width="140" height="28" />
+        <img slot="partner-logo" src="/images/kinepolis.png" alt="Kinepolis" width="72" height="22" />
+      </Header>
+
+      <main class="cn-listing">
+        <slot />
+      </main>
+
+      <Footer columns={FOOTER_COLUMNS} bottomLeft={FOOTER_BOTTOM_LEFT}>
+        <img slot="logo" src="/images/LogoCleanSmaller.png" alt="Cinematen" width="160" height="32" />
+        <Fragment slot="tagline">{FOOTER_TAGLINE}</Fragment>
+        <Fragment slot="social-icons">
+          <SocialIcons />
+        </Fragment>
+      </Footer>
+    </div>
+  </body>
+</html>
+
+<style>
+  .cn-page {
+    min-height: 100dvh;
+    background: var(--surface);
+    color: var(--on-surface);
+    display: flex;
+    flex-direction: column;
+  }
+  .cn-listing {
+    flex: 1;
+  }
+</style>
