@@ -1,0 +1,2 @@
+- [Cinematen Redesign Initiative](cinematen_redesign_initiative.md) — active redesign project, branch cinematen-redesign, hard constraints (mdx read-only, formspree unchanged, pixel-perfect, adbanner deferred)
+- [Cinematen Tech Stack Reference](cinematen_tech_stack.md) — Astro/React/MDX/Formspree/Vercel/GTM facts gathered during intake

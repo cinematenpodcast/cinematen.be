@@ -1,0 +1,1 @@
+- [Cinematen redesign](project_cinematen_redesign.md) — Home/Nieuws/Reviews/Search redesign, shared helpers, data-mapping decisions
