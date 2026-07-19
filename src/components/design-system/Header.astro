@@ -258,6 +258,21 @@ const hasPartner = Astro.slots.has("partner-logo");
     outline-offset: 2px;
   }
 
+  /* .cn-header__inner sets container-type: inline-size on itself (so
+     DESCENDANTS below can query against it) — same self-reference
+     limitation as .cn-hero: it can't condition its own padding on that
+     same containment context, so that one property needs a plain @media
+     query instead. The header is always full-viewport-width (no wrapping
+     element narrows it), so max-width: 720px here lines up with the
+     @container threshold below. Without this, padding stayed at the
+     desktop 0 64px, crowding the 3-slot row and pushing the burger to
+     x:64 instead of x:16. */
+  @media (max-width: 720px) {
+    .cn-header__inner {
+      padding: 0 16px;
+    }
+  }
+
   /* Collapse nav into a hamburger once it no longer fits — measured against
      the header's own width via a container query, not the viewport.
      Layout becomes a 3-slot mobile top bar: burger left, logo centered,
@@ -268,9 +283,6 @@ const hasPartner = Astro.slots.has("partner-logo");
     }
     .cn-header__search {
       display: none;
-    }
-    .cn-header__inner {
-      padding: 0 16px;
     }
     .cn-header__burger {
       display: flex;
@@ -286,6 +298,21 @@ const hasPartner = Astro.slots.has("partner-logo");
     }
     .cn-header__partner-label {
       display: none;
+    }
+    /* In this tight 3-slot flex row, the logo/partner images' width was
+       collapsing to a fraction of their real size (e.g. ~38px instead of
+       185px) even with flex-shrink: 0 and the correct 185/28 aspect-ratio
+       from their width/height attributes — an auto-width-from-aspect-ratio
+       quirk under flex-basis: auto in this constrained a row. Setting the
+       width explicitly (matching each image's real attributes) sidesteps
+       it entirely instead of relying on height + aspect-ratio to derive it. */
+    .cn-header__logo-link :global(img),
+    .cn-header__logo-link :global(svg) {
+      width: 185px;
+    }
+    .cn-header__partner :global(img) {
+      width: 34px;
+      flex-shrink: 0;
     }
   }
 
@@ -320,6 +347,11 @@ const hasPartner = Astro.slots.has("partner-logo");
   .cn-drawer__logo :global(img),
   .cn-drawer__logo :global(svg) {
     height: 24px;
+    /* Same auto-width-from-aspect-ratio squashing bug as the header/footer
+       logo under a flex parent (.cn-drawer__top) — see Header.astro's
+       mobile bar block. Explicit width (185/28 ratio scaled to height: 24)
+       sidesteps it. */
+    width: 159px;
     display: block;
   }
   .cn-drawer__close {
@@ -379,6 +411,12 @@ const hasPartner = Astro.slots.has("partner-logo");
     display: flex;
     justify-content: center;
     margin-bottom: 8px;
+  }
+  .cn-drawer__partner-logo :global(img) {
+    /* Same flex-context sizing quirk as above — here it stretched the
+       (square, 34x34) image's width to ~76px instead of matching its
+       height. Explicit width pins it back to the correct 1:1 ratio. */
+    width: 34px;
   }
   .cn-drawer__footer {
     margin-top: auto;

@@ -172,14 +172,25 @@
   border: 0;
 }
 
-/* Mobile: measured against the hero's own width via container query, not
-   viewport — shrink side padding, cap content to the available width, and
-   scale the title down. */
-@container (max-width: 520px) {
+/* .cn-hero sets its own container-type: inline-size (so its DESCENDANTS
+   below can query against it), which means a @container query can't also
+   resize .cn-hero itself — by the time containment is established, an
+   element can't condition its own box on that same containment context, so
+   browsers just skip the rule. Its own height needs an ordinary viewport
+   @media query instead; everything that targets an actual descendant
+   (content/title/desc/arrows) still works fine via @container below since
+   those aren't the containment-establishing element. */
+@media (max-width: 520px) {
   .cn-hero {
     height: 70vh;
     min-height: 420px;
   }
+}
+
+/* Mobile: measured against the hero's own width via container query, not
+   viewport — shrink side padding, cap content to the available width, and
+   scale the title down. */
+@container (max-width: 520px) {
   .cn-hero__content {
     max-width: 100%;
     padding: 0 20px;
@@ -199,7 +210,11 @@
     width: 36px;
     height: 36px;
     font-size: 16px;
-    top: 24px;
+    /* Was pinned to top: 24px (right under the header) — too high. Content
+       is bottom-anchored and can run up to ~half the hero's height (title
+       + desc + button), so a true 50% vertical center overlaps that text;
+       this sits centered within the image-only zone above it instead. */
+    top: 130px;
     transform: none;
   }
   .cn-hero__arrow--left {

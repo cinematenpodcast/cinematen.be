@@ -180,10 +180,11 @@ const hasSocial = Astro.slots.has("social-icons");
     .cn-footer__columns {
       grid-template-columns: repeat(2, 1fr);
     }
-  }
-  @media (max-width: 480px) {
-    .cn-footer__columns {
-      grid-template-columns: 1fr;
+    /* Same auto-width-from-aspect-ratio squashing bug as the header logo
+       under flex-basis: auto (here via inline-flex) — see Header.astro's
+       mobile block. Explicit width sidesteps it. */
+    .cn-footer__brand :global(img) {
+      width: 172px;
     }
   }
 </style>

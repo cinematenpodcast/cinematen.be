@@ -16,20 +16,22 @@ import PodcastCard from "../components/design-system/PodcastCard.astro";
 import RandomReviews from "../components/RandomReviews.astro";
 import { readFileSync } from "fs";
 import { join } from "path";
-import { formatDateTime, formatDateISO, readingTime } from "../lib/format";
+import { formatCardDate, formatDateISO, readingTime } from "../lib/format";
 import { getNavLinks, FOOTER_COLUMNS, FOOTER_BOTTOM_LEFT, FOOTER_TAGLINE, PARTNER_LABEL } from "../lib/siteNav";
 
 const { frontmatter } = Astro.props;
 
 // Fallback meta-description source for the (still-common, pre-backfill) case
 // where nieuws.summary is blank — read straight from the MDX file on disk.
-function extractDescriptionFromMDX(slug) {
+// Also the source for the hero's reading-time pill, which needs the actual
+// rendered body word count (see src/lib/format.ts readingTime).
+function getPlainTextFromMDX(slug) {
   if (!slug) return "";
   try {
     const filePath = join(process.cwd(), "src/content/nieuws", `${slug}.mdx`);
     const content = readFileSync(filePath, "utf-8");
     const withoutFrontmatter = content.replace(/^---[\s\S]*?---\s*\n\n?/m, "");
-    const text = withoutFrontmatter
+    return withoutFrontmatter
       .replace(/#{1,6}\s+/g, "")
       .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
       .replace(/\*\*([^*]+)\*\*/g, "$1")
@@ -37,7 +39,6 @@ function extractDescriptionFromMDX(slug) {
       .replace(/!\[([^\]]*)\]\([^)]+\)/g, "")
       .replace(/\s+/g, " ")
       .trim();
-    return text.substring(0, 155);
   } catch {
     return "";
   }
@@ -52,13 +53,11 @@ try {
 } catch {
   // rawUrlSlug wasn't percent-encoded; use as-is.
 }
-const metaDescription =
-  frontmatter.summary ||
-  extractDescriptionFromMDX(urlSlug) ||
-  extractDescriptionFromMDX(frontmatter.slug) ||
-  undefined;
+const plainText = getPlainTextFromMDX(urlSlug) || getPlainTextFromMDX(frontmatter.slug);
+const metaDescription = frontmatter.summary || plainText.substring(0, 155) || undefined;
+const minutesToRead = readingTime(plainText);
 
-const displayDate = formatDateTime(frontmatter.date);
+const displayDate = formatCardDate(frontmatter.date);
 // `trailer` is a plain YouTube video ID in frontmatter (e.g. "f_bKjZeJBBI"),
 // not a full URL — see src/content/config.ts. youtube-nocookie.com avoids
 // setting third-party cookies until the visitor actually plays the video.
@@ -93,12 +92,30 @@ const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed
                     <div class="cn-article-hero__content">
                         <h1>{frontmatter.title}</h1>
                         <div class="cn-article-hero__meta">
-                            {displayDate && <span class="cn-article-hero__date" data-pagefind-meta={`date:${formatDateISO(frontmatter.date)}`}>{displayDate}</span>}
+                            {displayDate && (
+                                <span class="cn-article-hero__date" data-pagefind-meta={`date:${formatDateISO(frontmatter.date)}`}>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                                    </svg>
+                                    {displayDate}
+                                </span>
+                            )}
+                            <span class="cn-article-hero__reading-time">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <circle cx="12" cy="12" r="9"></circle>
+                                    <polyline points="12 7 12 12 16 14"></polyline>
+                                </svg>
+                                {minutesToRead} min leestijd
+                            </span>
                         </div>
                     </div>
                 </section>
 
                 <article class="cn-article-prose">
+                    {frontmatter.summary && <p>{frontmatter.summary}</p>}
                     <slot />
 
                     {trailerSrc && (
@@ -193,13 +210,26 @@ const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed
         align-items: center;
         flex-wrap: wrap;
     }
-    .cn-article-hero__date {
+    .cn-article-hero__date,
+    .cn-article-hero__reading-time {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
         font-family: var(--font-sans);
         font-size: 12px;
         font-weight: 700;
         letter-spacing: 0.08em;
         text-transform: uppercase;
         color: var(--on-surface-variant);
+    }
+    /* Matches Artikel.dc.html's reading-time pill exactly — #1f2937 is a
+       one-off literal in the original design, not tied to any color token
+       (same case as the hero CTA button's literal #fff/#0a1128). */
+    .cn-article-hero__reading-time {
+        background: #1f2937;
+        color: var(--on-surface);
+        border-radius: var(--radius-full);
+        padding: 4px 12px;
     }
 
     .cn-article-prose {
@@ -277,11 +307,38 @@ const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed
     }
 
     @media (max-width: 720px) {
+        .cn-article-hero {
+            /* Content is bottom-anchored (align-items: flex-end), so the
+               hero must be TALL enough that even a long (5–6 line) title
+               leaves image visible above it — the title then sits low,
+               flush against the image's bottom edge, exactly like the
+               reference. Earlier short-hero attempts (45vh, 32vh) did the
+               opposite: for a long title the content became taller than
+               the hero, so the whole image was covered and the title rode
+               up to the very top. 56vh keeps a generous image band above
+               the title for both short and long headlines. min-height is a
+               floor, not a cap, so an unusually long title still grows the
+               hero rather than clipping. */
+            min-height: 56vh;
+            /* The base rule adds 32px padding-bottom on the section itself,
+               which sits in the gap between the meta row and the summary on
+               top of the content's own padding. Zero it here so the total
+               gap is controlled solely by .cn-article-hero__content's
+               padding-bottom below (= exactly 15px). */
+            padding-bottom: 0;
+        }
         .cn-article-hero__content {
-            padding: 0 var(--space-margin-mobile) 32px;
+            /* Sole contributor to the meta-row → summary gap now that the
+               section padding above and the prose padding-top below are both
+               zero — makes it exactly 15px, and pulls the bottom-anchored
+               title/meta lower, flush toward the image's bottom edge. */
+            padding: 0 var(--space-margin-mobile) 15px;
         }
         .cn-article-hero__content h1 {
-            font-size: 32px;
+            font-size: 28px;
+        }
+        .cn-article-prose {
+            padding-top: 0;
         }
     }
 </style>

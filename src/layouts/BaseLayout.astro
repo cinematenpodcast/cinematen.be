@@ -179,6 +179,9 @@ const canonicalURL = "https://www.cinematen.be/";
               })
             }
           </div>
+          <div class="cn-home-reviews__more">
+            <a href="/reviews&blogs/pages/1" class="cn-btn-outline">Meer reviews</a>
+          </div>
         </div>
       </section>
 
@@ -390,6 +393,11 @@ const canonicalURL = "https://www.cinematen.be/";
     grid-template-columns: repeat(3, 1fr);
     gap: 32px;
   }
+  /* Desktop has no "meer" button for this section (matches the original
+     design) — only shown on mobile, where the grid is capped to 4 cards. */
+  .cn-home-reviews__more {
+    display: none;
+  }
 
   @media (max-width: 1024px) {
     .cn-home-news__grid,
@@ -404,7 +412,13 @@ const canonicalURL = "https://www.cinematen.be/";
   }
   @media (max-width: 720px) {
     .cn-home-news {
-      margin-top: -48px;
+      /* Was -48px (an overlap trick that works against the desktop hero,
+         which has empty space above its bottom-anchored content) — on
+         mobile the hero's content sits right at its bottom edge (button
+         included), so pulling the news section up by nearly as much as the
+         hero's own bottom padding visually collided the "Film & TV nieuws"
+         heading with the "Lees meer" button. */
+      margin-top: 24px;
       padding: 0 var(--space-margin-mobile) 32px;
     }
     .cn-home-adslot,
@@ -416,6 +430,48 @@ const canonicalURL = "https://www.cinematen.be/";
     .cn-home-news__grid,
     .cn-home-reviews__grid {
       grid-template-columns: 1fr;
+    }
+    /* Cap both homepage grids to 4 cards on mobile — the rest exist in the
+       DOM (desktop still shows 9/6) but are hidden past the 4th so mobile
+       gets a short list plus a "meer" link instead of a long scroll. */
+    .cn-home-news__grid > :global(:nth-child(n + 5)),
+    .cn-home-reviews__grid > :global(:nth-child(n + 5)) {
+      display: none;
+    }
+    .cn-home-reviews__more {
+      display: flex;
+      justify-content: center;
+      margin-top: 32px;
+    }
+    /* Spotify's embed widget picks compact-horizontal vs large-vertical
+       layout based on the iframe's own rendered height, not just width —
+       the desktop height="152" attribute locks it into compact-horizontal,
+       which doesn't have room at mobile card widths and overflows (title/
+       buttons run past the edge). A taller height on mobile makes Spotify's
+       own script switch to its large vertical card layout instead. */
+    .cn-home-podcast__embed {
+      height: 352px;
+    }
+    /* .cn-home-podcast__main's min-width: 340px (set for the desktop 2-up
+       layout) is wider than the actual available space once the card's own
+       padding + page margin are subtracted on a narrow phone, forcing an
+       overflow (text pushed past the edge). Just zeroing min-width isn't
+       enough on its own either: without it, .main and .side can end up
+       fighting for space on the same wrapped row instead of each getting
+       their own — .side collapsed to ~72px and squashed its buttons into
+       circles with the labels overflowing outside them. flex-basis: 100%
+       forces each onto its own full-width row unconditionally. */
+    .cn-home-podcast__main,
+    .cn-home-podcast__side {
+      min-width: 0;
+      flex-basis: 100%;
+    }
+    /* Same auto-width-from-aspect-ratio squashing bug as the header logo
+       under flex-basis: auto — see Header.astro's mobile block. Explicit
+       width sidesteps it. */
+    .cn-home-podcast__partner img {
+      width: 64px;
+      flex-shrink: 0;
     }
   }
 </style>
