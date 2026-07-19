@@ -1,0 +1,53 @@
+---
+/**
+ * PodcastCard — real Spotify show embed in a labeled card, matching
+ * Artikel.dc.html. Replaces BasePodcastBanner everywhere it was used
+ * (Nieuws/Review article pages, Nieuws/Reviews listing pages).
+ */
+---
+
+<div class="cn-podcast-card">
+  <span class="cn-podcast-card__label">Luister naar onze podcast</span>
+  <h3 class="cn-podcast-card__heading">Elke week het laatste film- en serienieuws</h3>
+  <iframe
+    title="Cinematen Podcast op Spotify"
+    class="cn-podcast-card__embed"
+    src="https://open.spotify.com/embed/show/19O8JqKPSbQWek15vG3sig?utm_source=generator&theme=1"
+    width="100%"
+    height="152"
+    frameborder="0"
+    allowfullscreen
+    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+    loading="lazy"
+  ></iframe>
+</div>
+
+<style>
+  .cn-podcast-card {
+    background: var(--surface-container);
+    border: 1px solid var(--outline-variant);
+    border-radius: var(--radius-2xl);
+    padding: 28px;
+  }
+  .cn-podcast-card__label {
+    display: block;
+    font-family: var(--font-sans);
+    color: var(--accent-blue);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: 12px;
+  }
+  .cn-podcast-card__heading {
+    font-family: var(--font-sans);
+    font-weight: 800;
+    font-size: 24px;
+    color: #fff;
+    margin: 6px 0 18px;
+  }
+  .cn-podcast-card__embed {
+    border-radius: 12px;
+    display: block;
+    border: none;
+  }
+</style>

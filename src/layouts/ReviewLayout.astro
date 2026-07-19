@@ -4,13 +4,14 @@
 // passes `frontmatter` + slotted MDX `<Content />`). Same SEO/schema.org
 // pipeline and component inclusions as before (RandomReviews) — only the
 // visual chrome around the article body changed. BasePodcastBanner was
-// replaced with an inline podcast card (real Spotify show embed) and a
-// trailer embed was added, matching the same changes on NieuwsLayout.astro.
+// replaced with the shared PodcastCard component (real Spotify show embed)
+// and a trailer embed was added, matching NieuwsLayout.astro.
 import BaseHead from "../components/BaseHead.astro";
 import Header from "../components/design-system/Header.astro";
 import Footer from "../components/design-system/Footer.astro";
 import SocialIcons from "../components/design-system/SocialIcons.astro";
 import CategoryBadge from "../components/design-system/CategoryBadge.astro";
+import PodcastCard from "../components/design-system/PodcastCard.astro";
 import RandomReviews from "../components/RandomReviews.astro";
 import { formatCardDate, ratingOutOfTen } from "../lib/format";
 import { getNavLinks, FOOTER_COLUMNS, FOOTER_BOTTOM_LEFT, FOOTER_TAGLINE, PARTNER_LABEL } from "../lib/siteNav";
@@ -113,7 +114,7 @@ const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed
                                 <CategoryBadge label="REVIEW" tone={soortLower === "tv" ? "tv" : "film"} />
                                 <h1>{frontmatter.title}</h1>
                                 <div class="cn-review-hero__meta">
-                                    {displayDate && <span>{displayDate}</span>}
+                                    {displayDate && <span data-pagefind-meta={`date:${displayDate}`}>{displayDate}</span>}
                                     {frontmatter.schrijver && <span class="cn-review-hero__author">Door {frontmatter.schrijver}</span>}
                                 </div>
                             </div>
@@ -150,21 +151,7 @@ const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed
                         </div>
                     )}
 
-                    <div class="cn-article-podcast-card">
-                        <span class="cn-article-podcast-card__label">Luister naar onze podcast</span>
-                        <h3 class="cn-article-podcast-card__heading">Elke week het laatste film- en serienieuws</h3>
-                        <iframe
-                            title="Cinematen Podcast op Spotify"
-                            class="cn-article-podcast-card__embed"
-                            src="https://open.spotify.com/embed/show/19O8JqKPSbQWek15vG3sig?utm_source=generator&theme=1"
-                            width="100%"
-                            height="152"
-                            frameborder="0"
-                            allowfullscreen
-                            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                            loading="lazy"
-                        ></iframe>
-                    </div>
+                    <PodcastCard />
                 </article>
 
                 <RandomReviews currentSlug={frontmatter.slug} />
@@ -301,7 +288,7 @@ const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed
     }
 
     .cn-article-prose {
-        max-width: 720px;
+        max-width: 900px;
         margin: 0 auto;
         padding: 48px var(--space-margin-mobile) 64px;
         font-family: var(--font-sans);
@@ -371,33 +358,8 @@ const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed
         border: 0;
     }
 
-    .cn-article-podcast-card {
+    .cn-article-prose :global(.cn-podcast-card) {
         margin-top: 48px;
-        background: var(--surface-container);
-        border: 1px solid var(--outline-variant);
-        border-radius: var(--radius-2xl);
-        padding: 28px;
-    }
-    .cn-article-podcast-card__label {
-        display: block;
-        font-family: var(--font-sans);
-        color: var(--accent-blue);
-        font-weight: 700;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        font-size: 12px;
-    }
-    .cn-article-podcast-card__heading {
-        font-family: var(--font-sans);
-        font-weight: 800;
-        font-size: 24px;
-        color: #fff;
-        margin: 6px 0 18px;
-    }
-    .cn-article-podcast-card__embed {
-        border-radius: 12px;
-        display: block;
-        border: none;
     }
 
     @media (max-width: 720px) {

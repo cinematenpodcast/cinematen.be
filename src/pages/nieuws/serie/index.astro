@@ -2,9 +2,8 @@
 import { getCollection } from "astro:content";
 import ListingShell from "../../../layouts/ListingShell.astro";
 import ArticleCard from "../../../components/design-system/ArticleCard.astro";
-import CategoryBadge from "../../../components/design-system/CategoryBadge.astro";
 import NieuwsFilterChips from "../../../components/NieuwsFilterChips.astro";
-import BasePodcastBanner from "../../../components/BasePodcastBanner.astro";
+import PodcastCard from "../../../components/design-system/PodcastCard.astro";
 import { extractPreview } from "../../../lib/textPreview";
 import { formatCardDate } from "../../../lib/format";
 
@@ -34,13 +33,12 @@ const serieNieuws = allNieuws
       {serieNieuws.map(post => (
         <ArticleCard title={post.data.title} href={`/nieuws/${getCleanId(post.id)}`} excerpt={post.data.summary || extractPreview(post.body)}>
           <img slot="image" src={post.data.thumbnail} alt={post.data.title} loading="lazy" />
-          <CategoryBadge slot="badge" label="TV" tone="tv" />
           <span slot="meta">{formatCardDate(post.data.date)}</span>
         </ArticleCard>
       ))}
     </div>
   </div>
   <div class="cn-listing__podcast">
-    <BasePodcastBanner />
+    <PodcastCard />
   </div>
 </ListingShell>

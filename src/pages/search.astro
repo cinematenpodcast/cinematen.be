@@ -12,7 +12,7 @@ import BaseHeadExclude from "../components/BaseHeadExclude.astro";
 import Header from "../components/design-system/Header.astro";
 import Footer from "../components/design-system/Footer.astro";
 import SocialIcons from "../components/design-system/SocialIcons.astro";
-import BasePodcastBanner from "../components/BasePodcastBanner.astro";
+import PodcastCard from "../components/design-system/PodcastCard.astro";
 import SearchField from "../components/SearchField.astro";
 import { getNavLinks, FOOTER_COLUMNS, FOOTER_BOTTOM_LEFT, FOOTER_TAGLINE, PARTNER_LABEL } from "../lib/siteNav";
 ---
@@ -35,7 +35,7 @@ import { getNavLinks, FOOTER_COLUMNS, FOOTER_BOTTOM_LEFT, FOOTER_TAGLINE, PARTNE
             </main>
 
             <div class="cn-search__podcast">
-                <BasePodcastBanner />
+                <PodcastCard />
             </div>
 
             <Footer columns={FOOTER_COLUMNS} bottomLeft={FOOTER_BOTTOM_LEFT}>
@@ -76,7 +76,7 @@ import { getNavLinks, FOOTER_COLUMNS, FOOTER_BOTTOM_LEFT, FOOTER_TAGLINE, PARTNE
         max-width: 700px;
     }
     .cn-search__podcast {
-        max-width: var(--container-max);
+        max-width: 920px;
         margin: 0 auto;
         padding: 0 var(--space-margin-desktop) 64px;
     }

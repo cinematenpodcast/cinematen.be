@@ -26,9 +26,6 @@
  *          sized by the media box (16:9 aspect-ratio for default/overlay,
  *          fixed 112x84 for 'row'). Add width/height or use Astro's <Image>
  *          for real dimensions — this component only constrains the box.
- *   badge  (optional) — small category pill (e.g. CategoryBadge), positioned
- *          top-left over the media in 'default'/'overlay'; not rendered in
- *          'row'.
  *   meta   (optional) — date / read-time / rating row, rendered under the
  *          excerpt with a hairline top border in 'default' (no border in
  *          'overlay'/'row', matching source).
@@ -44,7 +41,6 @@ interface Props {
 const { title, href, excerpt, variant = "default", rating } = Astro.props;
 const overlay = variant === "overlay";
 const row = variant === "row";
-const hasBadge = Astro.slots.has("badge");
 const hasMeta = Astro.slots.has("meta");
 ---
 
@@ -55,11 +51,6 @@ const hasMeta = Astro.slots.has("meta");
   <div class="cn-article__media">
     <slot name="image" />
     {overlay && <div class="cn-article__scrim" aria-hidden="true" />}
-    {hasBadge && !row && (
-      <div class="cn-article__badge">
-        <slot name="badge" />
-      </div>
-    )}
     {rating && (
       <div class="cn-article__rating">
         <span class="cn-article__rating-num">{rating}</span><span class="cn-article__rating-denom">/10</span>
@@ -114,12 +105,6 @@ const hasMeta = Astro.slots.has("meta");
   .cn-article:hover .cn-article__media :global(img) {
     transform: scale(1.05);
   }
-  .cn-article__badge {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    z-index: 1;
-  }
   .cn-article__rating {
     position: absolute;
     top: 12px;
@@ -155,8 +140,8 @@ const hasMeta = Astro.slots.has("meta");
   .cn-article__title {
     font-family: var(--font-sans);
     font-weight: 600;
-    font-size: var(--text-headline-md-size);
-    line-height: var(--text-headline-md-line);
+    font-size: 18px;
+    line-height: 1.3;
     color: var(--on-surface);
     margin: 0 0 12px;
   }

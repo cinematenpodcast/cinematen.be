@@ -2,7 +2,6 @@
 // Import necessary components
 import ListingShell from "../../layouts/ListingShell.astro";
 import ArticleCard from "../../components/design-system/ArticleCard.astro";
-import CategoryBadge from "../../components/design-system/CategoryBadge.astro";
 import NieuwsFilterChips from "../../components/NieuwsFilterChips.astro";
 
 import { getCollection } from "astro:content";
@@ -43,13 +42,6 @@ exclude_from_search: true
         .map((post) => (
           <ArticleCard title={post.frontmatter.title} href={post.url} excerpt={post.rawContent()}>
             <img slot="image" src={post.frontmatter.thumbnail} alt={post.frontmatter.title} loading="lazy" />
-            {post.frontmatter.soort && (
-              <CategoryBadge
-                slot="badge"
-                label={post.frontmatter.soort}
-                tone={post.frontmatter.soort.toLowerCase() === "tv" ? "tv" : "film"}
-              />
-            )}
             <span slot="meta">{formatCardDate(post.frontmatter.date)}</span>
           </ArticleCard>
         ))}
