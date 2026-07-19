@@ -65,15 +65,27 @@ export function formatHeroDate(dateInput: Date | string | undefined | null): str
 }
 
 /**
- * The `reviews` collection stores `rating` on a 0–5 scale in 0.5 steps (see
- * BaseReviewItem's 5-star generator). The design's rating badge displays out
- * of 10 (e.g. "8/10"), matching the reference exactly — doubling a 0.5-step
- * 0–5 value always lands on a whole number out of 10, so this isn't
- * inventing precision, just re-scaling it.
+ * The `reviews` collection stores `rating` already on a 0–10 scale (migrated
+ * from the original 0–5-in-0.5-steps scale — every stored value was doubled
+ * in place to match). The design's rating badge displays "X/10" directly.
  */
 export function ratingOutOfTen(rating: number | undefined | null): string | null {
   if (rating === undefined || rating === null || isNaN(rating) || rating <= 0) return null;
-  return String(Math.round(rating * 2));
+  return String(Math.round(rating));
+}
+
+/**
+ * The routable slug for a nieuws/reviews entry — its filename without the
+ * extension, regardless of which subfolder (e.g. a year/month organization
+ * folder) it lives in. Astro's content-collection `entry.id` is the file's
+ * path *relative to the collection root*, which includes any subfolders —
+ * every route and link in the site must derive its slug via this function,
+ * not the raw `id`, so moving files into date-based subfolders never
+ * changes a live URL.
+ */
+export function slugFromEntryId(id: string): string {
+  const basename = id.split("/").pop() ?? id;
+  return basename.replace(/\.mdx$/, "");
 }
 
 /**

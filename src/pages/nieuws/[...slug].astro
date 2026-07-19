@@ -1,13 +1,13 @@
 ---
 import { getCollection } from "astro:content";
 import NieuwsLayout from "../../layouts/NieuwsLayout.astro";
+import { slugFromEntryId } from "../../lib/format";
 
 export async function getStaticPaths() {
   const posts = await getCollection("nieuws", (post) => !post.data.draft);
 
   return posts.map((post) => {
-    const cleanId = post.id.replace(/\.mdx$/, '');
-    return { params: { slug: cleanId }, props: { post } };
+    return { params: { slug: slugFromEntryId(post.id) }, props: { post } };
   });
 }
 

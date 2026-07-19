@@ -9,7 +9,7 @@ import PodcastCard from "../../../components/design-system/PodcastCard.astro";
 import { getCollection } from "astro:content";
 import type { Page } from "astro";
 import { extractPreview } from "../../../lib/textPreview";
-import { formatCardDate } from "../../../lib/format";
+import { formatCardDate, slugFromEntryId } from "../../../lib/format";
 
 export async function getStaticPaths({ paginate }) {
     // Load all news posts
@@ -21,14 +21,9 @@ export async function getStaticPaths({ paginate }) {
         return new Date(b.data.date).getTime() - new Date(a.data.date).getTime();
     });
 
-    // Helper function to ensure clean ID without .mdx extension
-    function getCleanId(id) {
-        return id ? id.replace(/\.mdx$/, '') : '';
-    }
-
     // Map to format expected by pagination
     const mappedPosts = sortedPosts.map(post => ({
-        url: `/nieuws/${getCleanId(post.id)}`,
+        url: `/nieuws/${slugFromEntryId(post.id)}`,
         frontmatter: post.data,
         rawContent: post.data.summary || extractPreview(post.body),
     }));

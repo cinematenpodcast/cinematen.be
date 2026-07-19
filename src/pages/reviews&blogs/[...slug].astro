@@ -5,12 +5,13 @@ import { YouTube } from 'astro-embed';
 import EmptySpaceS from "../../components/EmptySpaceS.astro";
 import EmptySpaceM from "../../components/EmptySpaceM.astro";
 import EmptySpaceL from "../../components/EmptySpaceL.astro";
+import { slugFromEntryId } from "../../lib/format";
 
 export async function getStaticPaths() {
   const posts = await getCollection("reviews");
 
   return posts.map((post) => ({
-    params: { slug: post.id.replace(/\.mdx$/, '') },
+    params: { slug: slugFromEntryId(post.id) },
     props: { post },
   }));
 }

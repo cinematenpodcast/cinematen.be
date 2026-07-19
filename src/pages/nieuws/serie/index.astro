@@ -5,11 +5,7 @@ import ArticleCard from "../../../components/design-system/ArticleCard.astro";
 import NieuwsFilterChips from "../../../components/NieuwsFilterChips.astro";
 import PodcastCard from "../../../components/design-system/PodcastCard.astro";
 import { extractPreview } from "../../../lib/textPreview";
-import { formatCardDate } from "../../../lib/format";
-
-function getCleanId(id) {
-  return id ? id.replace(/\.mdx$/, '') : '';
-}
+import { formatCardDate, slugFromEntryId } from "../../../lib/format";
 
 const allNieuws = await getCollection("nieuws");
 // Categories reduced to just "Film" / "TV" (was "TV & Series") -- see .pages.yml.
@@ -31,7 +27,7 @@ const serieNieuws = allNieuws
     <NieuwsFilterChips active="tv" />
     <div class="cn-listing__grid">
       {serieNieuws.map(post => (
-        <ArticleCard title={post.data.title} href={`/nieuws/${getCleanId(post.id)}`} excerpt={post.data.summary || extractPreview(post.body)}>
+        <ArticleCard title={post.data.title} href={`/nieuws/${slugFromEntryId(post.id)}`} excerpt={post.data.summary || extractPreview(post.body)}>
           <img slot="image" src={post.data.thumbnail} alt={post.data.title} loading="lazy" />
           <span slot="meta">{formatCardDate(post.data.date)}</span>
         </ArticleCard>

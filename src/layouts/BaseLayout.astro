@@ -19,17 +19,13 @@ import BaseAdBanner from "../components/BaseAdBanner.astro";
 
 import { getCollection } from "astro:content";
 import { extractPreview } from "../lib/textPreview";
-import { formatCardDate, ratingOutOfTen } from "../lib/format";
+import { formatCardDate, ratingOutOfTen, slugFromEntryId } from "../lib/format";
 import { getNavLinks, FOOTER_COLUMNS, FOOTER_BOTTOM_LEFT, FOOTER_TAGLINE, PARTNER_LABEL } from "../lib/siteNav";
-
-function getCleanId(id: string) {
-  return id ? id.replace(/\.mdx$/, "") : "";
-}
 
 const allNieuwsRaw = (await getCollection("nieuws")).filter((p) => !p.data.draft);
 const allNieuws = allNieuwsRaw
   .map((post) => ({
-    url: `/nieuws/${getCleanId(post.id)}`,
+    url: `/nieuws/${slugFromEntryId(post.id)}`,
     data: post.data,
     excerpt: extractPreview(post.body),
   }))
@@ -40,7 +36,7 @@ const gridPosts = allNieuws.slice(0, 9);
 
 const allReviewsRaw = (await getCollection("reviews")).filter((p) => !p.data.draft);
 const reviewPosts = allReviewsRaw
-  .map((post) => ({ url: `/reviews&blogs/${getCleanId(post.id)}`, data: post.data }))
+  .map((post) => ({ url: `/reviews&blogs/${slugFromEntryId(post.id)}`, data: post.data }))
   .sort((a, b) => new Date(b.data.date ?? 0).getTime() - new Date(a.data.date ?? 0).getTime())
   .slice(0, 6);
 

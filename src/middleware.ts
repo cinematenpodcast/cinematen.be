@@ -1,5 +1,6 @@
 import { defineMiddleware } from "astro:middleware";
 import { getCollection } from "astro:content";
+import { slugFromEntryId } from "./lib/format";
 
 // Reserved first-segment paths under /nieuws/ that are real routes, not article slugs.
 const NIEUWS_RESERVED = new Set(["film", "serie", "tags", "pages", "14days"]);
@@ -11,7 +12,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
   if (nieuwsMatch && !NIEUWS_RESERVED.has(nieuwsMatch[1])) {
     const slug = decodeURIComponent(nieuwsMatch[1]);
     const posts = await getCollection("nieuws");
-    const exists = posts.some((post) => post.id.replace(/\.mdx$/, "") === slug);
+    const exists = posts.some((post) => slugFromEntryId(post.id) === slug);
     if (!exists) {
       return context.redirect("/nieuws/", 301);
     }
@@ -21,7 +22,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
   if (reviewsMatch && reviewsMatch[1] !== "tags" && reviewsMatch[1] !== "pages") {
     const slug = decodeURIComponent(reviewsMatch[1]);
     const reviews = await getCollection("reviews");
-    const exists = reviews.some((post) => post.id.replace(/\.mdx$/, "") === slug);
+    const exists = reviews.some((post) => slugFromEntryId(post.id) === slug);
     if (!exists) {
       return context.redirect("/reviews&blogs/", 301);
     }

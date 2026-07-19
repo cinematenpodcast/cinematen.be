@@ -6,16 +6,11 @@ import NieuwsFilterChips from "../../components/NieuwsFilterChips.astro";
 
 import { getCollection } from "astro:content";
 import { extractPreview } from "../../lib/textPreview";
-import { formatCardDate } from "../../lib/format";
-
-// Helper function to ensure clean ID without .mdx extension
-function getCleanId(id) {
-    return id ? id.replace(/\.mdx$/, '') : '';
-}
+import { formatCardDate, slugFromEntryId } from "../../lib/format";
 
 const allNieuwsPostsRaw = (await getCollection("nieuws")).filter(post => !post.data.draft);
 const allNieuwsPosts = allNieuwsPostsRaw.map(post => {
-    const cleanId = getCleanId(post.id);
+    const cleanId = slugFromEntryId(post.id);
     return {
         url: `/nieuws/${cleanId}`,
         frontmatter: post.data,

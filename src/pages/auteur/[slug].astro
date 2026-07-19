@@ -7,6 +7,7 @@ import BaseFooter from "../../components/BaseFooter.astro";
 import BaseScript from "../../components/BaseScript.astro";
 import BasePodcastBanner from "../../components/BasePodcastBanner.astro";
 import BaseNieuwsItem from "../../components/BaseNieuwsItem.astro";
+import { slugFromEntryId } from "../../lib/format";
 
 export async function getStaticPaths() {
   const reviews = await getCollection("reviews");
@@ -28,10 +29,6 @@ const reviews = await getCollection("reviews");
 const authorReviews = reviews
   .filter(r => r.data.schrijver?.toLowerCase() === authorName.toLowerCase())
   .sort((a, b) => new Date(b.data.date ?? 0).getTime() - new Date(a.data.date ?? 0).getTime());
-
-function getCleanId(id: string) {
-  return id.replace(/\.mdx$/, '');
-}
 
 const canonicalURL = `https://www.cinematen.be/auteur/${slug}/`;
 ---
@@ -55,7 +52,7 @@ const canonicalURL = `https://www.cinematen.be/auteur/${slug}/`;
         <div class="w-layout-grid nieuws-list">
           {authorReviews.map(post => (
             <BaseNieuwsItem
-              url={`/reviews&blogs/${getCleanId(post.id)}`}
+              url={`/reviews&blogs/${slugFromEntryId(post.id)}`}
               title={post.data.title}
               thumbnail={post.data.thumbnail || post.data.poster}
               date={post.data.date}

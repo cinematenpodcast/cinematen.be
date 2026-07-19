@@ -2,6 +2,7 @@ import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
 import type { APIContext } from 'astro';
 import { extractPreview } from '../lib/textPreview';
+import { slugFromEntryId } from '../lib/format';
 
 export async function GET(context: APIContext) {
   const nieuws = await getCollection('nieuws');
@@ -18,7 +19,7 @@ export async function GET(context: APIContext) {
       title: post.data.title,
       pubDate: post.data.date ?? new Date(),
       description: post.data.summary || extractPreview(post.body),
-      link: `/nieuws/${post.id.replace(/\.mdx$/, '')}`,
+      link: `/nieuws/${slugFromEntryId(post.id)}`,
     })),
     customData: '<language>nl-be</language>',
   });

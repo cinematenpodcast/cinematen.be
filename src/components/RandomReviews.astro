@@ -4,14 +4,9 @@
 // query/shuffle logic as before — only the markup/CSS changed.
 import { getCollection } from "astro:content";
 import ArticleCard from "./design-system/ArticleCard.astro";
-import { formatCardDate, ratingOutOfTen } from "../lib/format";
+import { formatCardDate, ratingOutOfTen, slugFromEntryId } from "../lib/format";
 
 const { currentSlug } = Astro.props;
-
-// Helper function to ensure clean ID without .mdx extension
-function getCleanId(id) {
-    return id ? id.replace(/\.mdx$/, '') : '';
-}
 
 // Alle reviews ophalen
 const allReviewsRaw = await getCollection("reviews");
@@ -22,7 +17,7 @@ const allReviewsRaw = await getCollection("reviews");
 const allReviews = allReviewsRaw
   .filter(post => !post.data.draft)
   .map(post => ({
-    url: `/reviews&blogs/${getCleanId(post.id)}`,
+    url: `/reviews&blogs/${slugFromEntryId(post.id)}`,
     data: post.data,
     slug: post.slug,
   }));

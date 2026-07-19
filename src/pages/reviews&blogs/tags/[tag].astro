@@ -6,18 +6,13 @@ import ReviewsFilterChips from "../../../components/ReviewsFilterChips.astro";
 import PodcastCard from "../../../components/design-system/PodcastCard.astro";
 import { getCollection } from "astro:content";
 import { extractPreview } from "../../../lib/textPreview";
-import { formatCardDate, ratingOutOfTen } from "../../../lib/format";
+import { formatCardDate, ratingOutOfTen, slugFromEntryId } from "../../../lib/format";
 
 export async function getStaticPaths () {
-  // Helper function to ensure clean ID without .mdx extension
-  function getCleanId(id) {
-    return id ? id.replace(/\.mdx$/, '') : '';
-  }
-
   // Get all reviews from content collection
   const allPostsRaw = await getCollection("reviews");
   const allPosts = allPostsRaw.map(post => ({
-    url: `/reviews&blogs/${getCleanId(post.id)}`,
+    url: `/reviews&blogs/${slugFromEntryId(post.id)}`,
     frontmatter: post.data,
     rawContent: () => post.data.summary || extractPreview(post.body),
   }));

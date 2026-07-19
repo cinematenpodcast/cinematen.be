@@ -12,22 +12,31 @@ import { join } from "node:path";
 // available here for sitemap.serialize() to pull real per-article dates from.
 // Read each collection's MDX frontmatter directly instead, once at config-eval
 // time, so the sitemap can carry real lastmod dates instead of the build timestamp.
+//
+// Content lives in YYYY/MM subfolders (organized by scripts/organize-content.mjs),
+// so this walks recursively — `{ recursive: true }` (Node 20.1+) returns every
+// nested file/dir as a path relative to `collectionDir`, e.g. "2026/07/x.mdx".
+// The map is keyed by basename only (matching slugFromEntryId in src/lib/format.ts),
+// since that's what the URL slug — and thus serialize()'s regex match below — is.
 function buildDateMap(collectionDir) {
   const map = new Map();
-  let files = [];
+  let entries = [];
   try {
-    files = readdirSync(join(process.cwd(), collectionDir)).filter((f) => f.endsWith(".mdx"));
+    entries = readdirSync(join(process.cwd(), collectionDir), { recursive: true }).filter((f) =>
+      f.endsWith(".mdx")
+    );
   } catch {
     return map;
   }
-  for (const file of files) {
+  for (const relPath of entries) {
     try {
-      const content = readFileSync(join(process.cwd(), collectionDir, file), "utf-8");
+      const content = readFileSync(join(process.cwd(), collectionDir, relPath), "utf-8");
       const match = content.match(/^date:\s*['"]?([^'"\n]+)['"]?\s*$/m);
       if (match) {
         const date = new Date(match[1]);
         if (!isNaN(date.getTime())) {
-          map.set(file.replace(/\.mdx$/, ""), date.toISOString());
+          const basename = relPath.split("/").pop().replace(/\.mdx$/, "");
+          map.set(basename, date.toISOString());
         }
       }
     } catch {
