@@ -1,29 +1,23 @@
 ---
 /**
- * SocialIcons — X (Twitter)/Instagram icon pair for Footer's `social-icons`
+ * SocialIcons — Facebook/Instagram icon pair for Footer's `social-icons`
  * slot.
  *
- * Ported from the real rendered reference (`cinematen-data.js` socialEls`) —
- * plain outline-style glyphs (`color: var(--on-surface-variant)`, no filled
- * background pill), not the old BaseFooter.astro filled-circle Facebook +
- * Instagram icons. New primitive — not part of the _ds_bundle export, which
- * didn't ship a social-icons component at all.
+ * Plain outline-style glyphs (`color: var(--on-surface-variant)`, no filled
+ * background pill), matching the rest of the footer's icon treatment.
  */
 ---
 
-{/* No confirmed real X/Twitter account exists anywhere in this codebase
-    (legacy BaseFooter.astro only ever had Facebook + Instagram) — the
-    reference mock itself links this icon to href="#" rather than a real
-    profile, so this isn't a placeholder invented here; it's matching the
-    source exactly rather than fabricating an unconfirmed account URL. */}
 <a
-  href="#"
+  href="https://www.facebook.com/cinematenpodcast/"
+  target="_blank"
+  rel="noopener"
   class="cn-social-link"
-  aria-label="Cinematen op X"
+  aria-label="Cinematen op Facebook"
 >
   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
     <path
-      d="M18.244 2H21.5l-7.5 8.57L23 22h-6.8l-5.32-6.96L4.8 22H1.54l8.02-9.17L1 2h6.96l4.8 6.36L18.244 2Zm-1.19 18h1.83L7.03 3.9H5.06L17.054 20Z"
+      d="M13.5 22v-8.5H16l.5-3.5h-3V7.8c0-1 .28-1.7 1.73-1.7H16.6V3.14C16.3 3.1 15.28 3 14.1 3c-2.44 0-4.1 1.49-4.1 4.22V10H7.5v3.5H10V22h3.5Z"
     ></path>
   </svg>
 </a>

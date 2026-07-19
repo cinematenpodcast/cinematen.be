@@ -70,10 +70,10 @@ const hasPartner = Astro.slots.has("partner-logo");
       <input type="text" name="q" placeholder="Zoeken…" aria-label="Zoeken" />
     </form>
     {hasPartner && (
-      <div class="cn-header__partner">
+      <a class="cn-header__partner" href="https://kinepolis.be" target="_blank" rel="noopener">
         {partnerLabel && <span class="cn-header__partner-label">{partnerLabel}</span>}
         <slot name="partner-logo" />
-      </div>
+      </a>
     )}
     <button
       class="cn-header__burger"
@@ -113,10 +113,12 @@ const hasPartner = Astro.slots.has("partner-logo");
     {hasPartner && (
       <Fragment>
         <div class="cn-drawer__divider"></div>
-        <div class="cn-drawer__partner-label">{partnerLabel || "Partner van"}</div>
-        <div class="cn-drawer__partner-logo">
-          <slot name="partner-logo" />
-        </div>
+        <a class="cn-drawer__partner-link" href="https://kinepolis.be" target="_blank" rel="noopener">
+          <div class="cn-drawer__partner-label">{partnerLabel || "Partner van"}</div>
+          <div class="cn-drawer__partner-logo">
+            <slot name="partner-logo" />
+          </div>
+        </a>
       </Fragment>
     )}
     {mobileCopyright && <div class="cn-drawer__footer">{mobileCopyright}</div>}
@@ -159,6 +161,9 @@ const hasPartner = Astro.slots.has("partner-logo");
     display: flex;
     gap: 4px;
     min-width: 0;
+    /* Nudge down slightly so the link labels sit on the same visual line
+       as the logo mark instead of reading a touch high next to it. */
+    margin-top: 4px;
   }
   .cn-header__link {
     font-family: var(--font-sans);
@@ -193,11 +198,11 @@ const hasPartner = Astro.slots.has("partner-logo");
     padding: 6px 12px;
     margin-left: 4px;
     flex-shrink: 0;
-    width: 96px;
+    width: 140px;
     transition: width 0.2s ease;
   }
   .cn-header__search:focus-within {
-    width: 200px;
+    width: 220px;
   }
   .cn-header__search svg {
     flex-shrink: 0;
@@ -225,6 +230,15 @@ const hasPartner = Astro.slots.has("partner-logo");
     color: var(--on-surface-variant);
     white-space: nowrap;
     flex-shrink: 0;
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+  .cn-header__partner:hover {
+    color: var(--on-surface);
+  }
+  .cn-header__partner:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
   }
   .cn-header__burger {
     display: none;
@@ -346,6 +360,11 @@ const hasPartner = Astro.slots.has("partner-logo");
   .cn-drawer__divider {
     border-top: 1px solid var(--outline-variant);
     margin: 16px 0;
+  }
+  .cn-drawer__partner-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
   }
   .cn-drawer__partner-label {
     text-align: center;

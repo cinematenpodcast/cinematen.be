@@ -2,16 +2,17 @@
 // Review/blog detail — redesigned per `Review.dc.html`.
 // Wrapped by src/pages/reviews&blogs/[...slug].astro (untouched, still
 // passes `frontmatter` + slotted MDX `<Content />`). Same SEO/schema.org
-// pipeline and component inclusions as before (BasePodcastBanner, RandomReviews)
-// — only the visual chrome around the article body changed.
+// pipeline and component inclusions as before (RandomReviews) — only the
+// visual chrome around the article body changed. BasePodcastBanner was
+// replaced with an inline podcast card (real Spotify show embed) and a
+// trailer embed was added, matching the same changes on NieuwsLayout.astro.
 import BaseHead from "../components/BaseHead.astro";
 import Header from "../components/design-system/Header.astro";
 import Footer from "../components/design-system/Footer.astro";
 import SocialIcons from "../components/design-system/SocialIcons.astro";
 import CategoryBadge from "../components/design-system/CategoryBadge.astro";
-import BasePodcastBanner from "../components/BasePodcastBanner.astro";
 import RandomReviews from "../components/RandomReviews.astro";
-import { formatCardDate, ratingOutOfFive } from "../lib/format";
+import { formatCardDate, ratingOutOfTen } from "../lib/format";
 import { getNavLinks, FOOTER_COLUMNS, FOOTER_BOTTOM_LEFT, FOOTER_TAGLINE, PARTNER_LABEL } from "../lib/siteNav";
 
 const { frontmatter } = Astro.props;
@@ -29,7 +30,11 @@ const displayDate = formatCardDate(frontmatter.date);
 // Real `rating` is stored on a 0–5 scale (see src/lib/format.ts) — the
 // schema.org Review markup below keeps that native scale (bestRating: 5)
 // rather than inventing a /10 conversion the static design mock assumed.
-const ratingLabel = ratingOutOfFive(frontmatter.rating);
+const ratingLabel = ratingOutOfTen(frontmatter.rating);
+// `trailer` is a plain YouTube video ID in frontmatter (e.g. "f_bKjZeJBBI"),
+// not a full URL — see src/content/config.ts. youtube-nocookie.com avoids
+// setting third-party cookies until the visitor actually plays the video.
+const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed/${frontmatter.trailer}` : null;
 ---
 
 <html lang="nl">
@@ -93,7 +98,7 @@ const ratingLabel = ratingOutOfFive(frontmatter.rating);
         <div class="cn-page">
             <Header links={getNavLinks("reviews")} partnerLabel={PARTNER_LABEL}>
                 <img slot="logo" src="/images/cinematen-white-horizontal.png" alt="Cinematen.be" width="185" height="28" />
-                <img slot="partner-logo" src="/images/kinepolis.png" alt="Kinepolis" width="72" height="22" />
+                <img slot="partner-logo" src="/images/kinepolis.png" alt="Kinepolis" width="34" height="34" />
             </Header>
 
             <main>
@@ -118,6 +123,7 @@ const ratingLabel = ratingOutOfFive(frontmatter.rating);
                                     {ratingLabel && (
                                         <div class="cn-review-hero__rating">
                                             <span class="cn-review-hero__rating-num">{ratingLabel}</span>
+                                            <span class="cn-review-hero__rating-denom">/10</span>
                                         </div>
                                     )}
                                 </div>
@@ -128,13 +134,40 @@ const ratingLabel = ratingOutOfFive(frontmatter.rating);
 
                 <article class="cn-article-prose">
                     <slot />
+
+                    {trailerSrc && (
+                        <div class="cn-article-trailer">
+                            <h2>Bekijk de trailer</h2>
+                            <div class="cn-article-trailer__frame">
+                                <iframe
+                                    src={trailerSrc}
+                                    title="Trailer"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen
+                                    loading="lazy"
+                                ></iframe>
+                            </div>
+                        </div>
+                    )}
+
+                    <div class="cn-article-podcast-card">
+                        <span class="cn-article-podcast-card__label">Luister naar onze podcast</span>
+                        <h3 class="cn-article-podcast-card__heading">Elke week het laatste film- en serienieuws</h3>
+                        <iframe
+                            title="Cinematen Podcast op Spotify"
+                            class="cn-article-podcast-card__embed"
+                            src="https://open.spotify.com/embed/show/19O8JqKPSbQWek15vG3sig?utm_source=generator&theme=1"
+                            width="100%"
+                            height="152"
+                            frameborder="0"
+                            allowfullscreen
+                            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                            loading="lazy"
+                        ></iframe>
+                    </div>
                 </article>
 
                 <RandomReviews currentSlug={frontmatter.slug} />
-
-                <div class="cn-article-podcast">
-                    <BasePodcastBanner />
-                </div>
             </main>
 
             <Footer columns={FOOTER_COLUMNS} bottomLeft={FOOTER_BOTTOM_LEFT}>
@@ -260,6 +293,12 @@ const ratingLabel = ratingOutOfFive(frontmatter.rating);
         font-size: 26px;
         color: var(--on-surface);
     }
+    .cn-review-hero__rating-denom {
+        font-family: var(--font-sans);
+        font-weight: 600;
+        font-size: 15px;
+        color: var(--on-surface-variant);
+    }
 
     .cn-article-prose {
         max-width: 720px;
@@ -306,10 +345,59 @@ const ratingLabel = ratingOutOfFive(frontmatter.rating);
         border-radius: var(--radius-lg);
     }
 
-    .cn-article-podcast {
-        max-width: var(--container-max);
-        margin: 0 auto;
-        padding: 0 var(--space-margin-desktop) 64px;
+    .cn-article-trailer {
+        margin: 40px 0;
+    }
+    .cn-article-trailer h2 {
+        font-family: var(--font-sans);
+        font-size: 24px;
+        font-weight: 600;
+        margin: 0 0 16px;
+        color: var(--on-surface);
+    }
+    .cn-article-trailer__frame {
+        position: relative;
+        width: 100%;
+        padding-top: 56.25%;
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        background: #000;
+    }
+    .cn-article-trailer__frame iframe {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+    }
+
+    .cn-article-podcast-card {
+        margin-top: 48px;
+        background: var(--surface-container);
+        border: 1px solid var(--outline-variant);
+        border-radius: var(--radius-2xl);
+        padding: 28px;
+    }
+    .cn-article-podcast-card__label {
+        display: block;
+        font-family: var(--font-sans);
+        color: var(--accent-blue);
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 12px;
+    }
+    .cn-article-podcast-card__heading {
+        font-family: var(--font-sans);
+        font-weight: 800;
+        font-size: 24px;
+        color: #fff;
+        margin: 6px 0 18px;
+    }
+    .cn-article-podcast-card__embed {
+        border-radius: 12px;
+        display: block;
+        border: none;
     }
 
     @media (max-width: 720px) {
@@ -325,9 +413,6 @@ const ratingLabel = ratingOutOfFive(frontmatter.rating);
         }
         .cn-review-hero__rating-num {
             font-size: 18px;
-        }
-        .cn-article-podcast {
-            padding: 0 var(--space-margin-mobile) 48px;
         }
     }
 </style>

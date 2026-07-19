@@ -33,7 +33,7 @@ const filmNieuws = allNieuws
       {filmNieuws.map(post => (
         <ArticleCard title={post.data.title} href={`/nieuws/${getCleanId(post.id)}`} excerpt={post.data.summary || extractPreview(post.body)}>
           <img slot="image" src={post.data.thumbnail} alt={post.data.title} loading="lazy" />
-          <CategoryBadge slot="badge" label="Film nieuws" tone="film" />
+          <CategoryBadge slot="badge" label="Film" tone="film" />
           <span slot="meta">{formatCardDate(post.data.date)}</span>
         </ArticleCard>
       ))}

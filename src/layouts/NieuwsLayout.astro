@@ -2,19 +2,20 @@
 // Nieuws article detail — redesigned per `Artikel.dc.html`.
 // Wrapped by src/pages/nieuws/[...slug].astro (untouched, still passes
 // `frontmatter` + slotted MDX `<Content />`). Same data/meta pipeline as
-// before (BaseHeadNieuws, RandomReviews, RelatedNieuws, BasePodcastBanner) —
-// only the visual chrome around the article body changed.
+// before (BaseHeadNieuws, RandomReviews) — only the visual chrome around
+// the article body changed. RelatedNieuws's "Misschien ook interessant"
+// section was removed: it duplicated RandomReviews's own related-content
+// grid on this same page. BasePodcastBanner was replaced with an inline
+// podcast card (real Spotify show embed, matching Artikel.dc.html) placed
+// at the end of the article body, before the related-content grid.
 import BaseHeadNieuws from "../components/BaseHeadNieuws.astro";
 import Header from "../components/design-system/Header.astro";
 import Footer from "../components/design-system/Footer.astro";
 import SocialIcons from "../components/design-system/SocialIcons.astro";
-import CategoryBadge from "../components/design-system/CategoryBadge.astro";
-import BasePodcastBanner from "../components/BasePodcastBanner.astro";
 import RandomReviews from "../components/RandomReviews.astro";
-import RelatedNieuws from "../components/RelatedNieuws.astro";
 import { readFileSync } from "fs";
 import { join } from "path";
-import { formatCardDate } from "../lib/format";
+import { formatDateTime, readingTime } from "../lib/format";
 import { getNavLinks, FOOTER_COLUMNS, FOOTER_BOTTOM_LEFT, FOOTER_TAGLINE, PARTNER_LABEL } from "../lib/siteNav";
 
 const { frontmatter } = Astro.props;
@@ -56,8 +57,11 @@ const metaDescription =
   extractDescriptionFromMDX(frontmatter.slug) ||
   undefined;
 
-const displayDate = formatCardDate(frontmatter.date);
-const soortLower = (frontmatter.soort || "").toLowerCase();
+const displayDate = formatDateTime(frontmatter.date);
+// `trailer` is a plain YouTube video ID in frontmatter (e.g. "f_bKjZeJBBI"),
+// not a full URL — see src/content/config.ts. youtube-nocookie.com avoids
+// setting third-party cookies until the visitor actually plays the video.
+const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed/${frontmatter.trailer}` : null;
 ---
 
 <html lang="nl">
@@ -76,7 +80,7 @@ const soortLower = (frontmatter.soort || "").toLowerCase();
         <div class="cn-page">
             <Header links={getNavLinks("nieuws")} partnerLabel={PARTNER_LABEL}>
                 <img slot="logo" src="/images/cinematen-white-horizontal.png" alt="Cinematen.be" width="185" height="28" />
-                <img slot="partner-logo" src="/images/kinepolis.png" alt="Kinepolis" width="72" height="22" />
+                <img slot="partner-logo" src="/images/kinepolis.png" alt="Kinepolis" width="34" height="34" />
             </Header>
 
             <main>
@@ -88,9 +92,6 @@ const soortLower = (frontmatter.soort || "").toLowerCase();
                     <div class="cn-article-hero__content">
                         <h1>{frontmatter.title}</h1>
                         <div class="cn-article-hero__meta">
-                            {frontmatter.soort && (
-                                <CategoryBadge label={`${frontmatter.soort} nieuws`} tone={soortLower === "tv" ? "tv" : "film"} />
-                            )}
                             {displayDate && <span class="cn-article-hero__date">{displayDate}</span>}
                         </div>
                     </div>
@@ -98,14 +99,40 @@ const soortLower = (frontmatter.soort || "").toLowerCase();
 
                 <article class="cn-article-prose">
                     <slot />
+
+                    {trailerSrc && (
+                        <div class="cn-article-trailer">
+                            <h2>Bekijk de trailer</h2>
+                            <div class="cn-article-trailer__frame">
+                                <iframe
+                                    src={trailerSrc}
+                                    title="Trailer"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen
+                                    loading="lazy"
+                                ></iframe>
+                            </div>
+                        </div>
+                    )}
+
+                    <div class="cn-article-podcast-card">
+                        <span class="cn-article-podcast-card__label">Luister naar onze podcast</span>
+                        <h3 class="cn-article-podcast-card__heading">Elke week het laatste film- en serienieuws</h3>
+                        <iframe
+                            title="Cinematen Podcast op Spotify"
+                            class="cn-article-podcast-card__embed"
+                            src="https://open.spotify.com/embed/show/19O8JqKPSbQWek15vG3sig?utm_source=generator&theme=1"
+                            width="100%"
+                            height="152"
+                            frameborder="0"
+                            allowfullscreen
+                            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                            loading="lazy"
+                        ></iframe>
+                    </div>
                 </article>
 
                 <RandomReviews currentSlug={frontmatter.slug} />
-                <RelatedNieuws currentSlug={frontmatter.slug} soort={frontmatter.soort} />
-
-                <div class="cn-article-podcast">
-                    <BasePodcastBanner />
-                </div>
             </main>
 
             <Footer columns={FOOTER_COLUMNS} bottomLeft={FOOTER_BOTTOM_LEFT}>
@@ -144,6 +171,10 @@ const soortLower = (frontmatter.soort || "").toLowerCase();
         width: 100%;
         height: 100%;
         object-fit: cover;
+        /* Same fix as the homepage hero — anchor to the top so the top of
+           the image is always visible instead of center-cropping. The
+           bottom scrim gradient below is untouched. */
+        object-position: center top;
     }
     .cn-article-hero__scrim {
         position: absolute;
@@ -163,8 +194,8 @@ const soortLower = (frontmatter.soort || "").toLowerCase();
         font-family: var(--font-sans);
         font-weight: 800;
         letter-spacing: -0.01em;
-        font-size: 52px;
-        line-height: 1.05;
+        font-size: 44px;
+        line-height: 1.1;
         color: var(--on-surface);
         margin: 0 0 24px;
         max-width: 820px;
@@ -228,10 +259,59 @@ const soortLower = (frontmatter.soort || "").toLowerCase();
         border-radius: var(--radius-lg);
     }
 
-    .cn-article-podcast {
-        max-width: var(--container-max);
-        margin: 0 auto;
-        padding: 0 var(--space-margin-desktop) 64px;
+    .cn-article-trailer {
+        margin: 40px 0;
+    }
+    .cn-article-trailer h2 {
+        font-family: var(--font-sans);
+        font-size: 24px;
+        font-weight: 600;
+        margin: 0 0 16px;
+        color: var(--on-surface);
+    }
+    .cn-article-trailer__frame {
+        position: relative;
+        width: 100%;
+        padding-top: 56.25%;
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        background: #000;
+    }
+    .cn-article-trailer__frame iframe {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+    }
+
+    .cn-article-podcast-card {
+        margin-top: 48px;
+        background: var(--surface-container);
+        border: 1px solid var(--outline-variant);
+        border-radius: var(--radius-2xl);
+        padding: 28px;
+    }
+    .cn-article-podcast-card__label {
+        display: block;
+        font-family: var(--font-sans);
+        color: var(--accent-blue);
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 12px;
+    }
+    .cn-article-podcast-card__heading {
+        font-family: var(--font-sans);
+        font-weight: 800;
+        font-size: 24px;
+        color: #fff;
+        margin: 6px 0 18px;
+    }
+    .cn-article-podcast-card__embed {
+        border-radius: 12px;
+        display: block;
+        border: none;
     }
 
     @media (max-width: 720px) {
@@ -240,9 +320,6 @@ const soortLower = (frontmatter.soort || "").toLowerCase();
         }
         .cn-article-hero__content h1 {
             font-size: 32px;
-        }
-        .cn-article-podcast {
-            padding: 0 var(--space-margin-mobile) 48px;
         }
     }
 </style>

@@ -2,7 +2,6 @@
 // Import necessary components
 import ListingShell from "../../../layouts/ListingShell.astro";
 import ArticleCard from "../../../components/design-system/ArticleCard.astro";
-import CategoryBadge from "../../../components/design-system/CategoryBadge.astro";
 import Pagination from "../../../components/design-system/Pagination.astro";
 import ReviewsFilterChips from "../../../components/ReviewsFilterChips.astro";
 import BasePodcastBanner from "../../../components/BasePodcastBanner.astro";
@@ -10,7 +9,7 @@ import BasePodcastBanner from "../../../components/BasePodcastBanner.astro";
 import { getCollection } from "astro:content";
 import type { Page } from "astro";
 import { extractPreview } from "../../../lib/textPreview";
-import { formatCardDate, ratingOutOfFive } from "../../../lib/format";
+import { formatCardDate, ratingOutOfTen } from "../../../lib/format";
 
 export async function getStaticPaths({ paginate }) {
     // Load all review posts
@@ -56,17 +55,9 @@ exclude_from_search: true
     <ReviewsFilterChips />
     <div class="cn-listing__grid">
       {page.data.map((post) => {
-        const rating = ratingOutOfFive(post.frontmatter.rating);
         return (
-          <ArticleCard title={post.frontmatter.title} href={post.url} excerpt={post.frontmatter.summary ?? post.rawContent}>
+          <ArticleCard title={post.frontmatter.title} href={post.url} excerpt={post.frontmatter.summary ?? post.rawContent} rating={ratingOutOfTen(post.frontmatter.rating)}>
             <img slot="image" src={post.frontmatter.thumbnail} alt={post.frontmatter.title} loading="lazy" />
-            {rating ? (
-              <CategoryBadge slot="badge" label={rating} tone="neutral" />
-            ) : (
-              post.frontmatter.soort && (
-                <CategoryBadge slot="badge" label={post.frontmatter.soort} tone={post.frontmatter.soort.toLowerCase() === "tv" ? "tv" : "film"} />
-              )
-            )}
             <span slot="meta">
               {formatCardDate(post.frontmatter.date)}
               {post.frontmatter.schrijver ? ` · ${post.frontmatter.schrijver}` : ""}

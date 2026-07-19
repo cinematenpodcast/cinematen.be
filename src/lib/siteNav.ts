@@ -25,8 +25,8 @@ export interface HeaderLinkData {
 export function getNavLinks(active: NavKey): HeaderLinkData[] {
   return [
     { label: "Home", href: "/", active: active === "home" },
-    { label: "Nieuws", href: "/nieuws", active: active === "nieuws" },
-    { label: "Reviews", href: "/reviews&blogs", active: active === "reviews" },
+    { label: "Nieuws", href: "/nieuws/pages/1", active: active === "nieuws" },
+    { label: "Reviews", href: "/reviews&blogs/pages/1", active: active === "reviews" },
     { label: "Podcast", href: "/#podcast", active: active === "podcast" },
     { label: "Over ons", href: "/over-ons", active: active === "overons" },
     { label: "Contact", href: "/contact", active: active === "contact" },
@@ -50,8 +50,8 @@ export const FOOTER_COLUMNS = [
   {
     heading: "Navigatie",
     links: [
-      { label: "Nieuws", href: "/nieuws" },
-      { label: "Reviews", href: "/reviews&blogs" },
+      { label: "Nieuws", href: "/nieuws/pages/1" },
+      { label: "Reviews", href: "/reviews&blogs/pages/1" },
       { label: "Blogs", href: "/reviews&blogs/tags/blog" },
       { label: "Podcasts", href: "/#podcast" },
     ],

@@ -24,9 +24,6 @@ import "./HeroCarousel.css";
  */
 export interface HeroSlide {
   image: { src: string; alt: string };
-  eyebrow?: string;
-  /** CSS color value for the eyebrow pill background, e.g. "var(--accent-purple)". */
-  eyebrowColor?: string;
   title: string;
   description?: string;
   ctaLabel?: string;
@@ -72,14 +69,6 @@ export default function HeroCarousel({ slides, autoplayMs = 0 }: HeroCarouselPro
           <div className="cn-hero__scrim-side" aria-hidden="true" />
           <div className="cn-hero__scrim-bottom" aria-hidden="true" />
           <div className="cn-hero__content">
-            {s.eyebrow && (
-              <span
-                className="cn-hero__eyebrow"
-                style={{ background: s.eyebrowColor || "var(--accent-purple)" }}
-              >
-                {s.eyebrow}
-              </span>
-            )}
             <h1 className="cn-hero__title">{s.title}</h1>
             {s.description && <p className="cn-hero__desc">{s.description}</p>}
             {s.ctaLabel && s.ctaHref && (

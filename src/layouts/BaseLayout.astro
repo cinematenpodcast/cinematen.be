@@ -13,14 +13,13 @@ import BaseHead from "../components/BaseHead.astro";
 import Header from "../components/design-system/Header.astro";
 import Footer from "../components/design-system/Footer.astro";
 import ArticleCard from "../components/design-system/ArticleCard.astro";
-import CategoryBadge from "../components/design-system/CategoryBadge.astro";
 import SocialIcons from "../components/design-system/SocialIcons.astro";
 import HeroCarousel from "../components/design-system/HeroCarousel.tsx";
 import BaseAdBanner from "../components/BaseAdBanner.astro";
 
 import { getCollection } from "astro:content";
 import { extractPreview } from "../lib/textPreview";
-import { formatCardDate, ratingOutOfFive } from "../lib/format";
+import { formatCardDate, ratingOutOfTen } from "../lib/format";
 import { getNavLinks, FOOTER_COLUMNS, FOOTER_BOTTOM_LEFT, FOOTER_TAGLINE, PARTNER_LABEL } from "../lib/siteNav";
 
 function getCleanId(id: string) {
@@ -50,8 +49,6 @@ const heroSlides = heroPosts.map((p) => ({
     src: p.data.thumbnail || "/images/Cinematelogotrans.png",
     alt: p.data.title,
   },
-  eyebrow: p.data.soort ? `${p.data.soort} nieuws` : undefined,
-  eyebrowColor: p.data.soort?.toLowerCase() === "tv" ? "var(--accent-purple)" : "var(--accent-blue)",
   title: p.data.title,
   description: p.data.summary || p.excerpt,
   ctaLabel: "Lees meer",
@@ -69,7 +66,7 @@ const canonicalURL = "https://www.cinematen.be/";
     <div class="cn-page">
       <Header links={getNavLinks("home")} partnerLabel={PARTNER_LABEL}>
         <img slot="logo" src="/images/cinematen-white-horizontal.png" alt="Cinematen.be" width="185" height="28" />
-        <img slot="partner-logo" src="/images/kinepolis.png" alt="Kinepolis" width="72" height="22" />
+        <img slot="partner-logo" src="/images/kinepolis.png" alt="Kinepolis" width="34" height="34" />
       </Header>
 
       <HeroCarousel client:load slides={heroSlides} autoplayMs={9000} />
@@ -94,13 +91,15 @@ const canonicalURL = "https://www.cinematen.be/";
           }
         </div>
         <div class="cn-home-news__more">
-          <a href="/nieuws" class="cn-btn-outline">Meer nieuws</a>
+          <a href="/nieuws/pages/1" class="cn-btn-outline">Meer nieuws</a>
         </div>
       </section>
 
-      <div class="cn-home-adslot">
-        <BaseAdBanner />
-      </div>
+      {false && (
+        <div class="cn-home-adslot">
+          <BaseAdBanner />
+        </div>
+      )}
 
       <section class="cn-home-podcast" id="podcast">
         <div class="cn-home-podcast__inner">
@@ -153,7 +152,7 @@ const canonicalURL = "https://www.cinematen.be/";
             </a>
             <div class="cn-home-podcast__partner">
               <span>Mogelijk gemaakt door</span>
-              <a href="https://www.kinepolis.be/" target="_blank" rel="noopener">
+              <a href="https://kinepolis.be" target="_blank" rel="noopener">
                 <img src="/images/kinepolis.png" alt="Kinepolis" width="64" height="64" loading="lazy" />
               </a>
             </div>
@@ -168,21 +167,9 @@ const canonicalURL = "https://www.cinematen.be/";
           <div class="cn-home-reviews__grid">
             {
               reviewPosts.map((p) => {
-                const rating = ratingOutOfFive(p.data.rating);
                 return (
-                  <ArticleCard title={p.data.title} href={p.url} excerpt={p.data.summary ?? undefined} variant="default">
+                  <ArticleCard title={p.data.title} href={p.url} excerpt={p.data.summary ?? undefined} variant="default" rating={ratingOutOfTen(p.data.rating)}>
                     <img slot="image" src={p.data.thumbnail || p.data.poster} alt={p.data.title} loading="lazy" />
-                    {rating ? (
-                      <CategoryBadge slot="badge" label={rating} tone="neutral" />
-                    ) : (
-                      p.data.soort && (
-                        <CategoryBadge
-                          slot="badge"
-                          label={p.data.soort}
-                          tone={p.data.soort.toLowerCase() === "tv" ? "tv" : "film"}
-                        />
-                      )
-                    )}
                     <span slot="meta">
                       {formatCardDate(p.data.date)}
                       {p.data.schrijver ? ` · ${p.data.schrijver}` : ""}

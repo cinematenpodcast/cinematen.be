@@ -2,12 +2,11 @@
 // Import necessary components
 import ListingShell from "../../../layouts/ListingShell.astro";
 import ArticleCard from "../../../components/design-system/ArticleCard.astro";
-import CategoryBadge from "../../../components/design-system/CategoryBadge.astro";
 import ReviewsFilterChips from "../../../components/ReviewsFilterChips.astro";
 import BasePodcastBanner from "../../../components/BasePodcastBanner.astro";
 import { getCollection } from "astro:content";
 import { extractPreview } from "../../../lib/textPreview";
-import { formatCardDate, ratingOutOfFive } from "../../../lib/format";
+import { formatCardDate, ratingOutOfTen } from "../../../lib/format";
 
 export async function getStaticPaths () {
   // Helper function to ensure clean ID without .mdx extension
@@ -64,17 +63,9 @@ exclude_from_search: true
       {tagged
         .sort((a, b) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime())
         .map(post => {
-          const rating = ratingOutOfFive(post.frontmatter.rating);
           return (
-            <ArticleCard title={post.frontmatter.title} href={post.url} excerpt={post.frontmatter.summary ?? post.rawContent()}>
+            <ArticleCard title={post.frontmatter.title} href={post.url} excerpt={post.frontmatter.summary ?? post.rawContent()} rating={ratingOutOfTen(post.frontmatter.rating)}>
               <img slot="image" src={post.frontmatter.thumbnail} alt={post.frontmatter.title} loading="lazy" />
-              {rating ? (
-                <CategoryBadge slot="badge" label={rating} tone="neutral" />
-              ) : (
-                post.frontmatter.soort && (
-                  <CategoryBadge slot="badge" label={post.frontmatter.soort} tone={post.frontmatter.soort.toLowerCase() === "tv" ? "tv" : "film"} />
-                )
-              )}
               <span slot="meta">
                 {formatCardDate(post.frontmatter.date)}
                 {post.frontmatter.schrijver ? ` · ${post.frontmatter.schrijver}` : ""}

@@ -6,7 +6,7 @@
 .cn-hero {
   position: relative;
   width: 100%;
-  height: 600px;
+  height: 880px;
   overflow: hidden;
   background: var(--surface);
   container-type: inline-size;
@@ -28,6 +28,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center top;
 }
 .cn-hero__scrim-side {
   position: absolute;
@@ -45,23 +46,15 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  max-width: 640px;
+  justify-content: flex-end;
+  /* Aligned to the same centered max-width container as .cn-home-news, so
+     the hero title lines up with "Film & TV nieuws" and the cards below
+     instead of sitting flush against the viewport edge. */
+  max-width: var(--container-max);
+  margin: 0 auto;
   padding: 0 var(--space-margin-desktop);
-  padding-bottom: 80px;
+  padding-bottom: 120px;
   box-sizing: border-box;
-}
-.cn-hero__eyebrow {
-  align-self: flex-start;
-  padding: 6px 12px;
-  border-radius: var(--radius-sm);
-  font-family: var(--font-sans);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin-bottom: 16px;
-  color: #fff;
 }
 .cn-hero__title {
   font-family: var(--font-sans);
@@ -71,7 +64,8 @@
   letter-spacing: -0.01em;
   color: #fff;
   margin: 0 0 16px;
-  /* Fixed-height hero box (600px) must never grow or overlap the section
+  max-width: 640px;
+  /* Fixed-height hero box (880px) must never grow or overlap the section
      below it, regardless of headline length — clip to 3 lines instead. */
   display: -webkit-box;
   -webkit-line-clamp: 3;

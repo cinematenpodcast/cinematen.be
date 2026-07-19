@@ -4,8 +4,7 @@
 // query/shuffle logic as before — only the markup/CSS changed.
 import { getCollection } from "astro:content";
 import ArticleCard from "./design-system/ArticleCard.astro";
-import CategoryBadge from "./design-system/CategoryBadge.astro";
-import { formatCardDate, ratingOutOfFive } from "../lib/format";
+import { formatCardDate, ratingOutOfTen } from "../lib/format";
 
 const { currentSlug } = Astro.props;
 
@@ -52,17 +51,9 @@ const randomReviews = shuffle(filteredReviews).slice(0, 3);
       <h2>Misschien ben je ook wel geïnteresseerd in&hellip;</h2>
       <div class="cn-random-reviews__grid">
         {randomReviews.map((post) => {
-          const rating = ratingOutOfFive(post.data.rating);
           return (
-            <ArticleCard title={post.data.title} href={post.url} excerpt={post.data.summary ?? undefined}>
+            <ArticleCard title={post.data.title} href={post.url} excerpt={post.data.summary ?? undefined} rating={ratingOutOfTen(post.data.rating)}>
               <img slot="image" src={post.data.thumbnail || post.data.poster} alt={post.data.title} loading="lazy" />
-              {rating ? (
-                <CategoryBadge slot="badge" label={rating} tone="neutral" />
-              ) : (
-                post.data.soort && (
-                  <CategoryBadge slot="badge" label={post.data.soort} tone={post.data.soort.toLowerCase() === "tv" ? "tv" : "film"} />
-                )
-              )}
               <span slot="meta">{formatCardDate(post.data.date)}</span>
             </ArticleCard>
           );

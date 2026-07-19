@@ -160,11 +160,16 @@ const hasSocial = Astro.slots.has("social-icons");
     flex-wrap: wrap;
     gap: 8px;
     font-family: var(--font-sans);
-    font-size: 12px;
-    color: var(--on-surface-variant);
+    font-size: 10px;
+    color: #fff;
   }
   .cn-footer__bottom p {
     margin: 0;
+    /* public/style.css ships a global `p { color: var(--grey) }` rule that
+       directly targets this <p> — a directly-matching rule always wins
+       over the inherited color from .cn-footer__bottom, regardless of
+       specificity, so it must be set here explicitly too. */
+    color: #fff;
   }
 
   @media (max-width: 768px) {
