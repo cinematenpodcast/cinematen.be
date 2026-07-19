@@ -28,9 +28,6 @@ const itemReviewedType = soortLower.includes("serie") || soortLower.includes("tv
 const reviewDescription = `Lees onze ${frontmatter.soort ? frontmatter.soort.toLowerCase() : 'review'} van ${frontmatter.title}. Bekijk onze beoordeling en ontdek of deze ${frontmatter.soort ? frontmatter.soort.toLowerCase() : 'content'} de moeite waard is.`;
 
 const displayDate = formatCardDate(frontmatter.date);
-// Real `rating` is stored on a 0–5 scale (see src/lib/format.ts) — the
-// schema.org Review markup below keeps that native scale (bestRating: 5)
-// rather than inventing a /10 conversion the static design mock assumed.
 const ratingLabel = ratingOutOfTen(frontmatter.rating);
 // `trailer` is a plain YouTube video ID in frontmatter (e.g. "f_bKjZeJBBI"),
 // not a full URL — see src/content/config.ts. youtube-nocookie.com avoids
@@ -67,8 +64,8 @@ const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed
           "reviewRating": {
             "@type": "Rating",
             "ratingValue": frontmatter.rating,
-            "bestRating": 5,
-            "worstRating": 0.5
+            "bestRating": 10,
+            "worstRating": 1
           },
           "itemReviewed": {
             "@type": itemReviewedType,
