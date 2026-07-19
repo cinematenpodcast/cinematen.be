@@ -13,7 +13,7 @@ import SocialIcons from "../components/design-system/SocialIcons.astro";
 import CategoryBadge from "../components/design-system/CategoryBadge.astro";
 import PodcastCard from "../components/design-system/PodcastCard.astro";
 import RandomReviews from "../components/RandomReviews.astro";
-import { formatCardDate, ratingOutOfTen } from "../lib/format";
+import { formatCardDate, formatDateISO, ratingOutOfTen } from "../lib/format";
 import { getNavLinks, FOOTER_COLUMNS, FOOTER_BOTTOM_LEFT, FOOTER_TAGLINE, PARTNER_LABEL } from "../lib/siteNav";
 
 const { frontmatter } = Astro.props;
@@ -114,7 +114,7 @@ const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed
                                 <CategoryBadge label="REVIEW" tone={soortLower === "tv" ? "tv" : "film"} />
                                 <h1>{frontmatter.title}</h1>
                                 <div class="cn-review-hero__meta">
-                                    {displayDate && <span data-pagefind-meta={`date:${displayDate}`}>{displayDate}</span>}
+                                    {displayDate && <span data-pagefind-meta={`date:${formatDateISO(frontmatter.date)}`}>{displayDate}</span>}
                                     {frontmatter.schrijver && <span class="cn-review-hero__author">Door {frontmatter.schrijver}</span>}
                                 </div>
                             </div>

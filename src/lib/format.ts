@@ -37,6 +37,19 @@ export function formatDateTime(dateInput: Date | string | undefined | null): str
 }
 
 /**
+ * Plain ISO date, no time — e.g. "2026-07-17". Used for the Pagefind
+ * `date` meta field so search results show a date only, independent of
+ * whatever format each page's own hero date display uses.
+ */
+export function formatDateISO(dateInput: Date | string | undefined | null): string {
+  if (!dateInput) return "";
+  const date = new Date(dateInput);
+  if (isNaN(date.getTime())) return "";
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())}`;
+}
+
+/**
  * Long Dutch date for article/review hero sections, e.g. "17 juli 2026".
  */
 export function formatHeroDate(dateInput: Date | string | undefined | null): string {

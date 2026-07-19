@@ -16,7 +16,7 @@ import PodcastCard from "../components/design-system/PodcastCard.astro";
 import RandomReviews from "../components/RandomReviews.astro";
 import { readFileSync } from "fs";
 import { join } from "path";
-import { formatDateTime, readingTime } from "../lib/format";
+import { formatDateTime, formatDateISO, readingTime } from "../lib/format";
 import { getNavLinks, FOOTER_COLUMNS, FOOTER_BOTTOM_LEFT, FOOTER_TAGLINE, PARTNER_LABEL } from "../lib/siteNav";
 
 const { frontmatter } = Astro.props;
@@ -93,7 +93,7 @@ const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed
                     <div class="cn-article-hero__content">
                         <h1>{frontmatter.title}</h1>
                         <div class="cn-article-hero__meta">
-                            {displayDate && <span class="cn-article-hero__date" data-pagefind-meta={`date:${displayDate}`}>{displayDate}</span>}
+                            {displayDate && <span class="cn-article-hero__date" data-pagefind-meta={`date:${formatDateISO(frontmatter.date)}`}>{displayDate}</span>}
                         </div>
                     </div>
                 </section>
