@@ -9,7 +9,7 @@ content:
     label: Nieuws Artikelen
     type: collection
     path: src/content/nieuws
-    filename: "{title}.mdx"
+    filename: "{year}/{month}/{title}.mdx"
     view:
       primary: title
       fields: [title, date, soort, draft]
@@ -73,7 +73,7 @@ content:
     label: Reviews & Blogs
     type: collection
     path: src/content/reviews
-    filename: "{title}.mdx"
+    filename: "{year}/{month}/{title}.mdx"
     view:
       primary: title
       fields: [title, date, soort, rating, featured, draft]
@@ -125,6 +125,9 @@ content:
       - name: rating
         type: number
         required: false
+        options:
+          min: 0
+          max: 10
       - name: tags
         type: string
         list: true
