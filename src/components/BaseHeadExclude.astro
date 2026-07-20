@@ -37,14 +37,12 @@ import "../styles/design-system/index.css";
 <link href="/images/favicon-512.png" rel="icon" type="image/png" sizes="512x512" />
 <link href="/images/webclip.png" rel="apple-touch-icon" />
 
-<!-- Preconnect to font origins -->
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
-<!-- Google Fonts: loaded async so the stylesheet request itself doesn't block first paint -->
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Rubik+Mono+One&display=swap" />
-<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Rubik+Mono+One&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
-<noscript><link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Rubik+Mono+One&display=swap" rel="stylesheet" /></noscript>
+<!-- Fonts (Rubik / Rubik Mono One) are self-hosted via @font-face in
+     src/styles/design-system/fonts.css — no Google Fonts origin needed.
+     (This used to also load a Google Fonts stylesheet via the media="print"
+     + onload="this.media='all'" deferred-load trick, but that inline onload
+     handler was always blocked by CSP script-src — dead code producing a
+     console violation on every page.) -->
 
 <!-- Critical CSS (is:inline prevents Astro scoping) -->
 <style is:inline>
