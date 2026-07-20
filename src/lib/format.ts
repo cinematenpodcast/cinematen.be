@@ -65,15 +65,12 @@ export function formatHeroDate(dateInput: Date | string | undefined | null): str
 }
 
 /**
- * The `reviews` collection stores `rating` on a 0–5 scale in 0.5 steps (see
- * BaseReviewItem's 5-star generator). The design's rating badge displays out
- * of 10 (e.g. "8/10"), matching the reference exactly — doubling a 0.5-step
- * 0–5 value always lands on a whole number out of 10, so this isn't
- * inventing precision, just re-scaling it.
+ * The `reviews` collection stores `rating` already on a 0–10 scale. The
+ * design's rating badge displays it as-is (e.g. "8/10").
  */
 export function ratingOutOfTen(rating: number | undefined | null): string | null {
   if (rating === undefined || rating === null || isNaN(rating) || rating <= 0) return null;
-  return String(Math.round(rating * 2));
+  return String(Math.round(rating));
 }
 
 /**
