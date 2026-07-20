@@ -38,6 +38,7 @@ const nieuws = defineCollection({
     layout: z.string().optional(),
     title: z.string(),
     date: z.coerce.date().optional(),
+    schrijver: z.string().optional(),
     soort: z.string().optional(),
     thumbnail: z.string().nullish(),
     trailer: z.string().optional(),

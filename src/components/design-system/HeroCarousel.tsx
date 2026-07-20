@@ -65,6 +65,8 @@ export default function HeroCarousel({ slides, autoplayMs = 0 }: HeroCarouselPro
             src={s.image.src}
             alt={s.image.alt}
             loading={i === 0 ? "eager" : "lazy"}
+            fetchpriority={i === 0 ? "high" : "auto"}
+            decoding={i === 0 ? "sync" : "async"}
           />
           <div className="cn-hero__scrim-side" aria-hidden="true" />
           <div className="cn-hero__scrim-bottom" aria-hidden="true" />

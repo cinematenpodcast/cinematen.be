@@ -73,7 +73,7 @@ const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed
           canonicalURL={canonicalURL}
           publishedDate={frontmatter.date}
           modifiedDate={frontmatter.date}
-          author="Yorrick"
+          author={frontmatter.schrijver}
         />
     </head>
     <body>
@@ -109,6 +109,13 @@ const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed
                                     <polyline points="12 7 12 12 16 14"></polyline>
                                 </svg>
                                 {minutesToRead} min leestijd
+                            </span>
+                            <span class="cn-article-hero__author">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                                Door {frontmatter.schrijver || "de redactie van Cinematen"}
                             </span>
                         </div>
                     </div>
@@ -210,7 +217,8 @@ const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed
         flex-wrap: wrap;
     }
     .cn-article-hero__date,
-    .cn-article-hero__reading-time {
+    .cn-article-hero__reading-time,
+    .cn-article-hero__author {
         display: inline-flex;
         align-items: center;
         gap: 6px;
@@ -220,6 +228,12 @@ const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed
         letter-spacing: 0.08em;
         text-transform: uppercase;
         color: var(--on-surface-variant);
+    }
+    .cn-article-hero__author {
+        background: var(--surface-container-high);
+        color: var(--on-surface);
+        border-radius: var(--radius-full);
+        padding: 4px 12px;
     }
     /* Matches Artikel.dc.html's reading-time pill exactly — #1f2937 is a
        one-off literal in the original design, not tied to any color token
