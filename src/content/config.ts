@@ -51,6 +51,15 @@ const nieuws = defineCollection({
     // not arbitrary strings.
     franchise: z.array(z.string()).nullish(),
     summary: z.string().optional(),
+    // GEO audit (2026-07-26): dateModified was hardcoded equal to
+    // datePublished sitewide — always literally true for articles that are
+    // never revised, but with zero mechanism to express a genuine correction
+    // when one happens. Only set this when an article is actually edited
+    // after publishing; leave unset otherwise (see NieuwsLayout.astro/
+    // ReviewLayout.astro — modifiedDate falls back to `date` when absent).
+    // Do NOT blanket-populate this on every deploy — Google's own AI-search
+    // guidance explicitly flags faking freshness as a self-audit warning sign.
+    updated: z.coerce.date().nullish(),
   }),
 });
 
@@ -67,9 +76,20 @@ const reviews = defineCollection({
     rating: z.number().optional(),
     tags: z.array(z.string()).nullish(),
     franchise: z.array(z.string()).nullish(),
+    // See the matching comment in the nieuws schema above — same rule: only
+    // set on a genuine post-publish edit, never blanket-populated.
+    updated: z.coerce.date().nullish(),
     featured: z.boolean().optional(),
     draft: z.boolean().optional(),
     trailer: z.string().optional(),
+    // GEO audit (2026-07-26): itemReviewed only had name+image, so a bare
+    // title like "Snow White" is ambiguous (multiple films share exact
+    // titles) — an AI engine can't safely resolve which film a review is
+    // about without an external identifier. Both nullish/optional: no
+    // backfill across existing reviews, populate going forward. Never
+    // fabricate an imdbId — get it from the film's real IMDb URL.
+    imdbId: z.string().nullish(),
+    releaseYear: z.number().nullish(),
   }),
 });
 

@@ -16,11 +16,25 @@
 - Film nieuws: https://www.cinematen.be/nieuws/film/
 - Serie nieuws: https://www.cinematen.be/nieuws/serie/
 - Podcast: https://www.cinematen.be/luister/
+- RSS feed: https://www.cinematen.be/rss.xml
+- Auteur Yorrick: https://www.cinematen.be/auteur/yorrick/
+- Auteur Maarten: https://www.cinematen.be/auteur/maarten/
+
+## Franchise hubs
+- Marvel: https://www.cinematen.be/franchises/marvel/
+- DC: https://www.cinematen.be/franchises/dc/
+- Star Wars: https://www.cinematen.be/franchises/star-wars/
+- Stranger Things: https://www.cinematen.be/franchises/stranger-things/
+- Harry Potter: https://www.cinematen.be/franchises/harry-potter/
+- Game of Thrones: https://www.cinematen.be/franchises/game-of-thrones/
+- Jurassic Park: https://www.cinematen.be/franchises/jurassic-park/
+- The Lord of the Rings: https://www.cinematen.be/franchises/lord-of-the-rings/
+- Star Trek: https://www.cinematen.be/franchises/star-trek/
 
 ## Content Policy
 - All content is original, written in Dutch
 - News articles cover international film and TV industry
-- Reviews include star ratings (0-5 scale)
+- Reviews include star ratings (0-10 scale)
 - No auto-generated content
 
 ## Contact

@@ -7,7 +7,8 @@ import BaseFooter from "../../components/BaseFooter.astro";
 import BaseScript from "../../components/BaseScript.astro";
 import BasePodcastBanner from "../../components/BasePodcastBanner.astro";
 import BaseNieuwsItem from "../../components/BaseNieuwsItem.astro";
-import { slugFromEntryId, authorSlug, isCollectiveAuthor } from "../../lib/format";
+import { slugFromEntryId, authorSlug, isCollectiveAuthor, buildPublisherSchema } from "../../lib/format";
+import { franchiseName } from "../../lib/franchises";
 
 export async function getStaticPaths() {
   const [reviews, nieuws] = await Promise.all([getCollection("reviews"), getCollection("nieuws")]);
@@ -37,6 +38,24 @@ const authorReviews = reviews
   .sort((a, b) => new Date(b.data.date ?? 0).getTime() - new Date(a.data.date ?? 0).getTime());
 
 const canonicalURL = `https://www.cinematen.be/auteur/${slug}/`;
+
+// GEO audit (2026-07-26): Person entity was previously just name+url — the
+// thinnest possible entity. knowsAbout is derived from this author's own
+// actual tag/franchise data (not a generic hardcoded list), so it's a real
+// signal, not filler. sameAs (personal LinkedIn/Letterboxd/X) deliberately
+// omitted — don't guess URLs the author hasn't confirmed.
+const topicCounts = new Map<string, number>();
+authorReviews.forEach((r) => {
+  (r.data.tags || []).forEach((t) => topicCounts.set(t, (topicCounts.get(t) || 0) + 1));
+  (r.data.franchise || []).forEach((f) => {
+    const label = franchiseName(f);
+    topicCounts.set(label, (topicCounts.get(label) || 0) + 1);
+  });
+});
+const knowsAbout = [...topicCounts.entries()]
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 6)
+  .map(([topic]) => topic);
 ---
 
 <html lang="nl">
@@ -53,7 +72,11 @@ const canonicalURL = `https://www.cinematen.be/auteur/${slug}/`;
     "mainEntity": {
       "@type": "Person",
       "name": authorName,
-      "url": canonicalURL
+      "url": canonicalURL,
+      "jobTitle": "Filmrecensent",
+      "description": `${authorName} schrijft film- en seriereviews voor Cinematen.be.`,
+      ...(knowsAbout.length > 0 && { "knowsAbout": knowsAbout }),
+      "worksFor": buildPublisherSchema()
     }
   })}></script>
 </head>

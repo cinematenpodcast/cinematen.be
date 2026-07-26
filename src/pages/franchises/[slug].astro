@@ -51,14 +51,28 @@ const allItems = [...nieuwsItems, ...reviewItems].sort(
 
 const canonicalURL = `https://www.cinematen.be/franchises/${slug}/`;
 const pageTitle = `${name} — Nieuws & Reviews | Cinematen.be`;
-const pageDescription = `Al het ${name}-nieuws en alle ${name}-reviews op één plek. Blijf op de hoogte van de laatste ${name}-ontwikkelingen op Cinematen.be.`;
+
+// Real derived stats, not authored-per-franchise prose (GEO audit,
+// 2026-07-26: hub pages were just a card grid + one generic sentence, giving
+// an AI engine nothing to extract at the aggregation level). Every number
+// here comes straight from the same data already rendered in the grid below.
+const ratedReviews = reviewItems.filter((r) => r.rating);
+const avgRating =
+  ratedReviews.length > 0
+    ? (ratedReviews.reduce((sum, r) => sum + Number(r.rating), 0) / ratedReviews.length).toFixed(1)
+    : null;
+const mostRecent = allItems[0];
+
+const pageDescription = `${nieuwsItems.length} nieuwsartikelen en ${reviewItems.length} reviews over ${name} op Cinematen.be${avgRating ? ` — gemiddelde reviewscore ${avgRating}/10` : ""}.`;
 ---
 
 <ListingShell navActive={null} useExcludeHead={false} title={pageTitle} description={pageDescription} canonicalURL={canonicalURL}>
   <div class="cn-listing__inner">
     <h1>{name}</h1>
     <p class="cn-listing__intro">
-      Al het nieuws en alle reviews over {name} op Cinematen.be — {allItems.length} artikel{allItems.length !== 1 ? "en" : ""}.
+      {nieuwsItems.length} nieuwsartikel{nieuwsItems.length !== 1 ? "en" : ""} en {reviewItems.length} review{reviewItems.length !== 1 ? "s" : ""} over {name} op Cinematen.be
+      {avgRating && <> — gemiddelde reviewscore <strong>{avgRating}/10</strong></>}.
+      {mostRecent && <>Meest recent: <a href={mostRecent.url}>{mostRecent.title}</a> ({formatCardDate(mostRecent.date)}).</>}
     </p>
     <div class="cn-listing__grid">
       {allItems.map((item) => (
@@ -78,4 +92,29 @@ const pageDescription = `Al het ${name}-nieuws en alle ${name}-reviews op één 
   "name": pageTitle,
   "description": pageDescription,
   "url": canonicalURL,
+  // GEO audit (2026-07-26): this was previously inert — name/description/url
+  // only, no relationship to the actual articles on the page. isPartOf/about/
+  // mainEntity give an AI engine the actual structure of "this page collects
+  // these N items about this topic" instead of just a description of one.
+  "isPartOf": { "@id": "https://www.cinematen.be/#website" },
+  "about": { "@type": "Thing", "name": name },
+  "mainEntity": {
+    "@type": "ItemList",
+    "numberOfItems": allItems.length,
+    "itemListElement": allItems.map((item, i) => ({
+      "@type": "ListItem",
+      "position": i + 1,
+      "url": `https://www.cinematen.be${item.url}/`,
+      "name": item.title,
+    })),
+  },
+})}></script>
+
+<script type="application/ld+json" set:html={JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.cinematen.be/" },
+    { "@type": "ListItem", "position": 2, "name": name, "item": canonicalURL },
+  ],
 })}></script>

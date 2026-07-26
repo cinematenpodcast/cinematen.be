@@ -13,7 +13,7 @@ import SocialIcons from "../components/design-system/SocialIcons.astro";
 import CategoryBadge from "../components/design-system/CategoryBadge.astro";
 import PodcastCard from "../components/design-system/PodcastCard.astro";
 import RandomReviews from "../components/RandomReviews.astro";
-import { formatCardDate, formatDateISO, ratingOutOfTen, buildAuthorSchema } from "../lib/format";
+import { formatCardDate, formatDateISO, ratingOutOfTen, buildAuthorSchema, buildPublisherSchema } from "../lib/format";
 import { getNavLinks, FOOTER_COLUMNS, FOOTER_BOTTOM_LEFT, FOOTER_TAGLINE, PARTNER_LABEL } from "../lib/siteNav";
 import { HUB_ELIGIBLE, franchiseName } from "../lib/franchises";
 
@@ -56,7 +56,7 @@ const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed
             title={reviewTitle}
             description={reviewDescription}
             publishedDate={frontmatter.date}
-            modifiedDate={frontmatter.date}
+            modifiedDate={frontmatter.updated || frontmatter.date}
             articleType="article"
             author={frontmatter.schrijver}
             image={frontmatter.poster}
@@ -70,6 +70,7 @@ const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed
           "description": reviewDescription,
           "url": canonicalURL,
           ...(frontmatter.date && { "datePublished": new Date(frontmatter.date).toISOString() }),
+          ...(frontmatter.updated && { "dateModified": new Date(frontmatter.updated).toISOString() }),
           "author": buildAuthorSchema(frontmatter.schrijver),
           "reviewRating": {
             "@type": "Rating",
@@ -80,16 +81,16 @@ const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed
           "itemReviewed": {
             "@type": itemReviewedType,
             "name": frontmatter.title,
+            // GEO audit (2026-07-26): imdbId/releaseYear are optional,
+            // populated per-review going forward (src/content/config.ts) —
+            // sameAs to IMDb is what actually disambiguates which film/show
+            // this review is about, since a bare title can be shared by
+            // multiple works.
+            ...(frontmatter.releaseYear && { "datePublished": String(frontmatter.releaseYear) }),
+            ...(frontmatter.imdbId && { "sameAs": `https://www.imdb.com/title/${frontmatter.imdbId}/` }),
             ...(frontmatter.poster && { "image": frontmatter.poster.startsWith('http') ? frontmatter.poster : `https://www.cinematen.be${encodeURI(frontmatter.poster)}` })
           },
-          "publisher": {
-            "@type": "Organization",
-            "name": "Cinematen",
-            "logo": {
-              "@type": "ImageObject",
-              "url": "https://www.cinematen.be/images/Cinematelogotrans.png"
-            }
-          }
+          "publisher": buildPublisherSchema()
         })}></script>
         )}
         <script type="application/ld+json" set:html={JSON.stringify({

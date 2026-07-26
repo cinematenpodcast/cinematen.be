@@ -2,7 +2,7 @@
 // Same design-system tokens import as BaseHead.astro — this head partial
 // (used on the Nieuws article detail pages) was missing it.
 import "../styles/design-system/index.css";
-import { buildAuthorSchema } from "../lib/format";
+import { buildAuthorSchema, buildPublisherSchema } from "../lib/format";
 
 const { title, thumbnail, description, canonicalURL, publishedDate, modifiedDate, author } = Astro.props;
 const defaultCanonical = "https://www.cinematen.be/";
@@ -89,14 +89,7 @@ const authorSchema = buildAuthorSchema(author);
   ...(formattedModifiedDate && { "dateModified": formattedModifiedDate }),
   "author": authorSchema,
   ...(thumbnail && { "image": finalThumbnail }),
-  "publisher": {
-    "@type": "Organization",
-    "name": "Cinematen",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://www.cinematen.be/images/Cinematelogotrans.png"
-    }
-  }
+  "publisher": buildPublisherSchema()
 })}></script>
 
 <!-- BreadcrumbList -->

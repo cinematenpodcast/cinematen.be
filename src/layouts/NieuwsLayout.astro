@@ -85,7 +85,7 @@ const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed
           description={metaDescription}
           canonicalURL={canonicalURL}
           publishedDate={frontmatter.date}
-          modifiedDate={frontmatter.date}
+          modifiedDate={frontmatter.updated || frontmatter.date}
           author={frontmatter.schrijver}
         />
     </head>

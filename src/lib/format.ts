@@ -117,14 +117,50 @@ export function authorSlug(name: string): string {
 }
 
 /**
+ * Single resolvable Organization entity for the whole site — GEO audit
+ * (2026-07-26) found "Cinematen" inlined independently in 4 places with no
+ * identity signals (no sameAs, no stable @id, no founder), so nothing let a
+ * knowledge graph merge those 4 copies into one entity. sameAs URLs below
+ * are verified against the actual site (SocialIcons.astro, BaseFooter.astro)
+ * — not guessed. foundingDate omitted rather than fabricated; add it once
+ * confirmed.
+ */
+export function buildPublisherSchema() {
+  return {
+    "@type": "Organization",
+    "@id": "https://www.cinematen.be/#organization",
+    "name": "Cinematen",
+    "url": "https://www.cinematen.be/",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.cinematen.be/images/Cinematelogotrans.png",
+    },
+    "sameAs": [
+      "https://www.facebook.com/cinematenpodcast/",
+      "https://www.instagram.com/cinematen_podcast",
+      "https://open.spotify.com/show/19O8JqKPSbQWek15vG3sig",
+      "https://podcasts.apple.com/us/podcast/cinematen/id1674761868",
+    ],
+    "founder": [
+      { "@type": "Person", "name": "Yorrick Schoonheydt", "url": "https://www.cinematen.be/auteur/yorrick/" },
+      { "@type": "Person", "name": "Maarten", "url": "https://www.cinematen.be/auteur/maarten/" },
+    ],
+  };
+}
+
+/**
  * Schema.org author entity for a byline name. Real named authors get a Person
  * tied to their own /auteur/[slug]/ page (so distinct authors don't all point
  * at the same url/sameAs); the collective byline and missing/unknown authors
- * get Organization — never a guessed Person identity.
+ * get the same full Organization entity as buildPublisherSchema() (same @id,
+ * inlined rather than a bare {"@id": ...} reference — not every JSON-LD
+ * consumer merges entities across separate <script> blocks on a page, so
+ * repeating the full object under the shared @id is the safer, more widely
+ * compatible choice) rather than a second, slightly-different Organization.
  */
 export function buildAuthorSchema(name: string | undefined | null) {
   if (!name || isCollectiveAuthor(name)) {
-    return { "@type": "Organization", "name": "Cinematen", "url": "https://www.cinematen.be/" };
+    return buildPublisherSchema();
   }
   return {
     "@type": "Person",

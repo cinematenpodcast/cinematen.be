@@ -13,6 +13,23 @@
 // a passing "...like in Mission Impossible..." aside tagging an unrelated
 // article). Title match OR >=2 body mentions was the threshold that held up
 // under spot-checking.
+//
+// GEO audit follow-up (2026-07-26): manually reviewed all 28 entries this
+// produced with 2+ franchise tags. Found real false positives at exactly the
+// >=2 body-mention margin (awards-roundup articles namedropping "Spider-Man"/
+// "Mission: Impossible" among many unrelated nominees; a Tintin article
+// listing several other upcoming films for context) — but ALSO found genuine
+// crossover cases sitting at that same count (e.g. "Mahershala Ali sluit zich
+// aan bij Jurassic World" only hits "marvel"+"avengers" twice, but is a real
+// Marvel-actor-joins-Jurassic-World story). Raising the threshold to 3 would
+// have dropped that genuine case while fixing the false positives — the two
+// error classes overlap at this sample size, so blind threshold tuning trades
+// one error type for another rather than fixing precision. The 14 real
+// mistags found were corrected by hand, not by retuning this script. If this
+// keeps recurring at scale, the fix is a stronger signal than raw mention
+// count (e.g. weighting specific-property keywords like "batman" or "iron
+// man" higher than the bare franchise name "marvel"/"dc"), not a higher
+// threshold — but that wasn't validated against enough data to ship blind.
 import { readFileSync, writeFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 
