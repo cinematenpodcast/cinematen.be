@@ -1,9 +1,20 @@
 ---
-// Instant HTTP 301 redirect - no visible redirect page
+// Instant HTTP 301 redirect - no visible redirect page.
+// prerender = false is required for the Response() below to actually execute
+// as a real server-side redirect (this route runs on the @astrojs/vercel
+// serverless adapter) — without it, Astro bakes this into a static page at
+// build time and can't emit a real HTTP redirect, silently falling back to
+// a client-side JS "Redirecting..." stub instead: a live 200 with no noindex,
+// which was getting submitted to the sitemap and pinged via IndexNow as if
+// it were real content (SEO re-audit, 2026-07-26).
+export const prerender = false;
+
+// Trailing slash included directly so this doesn't need a second hop through
+// Vercel's own trailingSlash:true normalization (vercel.json).
 return new Response(null, {
     status: 301,
     headers: {
-        'Location': '/nieuws/pages/1',
+        'Location': '/nieuws/pages/1/',
         'Cache-Control': 'public, max-age=31536000, immutable',
     },
 });

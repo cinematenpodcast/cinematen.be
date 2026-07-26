@@ -7,6 +7,20 @@ Each task lists: effort, impact, files touched, steps, and how to verify it's ac
 
 ---
 
+## Re-audit — 2026-07-26 — Health score: 55 → 66/100
+
+Second full 11-stream audit, verifying Phases 1-3 actually worked (not just re-discovering the same findings). Full breakdown lives in the published artifact report from that session; summary here for anyone reading this file cold.
+
+**Confirmed live-verified fixes:** all 5 original schema bugs, mobile hero overlap/touch-targets, review title/description rewrite, hub-and-spoke internal linking (~0 → 3-7 links/article), trailing-slash + IndexNow.
+
+**New regression found and fixed same day:** the Phase 2 trailing-slash change exposed a pre-existing dead-code collision — `src/pages/nieuws.html`, a legacy static file left over from before this redirect was converted to `.astro`, was silently winning the build over `src/pages/nieuws/index.astro` and serving a client-side "Redirecting..." stub as a live 200 (submitted to the sitemap, pinged via IndexNow). Fixed by deleting the dead file, adding `export const prerender = false` to both `nieuws/index.astro` and `reviews&blogs/index.astro` so their `Response(301)` actually executes server-side, and excluding both bare index URLs from the sitemap explicitly regardless.
+
+**Deliberately left as documented debt:** the apex-domain (`cinematen.be`, no `www`) now takes 2 redirect hops instead of 1 to reach its final URL, a side effect of the same trailing-slash change interacting with the existing host-redirect rule. Real-world impact is low — all canonical URLs and essentially all real traffic already targets `www.cinematen.be` with a trailing slash, so this only affects the rare case of a direct link to the bare apex domain, and it still resolves correctly. Fixing it properly means fighting Vercel's redirect-vs-trailingSlash rule ordering (undocumented precedence) or adding real Astro middleware — both riskier production-routing changes than this edge case's impact justifies. Revisit if it's ever shown to matter.
+
+**Other findings from this pass, not yet addressed:** 6 thin/noindexed review tag pages (musical, thriller, superhero, comicbook, reality, adventure) leak into the sitemap because the sitemap filter doesn't know about the `MIN_POSTS_TO_INDEX = 3` threshold that lives in the page component itself — same category of bug as the one just fixed, worth mirroring the threshold into `astro.config.mjs`. The Marvel franchise hub is ~15-20% off-topic (loose keyword-matching tags listicle/roundup articles to franchises they only mention in passing) — `scripts/tag-franchises.mjs`'s threshold needs tightening or roundup-style posts need excluding from auto-tagging. The 9 franchise hub pages have no navigation entry point anywhere (no nav link, footer link, or index page) — only reachable via spoke links or the sitemap. `sameAs` is completely absent from all schema output now (not just Instagram-only as before) — the Instagram link already exists in the footer UI, just never got wired into JSON-LD, a quick win whenever picked up.
+
+---
+
 ## Phase 1 — This week (no dependencies, highest impact) — ✅ DONE (2026-07-20)
 
 ### 1.1 Fix the image pipeline (Critical — LCP) — ✅ Done (partial — see note)

@@ -72,9 +72,17 @@ export default defineConfig({
       // are now real, sometimes-indexable landing pages (see
       // src/pages/nieuws/tags/[tag].astro), so only exclude the numbered
       // variant, not the tag root itself.
+      //
+      // /nieuws/ and /reviews&blogs/ (bare index) are pure 301 redirects to
+      // .../pages/1/ (see src/pages/nieuws/index.astro) — a redirect target
+      // has no business in a sitemap regardless of whether it renders
+      // correctly, so these are excluded explicitly rather than relying on
+      // the prerender=false switch alone to keep them out.
       filter: (page) =>
         !page.includes('/nieuws/pages/') &&
         !page.includes('/reviews&blogs/pages/') &&
+        !/^https?:\/\/[^/]+\/nieuws\/?$/.test(page) &&
+        !/^https?:\/\/[^/]+\/reviews&blogs\/?$/.test(page) &&
         !/\/nieuws\/tags\/[^/]+\/\d+\/?$/.test(page) &&
         !/\/reviews&blogs\/tags\/[^/]+\/\d+\/?$/.test(page) &&
         !page.includes('/nieuws/14days'),
