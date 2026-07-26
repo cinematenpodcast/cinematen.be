@@ -202,12 +202,19 @@
        static vh against the LARGEST possible viewport (address bar hidden),
        so 70vh renders taller than the actually-visible screen whenever the
        address bar is showing, leaving a large dead gap below the dots
-       before the next section starts. dvh tracks the real, current viewport. */
-    height: 64dvh;
-    min-height: 420px;
+       before the next section starts. dvh tracks the real, current viewport.
+       Went to 64dvh first — too short: content is bottom-anchored, so a
+       shorter hero pushes the (fixed-height) title/desc/button block up
+       into the image, overlapping the nav arrows and covering more of the
+       photo than intended. 78dvh gives that block room to sit lower —
+       more photo visible above it — while dvh (not vh) still means this
+       doesn't reintroduce the original oversized-gap bug regardless of
+       percentage chosen. */
+    height: 78dvh;
+    min-height: 460px;
   }
   .cn-hero__dots {
-    bottom: 16px;
+    bottom: 12px;
   }
 }
 
