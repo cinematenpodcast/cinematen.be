@@ -106,34 +106,34 @@ Note: the `cinematen-redesign` branch mentioned throughout Phase 2 as something 
 
 ---
 
-## Phase 3 — This month (structural, compounding value)
+## Phase 3 — This month (structural, compounding value) — ✅ DONE except 3.2 (2026-07-22)
 
-### 3.1 Build hub-and-spoke content architecture (highest long-term ROI)
+### 3.1 Build hub-and-spoke content architecture (highest long-term ROI) — ✅ Done
 **Effort:** High · **Impact:** Very high — currently zero internal-linking strategy despite major franchise volume (97 Avengers/Marvel articles, 59 Star Wars, 37 Bond, 24 Harry Potter)
 
-Sequence matters — each step depends on the last:
-- [ ] **3.1a** Normalize tag data quality first: fix casing, typos ("fimm" → "film", "comcis" → "comics", "castin" → "casting"), dedupe tags that just restate `soort` (Film/TV). Automated clustering can't run on noisy data.
-- [ ] **3.1b** Add a structured `franchise`/`entity` taxonomy field to `nieuws`/`reviews` frontmatter schema — free-text tags can't reliably drive hub logic.
-- [ ] **3.1c** Add a real related-content module to news article pages (currently has none) — match on `soort` + shared tags/franchise, replacing "nothing."
-- [ ] **3.1d** Replace `RandomReviews.astro`'s random shuffle with genre/soort-matched related reviews.
-- [ ] **3.1e** Build franchise/title hub pages for top recurring entities (Marvel/Avengers, Star Wars, Bond, Harry Potter, DC) that aggregate news + reviews for that title and become mandatory internal-link targets (spoke→hub and hub→spoke).
-- [ ] **3.1f** Once the taxonomy exists, convert `/nieuws/tags/[tag]` and `/reviews&blogs/tags/[tag]` from redirect-to-chronological-list into real curated topic landing pages.
+- [x] **3.1a** Normalized tags across all 806 affected content files (both YAML styles present in the corpus — flow `tags: [...]` and block `tags:\n  - x` — a first pass only handled block-style and silently missed 755 flow-style files, caught via dry-run diffing before applying). Fixed casing, typos (`fimm`→`film`, `comcis`→`comics`, `castin`→`casting`), stripped stray smart-quote wrapping, and dropped tags that just restated `soort` (Film/TV) as redundant. Result: nieuws went from 12 unique tag values to 3 (`trailer`, `casting`, `comics`); reviews from 23 to 15 real genre tags.
+- [x] **3.1b** Added a `franchise: z.array(z.string()).nullish()` field to both collection schemas (`src/content/config.ts`). Backfilled it on 282 existing entries via a keyword-matching script (`scripts/tag-franchises.mjs`, re-runnable) against a 14-franchise list (Marvel, DC, Star Wars, Harry Potter, Stranger Things, Game of Thrones, Jurassic Park, LOTR, Star Trek, Mission: Impossible, James Bond, John Wick, Fast & Furious, Yellowstone). Threshold tuned from real false-positive spot-checks: title match OR ≥2 body mentions — a single incidental body mention (e.g. an actor's other film namedropped in a bio aside) produced clearly wrong tags at a looser threshold (also found and fixed a `"007"` keyword bug that was matching inside years like "2007").
+- [x] **3.1c** Built `src/components/RelatedNieuws.astro` — nieuws articles had zero related-content module before this. Ranks other nieuws entries by shared franchise (highest weight) → soort match → shared tags, via a new shared `rankRelated()` helper (`src/lib/relatedContent.ts`), falling back to recent same-soort articles so it's never sparse on entries with no franchise/tags set.
+- [x] **3.1d** `RandomReviews.astro` (used on both review and nieuws pages) now uses the same `rankRelated()` scoring instead of a pure random shuffle.
+- [x] **3.1e** Built franchise hub pages (`src/pages/franchises/[slug].astro`) for the 9 franchises with enough tagged volume to be a real destination, not a thin page (≥10 entries — see `HUB_ELIGIBLE` in `src/lib/franchises.ts`): Marvel (103), DC (59), Star Wars (55), Stranger Things (17), Harry Potter (17), Game of Thrones (15), Jurassic Park (12), LOTR (11), Star Trek (11). Each aggregates nieuws + reviews for that franchise, sorted by date, real indexable title/description/canonical, in the sitemap. Added a "Meer over {Franchise} →" spoke→hub link on every article/review tagged with a hub-eligible franchise.
+- [x] **3.1f** `/nieuws/tags/:tag` was a runtime 301 redirect to `/nieuws/tags/:tag/1` — now renders page-1 content directly (no redirect hop), since that's the URL most likely to actually be linked to. The numbered `/1`, `/2`... pages still exist for pagination and stay noindexed via `ListingShell`'s default, so there's no duplicate-content conflict with the newly-indexable bare tag page. Made both nieuws and reviews tag pages conditionally indexable (real title/description, not blanket noindex) only when a tag has ≥3 posts, so thin single-entry tags don't get indexed as thin content. Fixed the sitemap filter (`astro.config.mjs`) to allow the bare tag URLs through while still excluding the noindexed numbered sub-pages.
+- [x] **Verified throughout:** `npx astro check` stayed at the 61-error baseline (confirmed via git-stash comparison) and `npm run build` passed after every sub-step; spot-checked real rendered output at each stage (e.g. the Avengers: Doomsday article's "Meer nieuws" section correctly surfaces Ghost Rider/Black Panther 3/X-Men — all genuinely Marvel — instead of random articles).
 
-**Verify:** Internal-links-per-article count should go from ~0 to several; track organic sessions to hub pages once live as a leading indicator.
+**Note on the audit's original franchise counts** (97/59/37/24) vs. what actually got tagged (Marvel 104, Star Wars 55, DC 59, Harry Potter 17): different keyword sets and two extra days of new content explain most of the gap — not a discrepancy to worry about.
 
-### 3.2 Build off-site entity presence (GEO/AI-citation authority)
+### 3.2 Build off-site entity presence (GEO/AI-citation authority) — ⚠️ Not done — not a coding task
 **Effort:** High (ongoing) · **Impact:** Medium-high for AI Overviews/ChatGPT/Perplexity citation — currently the weakest GEO dimension
 
-- [ ] Expand `sameAs` in Person/Organization schema with every real existing profile (not just Instagram) — check for YouTube, podcast platforms, LinkedIn.
-- [ ] Grow an active YouTube presence (not just embedding trailers) — YouTube has the strongest brand-mention correlation per current data.
-- [ ] Establish presence in relevant Reddit communities (r/belgium, r/film) — Reddit is a dominant citation source for both ChatGPT and Perplexity.
-- [ ] Evaluate Wikipedia notability for Cinematen/founders — long-term, not urgent.
+- [ ] Expand `sameAs` in Person/Organization schema with every real existing profile (not just Instagram) — check for YouTube, podcast platforms, LinkedIn. **This one *is* a quick code change if/when you share the real profile URLs** — I don't have them and won't guess.
+- [ ] Grow an active YouTube presence (not just embedding trailers) — genuine ongoing community/marketing work, not something achievable via code.
+- [ ] Establish presence in relevant Reddit communities (r/belgium, r/film) — same as above.
+- [ ] Evaluate Wikipedia notability for Cinematen/founders — same as above.
 
-### 3.3 Smaller technical/hygiene items
-- [ ] Implement IndexNow protocol for faster Bing/Yandex indexing of new articles (cheap given publishing frequency).
-- [ ] Add `includeSubDomains; preload` to the HSTS header in `vercel.json`.
-- [ ] Fix sitemap filter inconsistency: exclude `/nieuws/film` and `/nieuws/serie` in `astro.config.mjs` sitemap filter, same as tag pages — or confirm they have unique enough content to justify keeping them indexed.
-- [ ] Collapse the redundant `Article` + `Review` sibling JSON-LD nodes in `ReviewLayout.astro` into one primary `Review` type (Google's supported type for review pages).
+### 3.3 Smaller technical/hygiene items — ✅ Done (one item skipped by your choice)
+- [x] Implemented the IndexNow protocol: key file at `public/89341843606ca8c087dfb8f5aba1f6bc.txt`, submission script `scripts/submit-indexnow.mjs` (fetches the full sitemap, submits every URL — idempotent, so no diffing needed), wired into `.github/workflows/notify-deployment.yml` as a new job that fires after every successful **Production** deploy.
+- [ ] **Skipped by your choice** — `includeSubDomains; preload` on the HSTS header: flagged that this affects *every* subdomain (confirmed `n8n.cinematen.be` is HTTPS-ready, but couldn't verify every possible subdomain — mail, staging, etc.) and that `preload` is slow to reverse if something breaks later. You chose to skip it; header stays at Vercel's current default.
+- [x] Sitemap filter inconsistency: checked `/nieuws/film` and `/nieuws/serie` directly — both have real unique titles, meta descriptions, and intro copy, and serve a genuine category-filtering need. Confirmed they should stay indexed as-is; no change needed (this was a "confirm or fix" item, and confirming was the right call here).
+- [x] Collapsed the redundant `Article` + `Review` sibling JSON-LD nodes in `ReviewLayout.astro`/`BaseHead.astro` — reviews with a real rating now emit `Review` only (Google's supported type for review pages); the one review without a rating (`onze-meest-verwachte-films-en-series-van-2026.mdx`, a listicle, not a single-item review) correctly still gets `Article`. Verified both cases in build output.
 
 ---
 
@@ -155,6 +155,6 @@ No SEO drift baseline existed for cinematen.be before this audit. Recommend capt
 /seo drift baseline https://cinematen.be
 ```
 
-## After Phase 1-2 ship
+## After Phase 1-3 ship
 
-Re-run `/seo audit https://cinematen.be` to get an updated health score and confirm the fixes landed as expected.
+Re-run `/seo audit https://cinematen.be` to get an updated health score and confirm the fixes landed as expected — Phases 1-3 together are a large enough set of changes (image pipeline, authorship/schema, review titles, hub-and-spoke architecture, tag pages) that a fresh full audit is worth more here than spot-checking individual items.

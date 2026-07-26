@@ -44,6 +44,12 @@ const nieuws = defineCollection({
     trailer: z.string().optional(),
     draft: z.boolean().optional(),
     tags: z.array(z.string()).nullish(),
+    // Structured franchise/entity taxonomy — distinct from the free-text
+    // `tags` field, which can't reliably drive hub-page/related-content
+    // logic (inconsistent casing, typos, no fixed vocabulary). Values are
+    // slugs from a fixed known-franchise list (see scripts/tag-franchises.mjs),
+    // not arbitrary strings.
+    franchise: z.array(z.string()).nullish(),
     summary: z.string().optional(),
   }),
 });
@@ -60,6 +66,7 @@ const reviews = defineCollection({
     summary: z.string().nullish(),
     rating: z.number().optional(),
     tags: z.array(z.string()).nullish(),
+    franchise: z.array(z.string()).nullish(),
     featured: z.boolean().optional(),
     draft: z.boolean().optional(),
     trailer: z.string().optional(),

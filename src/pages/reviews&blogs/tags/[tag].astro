@@ -46,13 +46,27 @@ export async function getStaticPaths () {
 const tagname = Astro.params.tag.toLowerCase(); // Convert tagname to lowercase
 const { tagged } = Astro.props;
 
-exclude_from_search: true
+// Indexable only with enough posts to not read as thin content (SEO audit,
+// 2026-07-22 — see src/pages/nieuws/tags/[tag].astro for the same rule and
+// its rationale: tags are now a cleaned, fixed vocabulary, not noisy
+// free-text, so blanket noindex no longer makes sense for every tag page).
+const MIN_POSTS_TO_INDEX = 3;
+const indexable = tagged.length >= MIN_POSTS_TO_INDEX;
+const canonicalURL = `https://www.cinematen.be/reviews&blogs/tags/${tagname}/`;
+const pageTitle = `${tagname[0].toUpperCase()}${tagname.slice(1)} — Reviews & Blogs | Cinematen.be`;
+const pageDescription = `${tagged.length} review${tagged.length !== 1 ? "s" : ""} getagd met "${tagname}" op Cinematen.be.`;
 ---
 
-<ListingShell navActive="reviews">
+<ListingShell
+  navActive="reviews"
+  useExcludeHead={!indexable}
+  title={indexable ? pageTitle : undefined}
+  description={indexable ? pageDescription : undefined}
+  canonicalURL={indexable ? canonicalURL : undefined}
+>
   <div class="cn-listing__inner">
     <h1>Reviews &amp; Blogs — {tagname}</h1>
-    <p class="cn-listing__intro">Alle reviews en blogs getagd met &ldquo;{tagname}&rdquo;.</p>
+    <p class="cn-listing__intro">{tagged.length} review{tagged.length !== 1 ? "s" : ""} getagd met &ldquo;{tagname}&rdquo;.</p>
     <ReviewsFilterChips activeTag={tagname} />
     <div class="cn-listing__grid">
       {tagged

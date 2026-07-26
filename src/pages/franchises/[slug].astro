@@ -1,0 +1,81 @@
+---
+// Franchise hub pages (SEO audit, 2026-07-20/22): the site had zero
+// hub-and-spoke architecture despite heavy franchise-repeat content volume
+// (e.g. ~100+ Marvel articles) scattered across chronological folders with
+// no aggregating landing page. Combines nieuws + reviews for one franchise,
+// sorted by date. Only generated for franchises with enough tagged entries
+// to be a real destination, not a thin page — see HUB_ELIGIBLE in
+// src/lib/franchises.ts. Spoke articles link back here via the
+// "Meer over {franchise}" link in NieuwsLayout.astro/ReviewLayout.astro.
+import { getCollection } from "astro:content";
+import ListingShell from "../../layouts/ListingShell.astro";
+import ArticleCard from "../../components/design-system/ArticleCard.astro";
+import PodcastCard from "../../components/design-system/PodcastCard.astro";
+import { formatCardDate, ratingOutOfTen, slugFromEntryId } from "../../lib/format";
+import { HUB_ELIGIBLE, franchiseName } from "../../lib/franchises";
+
+export async function getStaticPaths() {
+  return Array.from(HUB_ELIGIBLE).map((slug) => ({ params: { slug } }));
+}
+
+const { slug } = Astro.params;
+const name = franchiseName(slug);
+
+const [nieuwsRaw, reviewsRaw] = await Promise.all([getCollection("nieuws"), getCollection("reviews")]);
+
+const nieuwsItems = nieuwsRaw
+  .filter((p) => !p.data.draft && p.data.franchise?.includes(slug))
+  .map((p) => ({
+    url: `/nieuws/${slugFromEntryId(p.id)}`,
+    title: p.data.title,
+    date: p.data.date,
+    thumbnail: p.data.thumbnail,
+    excerpt: p.data.summary,
+    rating: null as string | null,
+  }));
+
+const reviewItems = reviewsRaw
+  .filter((p) => !p.data.draft && p.data.franchise?.includes(slug))
+  .map((p) => ({
+    url: `/reviews&blogs/${slugFromEntryId(p.id)}`,
+    title: p.data.title,
+    date: p.data.date,
+    thumbnail: p.data.thumbnail || p.data.poster,
+    excerpt: p.data.summary,
+    rating: ratingOutOfTen(p.data.rating),
+  }));
+
+const allItems = [...nieuwsItems, ...reviewItems].sort(
+  (a, b) => new Date(b.date ?? 0).getTime() - new Date(a.date ?? 0).getTime()
+);
+
+const canonicalURL = `https://www.cinematen.be/franchises/${slug}/`;
+const pageTitle = `${name} — Nieuws & Reviews | Cinematen.be`;
+const pageDescription = `Al het ${name}-nieuws en alle ${name}-reviews op één plek. Blijf op de hoogte van de laatste ${name}-ontwikkelingen op Cinematen.be.`;
+---
+
+<ListingShell navActive={null} useExcludeHead={false} title={pageTitle} description={pageDescription} canonicalURL={canonicalURL}>
+  <div class="cn-listing__inner">
+    <h1>{name}</h1>
+    <p class="cn-listing__intro">
+      Al het nieuws en alle reviews over {name} op Cinematen.be — {allItems.length} artikel{allItems.length !== 1 ? "en" : ""}.
+    </p>
+    <div class="cn-listing__grid">
+      {allItems.map((item) => (
+        <ArticleCard title={item.title} href={item.url} excerpt={item.excerpt ?? undefined} rating={item.rating ?? undefined}>
+          <img slot="image" src={item.thumbnail} alt={item.title} loading="lazy" />
+          <span slot="meta">{formatCardDate(item.date)}</span>
+        </ArticleCard>
+      ))}
+    </div>
+    <PodcastCard />
+  </div>
+</ListingShell>
+
+<script type="application/ld+json" set:html={JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": pageTitle,
+  "description": pageDescription,
+  "url": canonicalURL,
+})}></script>

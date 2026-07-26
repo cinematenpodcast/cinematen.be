@@ -3,21 +3,30 @@
 // Wrapped by src/pages/nieuws/[...slug].astro (untouched, still passes
 // `frontmatter` + slotted MDX `<Content />`). Same data/meta pipeline as
 // before (BaseHeadNieuws, RandomReviews) — only the visual chrome around
-// the article body changed. RelatedNieuws's "Misschien ook interessant"
-// section was removed: it duplicated RandomReviews's own related-content
-// grid on this same page. BasePodcastBanner was replaced with the shared
+// the article body changed. BasePodcastBanner was replaced with the shared
 // PodcastCard component (real Spotify show embed, matching Artikel.dc.html)
 // placed at the end of the article body, before the related-content grid.
+//
+// RelatedNieuws re-added (SEO audit, 2026-07-22): a prior version of this
+// component was removed for duplicating RandomReviews's grid on the same
+// page — but that one was a plain random shuffle, structurally identical to
+// RandomReviews's own random shuffle, so two near-identical "random cards"
+// sections back to back really was redundant. This version and RandomReviews
+// both now rank by real relevance (src/lib/relatedContent.ts) instead of
+// shuffling, and surface genuinely different content (other news vs.
+// reviews), so they're no longer redundant with each other.
 import BaseHeadNieuws from "../components/BaseHeadNieuws.astro";
 import Header from "../components/design-system/Header.astro";
 import Footer from "../components/design-system/Footer.astro";
 import SocialIcons from "../components/design-system/SocialIcons.astro";
 import PodcastCard from "../components/design-system/PodcastCard.astro";
+import RelatedNieuws from "../components/RelatedNieuws.astro";
 import RandomReviews from "../components/RandomReviews.astro";
 import { readFileSync } from "fs";
 import { join } from "path";
 import { formatCardDate, formatDateISO, readingTime } from "../lib/format";
 import { getNavLinks, FOOTER_COLUMNS, FOOTER_BOTTOM_LEFT, FOOTER_TAGLINE, PARTNER_LABEL } from "../lib/siteNav";
+import { HUB_ELIGIBLE, franchiseName } from "../lib/franchises";
 
 const { frontmatter } = Astro.props;
 
@@ -58,6 +67,10 @@ const metaDescription = frontmatter.summary || plainText.substring(0, 155) || un
 const minutesToRead = readingTime(plainText);
 
 const displayDate = formatCardDate(frontmatter.date);
+// Spoke -> hub link (see src/pages/franchises/[slug].astro): the first
+// hub-eligible franchise this article is tagged with, if any. An article
+// can have multiple franchise tags (rare); only one hub link is shown.
+const hubFranchiseSlug = (frontmatter.franchise || []).find((f) => HUB_ELIGIBLE.has(f));
 // `trailer` is a plain YouTube video ID in frontmatter (e.g. "f_bKjZeJBBI"),
 // not a full URL — see src/content/config.ts. youtube-nocookie.com avoids
 // setting third-party cookies until the visitor actually plays the video.
@@ -139,10 +152,17 @@ const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed
                         </div>
                     )}
 
+                    {hubFranchiseSlug && (
+                        <a class="cn-franchise-hub-link" href={`/franchises/${hubFranchiseSlug}/`}>
+                            Meer over {franchiseName(hubFranchiseSlug)} →
+                        </a>
+                    )}
+
                     <PodcastCard />
                 </article>
 
-                <RandomReviews currentSlug={frontmatter.slug} />
+                <RelatedNieuws currentSlug={frontmatter.slug} soort={frontmatter.soort} tags={frontmatter.tags} franchise={frontmatter.franchise} />
+                <RandomReviews currentSlug={frontmatter.slug} soort={frontmatter.soort} tags={frontmatter.tags} franchise={frontmatter.franchise} />
             </main>
 
             <Footer columns={FOOTER_COLUMNS} bottomLeft={FOOTER_BOTTOM_LEFT}>
@@ -287,6 +307,25 @@ const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed
         max-width: 100%;
         height: auto;
         border-radius: var(--radius-lg);
+    }
+
+    .cn-franchise-hub-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 8px;
+        padding: 8px 16px;
+        border-radius: var(--radius-full);
+        background: var(--surface-container-high);
+        color: var(--on-surface);
+        font-family: var(--font-sans);
+        font-weight: 700;
+        font-size: 14px;
+        text-decoration: none;
+        transition: opacity 0.15s ease;
+    }
+    .cn-franchise-hub-link:hover {
+        opacity: 0.85;
     }
 
     .cn-article-trailer {

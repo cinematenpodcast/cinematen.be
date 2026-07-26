@@ -6,7 +6,7 @@
 import "../styles/design-system/index.css";
 import { buildAuthorSchema } from "../lib/format";
 
-const { canonicalURL, title, description, publishedDate, modifiedDate, articleType, author, image } = Astro.props;
+const { canonicalURL, title, description, publishedDate, modifiedDate, articleType, author, image, skipArticleSchema } = Astro.props;
 const defaultCanonical = "https://www.cinematen.be/";
 const finalCanonical = canonicalURL || defaultCanonical;
 // The /reviews&blogs/ path segment contains a literal "&", valid in a URL path but
@@ -129,6 +129,12 @@ const formattedModifiedDate = formatDateForMeta(modifiedDate);
 
 <!-- Structured Data -->
 {articleType === "article" ? (
+  // skipArticleSchema: review pages supply their own primary Review schema
+  // (see ReviewLayout.astro) — emitting Article here too would put two
+  // sibling schema.org nodes describing the same URL with duplicated
+  // author/publisher/description, and Review is Google's supported type for
+  // review pages, not Article.
+  !skipArticleSchema && (
 <script type="application/ld+json" set:html={JSON.stringify({
   "@context": "https://schema.org",
   "@type": "Article",
@@ -148,6 +154,7 @@ const formattedModifiedDate = formatDateForMeta(modifiedDate);
     }
   }
 })}></script>
+  )
 ) : (
 <script type="application/ld+json" set:html={JSON.stringify({
   "@context": "https://schema.org",

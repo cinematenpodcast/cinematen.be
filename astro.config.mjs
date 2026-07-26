@@ -66,11 +66,17 @@ export default defineConfig({
   integrations: [
     mdx(),
     sitemap({
+      // Numbered tag-pagination sub-pages (/nieuws/tags/:tag/2, etc.) stay
+      // noindexed (ListingShell's default BaseHeadExclude) and excluded here
+      // — but the bare /nieuws/tags/:tag and /reviews&blogs/tags/:tag pages
+      // are now real, sometimes-indexable landing pages (see
+      // src/pages/nieuws/tags/[tag].astro), so only exclude the numbered
+      // variant, not the tag root itself.
       filter: (page) =>
         !page.includes('/nieuws/pages/') &&
         !page.includes('/reviews&blogs/pages/') &&
-        !page.includes('/nieuws/tags/') &&
-        !page.includes('/reviews&blogs/tags/') &&
+        !/\/nieuws\/tags\/[^/]+\/\d+\/?$/.test(page) &&
+        !/\/reviews&blogs\/tags\/[^/]+\/\d+\/?$/.test(page) &&
         !page.includes('/nieuws/14days'),
       serialize(item) {
         const match = item.url.match(/\/(nieuws|reviews&blogs)\/([^/]+)\/?$/);

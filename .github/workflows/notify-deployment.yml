@@ -18,3 +18,23 @@ jobs:
               "sha": "${{ github.event.deployment.sha }}",
               "repository": "${{ github.repository }}"
             }'
+
+  # Nudges Bing/Yandex (and any other participating engine) to recrawl sooner
+  # than their own schedule after every successful production deploy, instead
+  # of waiting on IndexNow entirely passively. Resubmitting the full sitemap
+  # is idempotent on IndexNow's end, so this doesn't need to diff what
+  # actually changed (see scripts/submit-indexnow.mjs).
+  indexnow:
+    if: github.event.deployment_status.state == 'success' && github.event.deployment_status.environment == 'Production'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            scripts/submit-indexnow.mjs
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Submit sitemap URLs to IndexNow
+        run: node scripts/submit-indexnow.mjs

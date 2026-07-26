@@ -1,0 +1,70 @@
+---
+// Related-news module for nieuws article pages — didn't exist before (SEO
+// audit, 2026-07-20: zero internal-linking strategy on news articles despite
+// heavy franchise-repeat content volume). Ranks other nieuws entries by
+// shared franchise/soort/tags via rankRelated() (src/lib/relatedContent.ts),
+// falling back to same-soort recent articles when nothing scores above 0 so
+// the module is never sparse on entries with no franchise/tags set.
+import { getCollection } from "astro:content";
+import ArticleCard from "./design-system/ArticleCard.astro";
+import { formatCardDate, slugFromEntryId } from "../lib/format";
+import { rankRelated } from "../lib/relatedContent";
+
+const { currentSlug, soort, tags, franchise } = Astro.props;
+
+const allNieuwsRaw = await getCollection("nieuws");
+const candidates = allNieuwsRaw
+  .filter((post) => !post.data.draft && post.slug !== currentSlug)
+  .map((post) => ({
+    url: `/nieuws/${slugFromEntryId(post.id)}`,
+    data: post.data,
+    date: post.data.date,
+  }));
+
+const related = rankRelated({ soort, tags, franchise }, candidates, 3);
+---
+
+{related.length > 0 && (
+  <section class="cn-related-nieuws">
+    <div class="cn-related-nieuws__inner">
+      <h2>Meer nieuws</h2>
+      <div class="cn-related-nieuws__grid">
+        {related.map((post) => (
+          <ArticleCard title={post.data.title} href={post.url} excerpt={post.data.summary ?? undefined}>
+            <img slot="image" src={post.data.thumbnail} alt={post.data.title} loading="lazy" />
+            <span slot="meta">{formatCardDate(post.data.date)}</span>
+          </ArticleCard>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .cn-related-nieuws {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: 0 var(--space-margin-desktop) 32px;
+  }
+  .cn-related-nieuws__inner h2 {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 24px;
+    color: var(--on-surface);
+    text-align: center;
+    margin: 0 0 32px;
+  }
+  .cn-related-nieuws__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-gutter);
+  }
+  @media (max-width: 900px) {
+    .cn-related-nieuws {
+      padding: 0 var(--space-margin-mobile) 24px;
+    }
+    .cn-related-nieuws__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

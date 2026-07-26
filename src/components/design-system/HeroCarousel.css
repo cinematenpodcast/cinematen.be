@@ -198,8 +198,16 @@
    those aren't the containment-establishing element. */
 @media (max-width: 520px) {
   .cn-hero {
-    height: 70vh;
+    /* dvh (dynamic viewport height), not vh — mobile Chrome/Safari compute
+       static vh against the LARGEST possible viewport (address bar hidden),
+       so 70vh renders taller than the actually-visible screen whenever the
+       address bar is showing, leaving a large dead gap below the dots
+       before the next section starts. dvh tracks the real, current viewport. */
+    height: 64dvh;
     min-height: 420px;
+  }
+  .cn-hero__dots {
+    bottom: 16px;
   }
 }
 

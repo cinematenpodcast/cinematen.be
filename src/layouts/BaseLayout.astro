@@ -412,8 +412,10 @@ const canonicalURL = "https://www.cinematen.be/";
          mobile the hero's content sits right at its bottom edge (button
          included), so pulling the news section up by nearly as much as the
          hero's own bottom padding visually collided the "Film & TV nieuws"
-         heading with the "Lees meer" button. */
-      margin-top: 24px;
+         heading with the "Lees meer" button. Trimmed further (24px -> 16px)
+         together with the hero's vh->dvh fix above, which was the main
+         source of the large gap real mobile browsers showed here. */
+      margin-top: 16px;
       padding: 0 var(--space-margin-mobile) 32px;
     }
     .cn-home-adslot,

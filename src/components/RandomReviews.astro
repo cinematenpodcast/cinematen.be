@@ -1,12 +1,20 @@
 ---
 // Restyled onto the shared design system (was a standalone light-theme card
-// row, clashing with the redesigned dark article/review pages). Same
-// query/shuffle logic as before — only the markup/CSS changed.
+// row, clashing with the redesigned dark article/review pages).
+//
+// Was a pure random shuffle (SEO audit, 2026-07-20: "provides no semantic
+// internal linking value, just serves 3 random reviews"). Now ranks by
+// shared franchise/soort/tags via rankRelated() (src/lib/relatedContent.ts),
+// falling back to recent reviews when nothing scores above 0 so this never
+// goes sparse on pages with no franchise/tags set. Component name kept
+// as-is (still reviews-only) even though callers now pass more than just
+// currentSlug, to avoid a wider rename across both call sites.
 import { getCollection } from "astro:content";
 import ArticleCard from "./design-system/ArticleCard.astro";
 import { formatCardDate, ratingOutOfTen, slugFromEntryId } from "../lib/format";
+import { rankRelated } from "../lib/relatedContent";
 
-const { currentSlug } = Astro.props;
+const { currentSlug, soort, tags, franchise } = Astro.props;
 
 // Alle reviews ophalen
 const allReviewsRaw = await getCollection("reviews");
@@ -15,29 +23,14 @@ const allReviewsRaw = await getCollection("reviews");
 // (derived from the frontmatter `slug:` override, see src/content/config.ts)
 // is used instead of the old `post.data.slug`/`post.frontmatter.slug`.
 const allReviews = allReviewsRaw
-  .filter(post => !post.data.draft)
+  .filter(post => !post.data.draft && post.slug !== currentSlug)
   .map(post => ({
     url: `/reviews&blogs/${slugFromEntryId(post.id)}`,
     data: post.data,
-    slug: post.slug,
+    date: post.data.date,
   }));
 
-// Filter de huidige review eruit
-const filteredReviews = allReviews.filter(post => post.slug !== currentSlug);
-
-// Shuffle functie
-function shuffle(array) {
-  let currentIndex = array.length, randomIndex;
-  while (currentIndex !== 0) {
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex--;
-    [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-  }
-  return array;
-}
-
-// Kies 3 random reviews
-const randomReviews = shuffle(filteredReviews).slice(0, 3);
+const randomReviews = rankRelated({ soort, tags, franchise }, allReviews, 3);
 ---
 
 {randomReviews.length > 0 && (

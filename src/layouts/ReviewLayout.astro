@@ -15,6 +15,7 @@ import PodcastCard from "../components/design-system/PodcastCard.astro";
 import RandomReviews from "../components/RandomReviews.astro";
 import { formatCardDate, formatDateISO, ratingOutOfTen, buildAuthorSchema } from "../lib/format";
 import { getNavLinks, FOOTER_COLUMNS, FOOTER_BOTTOM_LEFT, FOOTER_TAGLINE, PARTNER_LABEL } from "../lib/siteNav";
+import { HUB_ELIGIBLE, franchiseName } from "../lib/franchises";
 
 const { frontmatter } = Astro.props;
 
@@ -40,6 +41,8 @@ const itemReviewedType = soortLower.includes("serie") || soortLower.includes("tv
 const reviewDescription = frontmatter.summary || `Lees onze ${frontmatter.soort ? frontmatter.soort.toLowerCase() : 'review'} van ${frontmatter.title}. Bekijk onze beoordeling en ontdek of deze ${frontmatter.soort ? frontmatter.soort.toLowerCase() : 'content'} de moeite waard is.`;
 
 const displayDate = formatCardDate(frontmatter.date);
+// Spoke -> hub link (see src/pages/franchises/[slug].astro).
+const hubFranchiseSlug = (frontmatter.franchise || []).find((f) => HUB_ELIGIBLE.has(f));
 // `trailer` is a plain YouTube video ID in frontmatter (e.g. "f_bKjZeJBBI"),
 // not a full URL — see src/content/config.ts. youtube-nocookie.com avoids
 // setting third-party cookies until the visitor actually plays the video.
@@ -57,6 +60,7 @@ const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed
             articleType="article"
             author={frontmatter.schrijver}
             image={frontmatter.poster}
+            skipArticleSchema={frontmatter.rating > 0}
         />
         {frontmatter.rating && frontmatter.rating > 0 && (
         <script type="application/ld+json" set:html={JSON.stringify({
@@ -172,10 +176,16 @@ const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed
                         </div>
                     )}
 
+                    {hubFranchiseSlug && (
+                        <a class="cn-franchise-hub-link" href={`/franchises/${hubFranchiseSlug}/`}>
+                            Meer over {franchiseName(hubFranchiseSlug)} →
+                        </a>
+                    )}
+
                     <PodcastCard />
                 </article>
 
-                <RandomReviews currentSlug={frontmatter.slug} />
+                <RandomReviews currentSlug={frontmatter.slug} soort={frontmatter.soort} tags={frontmatter.tags} franchise={frontmatter.franchise} />
             </main>
 
             <Footer columns={FOOTER_COLUMNS} bottomLeft={FOOTER_BOTTOM_LEFT}>
@@ -357,6 +367,25 @@ const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed
         max-width: 100%;
         height: auto;
         border-radius: var(--radius-lg);
+    }
+
+    .cn-franchise-hub-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 8px;
+        padding: 8px 16px;
+        border-radius: var(--radius-full);
+        background: var(--surface-container-high);
+        color: var(--on-surface);
+        font-family: var(--font-sans);
+        font-weight: 700;
+        font-size: 14px;
+        text-decoration: none;
+        transition: opacity 0.15s ease;
+    }
+    .cn-franchise-hub-link:hover {
+        opacity: 0.85;
     }
 
     .cn-article-trailer {

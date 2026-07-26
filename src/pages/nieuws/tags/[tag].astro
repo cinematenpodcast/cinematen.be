@@ -1,11 +1,102 @@
 ---
-// Redirects the bare /nieuws/tags/:tag to its first paginated page.
-// Must be server-rendered (not prerendered): a prerendered page can't emit a real
-// HTTP redirect, only a static meta-refresh stub, which briefly flashes a blank
-// "Redirecting to: ..." page in the browser before continuing.
-export const prerender = false;
+// Was a 301 redirect to /nieuws/tags/:tag/1 (SEO audit, 2026-07-20/22: "just
+// redirect into a paginated tag archive — no dedicated tag/topic landing
+// page, just chronological listings"). Now renders page 1's content
+// directly — this is the URL most likely to actually be linked to, so it
+// should be a real page, not a redirect hop. /nieuws/tags/:tag/1 (from
+// [page].astro) still exists and shows the same content, but declares this
+// bare URL as its canonical (see that file), so there's exactly one
+// canonical URL for page 1, not a redirect *or* a duplicate-content pair.
+//
+// Indexable (real title/description, not noindex) only when the tag has
+// enough posts (>=3) to not read as thin content — tags now come from a
+// fixed, cleaned vocabulary (scripts/tag-franchises.mjs's sibling cleanup,
+// see src/content/config.ts) so this is no longer the noisy free-text pile
+// that justified blanket-noindexing every tag page.
+import ListingShell from "../../../layouts/ListingShell.astro";
+import ArticleCard from "../../../components/design-system/ArticleCard.astro";
+import Pagination from "../../../components/design-system/Pagination.astro";
+import NieuwsFilterChips from "../../../components/NieuwsFilterChips.astro";
+import PodcastCard from "../../../components/design-system/PodcastCard.astro";
 
-const { tag } = Astro.params;
+import { getCollection } from "astro:content";
+import { extractPreview } from "../../../lib/textPreview";
+import { formatCardDate, slugFromEntryId } from "../../../lib/format";
 
-return Astro.redirect(`/nieuws/tags/${tag}/1`, 301);
+const MIN_POSTS_TO_INDEX = 3;
+
+export async function getStaticPaths() {
+  // Astro statically extracts getStaticPaths into its own build-time chunk,
+  // which does NOT retain outer module-scope consts (only imports) — PAGE_SIZE
+  // has to be declared inside here, not shared with the module-level copy
+  // below used by the render script.
+  const PAGE_SIZE = 8;
+  const allPostsRaw = (await getCollection("nieuws")).filter((post) => !post.data.draft);
+
+  const allPosts = allPostsRaw.map((post) => {
+    const cleanId = slugFromEntryId(post.id);
+    return {
+      url: `/nieuws/${cleanId}`,
+      frontmatter: post.data,
+      rawContent: () => post.data.summary || extractPreview(post.body, 200),
+      date: post.data.date,
+    };
+  });
+
+  const tagMap = new Map();
+  allPosts.forEach((post) => {
+    if (post.frontmatter.title && post.frontmatter.tags) {
+      post.frontmatter.tags.forEach((tag) => {
+        const formattedTag = tag.toLowerCase().replace(/:/g, "");
+        if (!tagMap.has(formattedTag)) tagMap.set(formattedTag, []);
+        tagMap.get(formattedTag).push(post);
+      });
+    }
+  });
+
+  return Array.from(tagMap.entries()).map(([tag, posts]) => {
+    const sorted = posts.sort((a, b) => new Date(b.date ?? 0).getTime() - new Date(a.date ?? 0).getTime());
+    return {
+      params: { tag },
+      props: { tag, posts: sorted.slice(0, PAGE_SIZE), total: sorted.length },
+    };
+  });
+}
+
+const { tag, posts, total } = Astro.props;
+const totalPages = Math.ceil(total / 8); // must match the PAGE_SIZE inside getStaticPaths above
+const indexable = total >= MIN_POSTS_TO_INDEX;
+const canonicalURL = `https://www.cinematen.be/nieuws/tags/${tag}/`;
+const pageTitle = `${tag[0].toUpperCase()}${tag.slice(1)} — Film & TV nieuws | Cinematen.be`;
+const pageDescription = `${total} nieuwsartikel${total !== 1 ? "en" : ""} getagd met "${tag}" op Cinematen.be.`;
 ---
+
+<ListingShell
+  navActive="nieuws"
+  useExcludeHead={!indexable}
+  title={indexable ? pageTitle : undefined}
+  description={indexable ? pageDescription : undefined}
+  canonicalURL={indexable ? canonicalURL : undefined}
+>
+  <div class="cn-listing__inner">
+    <h1>Film &amp; TV nieuws — {tag}</h1>
+    <p class="cn-listing__intro">{total} artikel{total !== 1 ? "en" : ""} getagd met &ldquo;{tag}&rdquo;.</p>
+    <NieuwsFilterChips />
+    <div class="cn-listing__grid">
+      {posts.map((post) => (
+        <ArticleCard title={post.frontmatter.title} href={post.url} excerpt={post.rawContent()}>
+          <img slot="image" src={post.frontmatter.thumbnail} alt={post.frontmatter.title} loading="lazy" />
+          <span slot="meta">{formatCardDate(post.frontmatter.date)}</span>
+        </ArticleCard>
+      ))}
+    </div>
+    {totalPages > 1 && (
+      <div class="cn-listing__pagination">
+        <Pagination page={1} totalPages={totalPages} hrefBase={`/nieuws/tags/${tag}/:page`} />
+      </div>
+    )}
+  </div>
+  <div class="cn-listing__podcast">
+    <PodcastCard />
+  </div>
+</ListingShell>
