@@ -142,22 +142,38 @@
   transform: translateX(-50%);
   z-index: 2;
   display: flex;
-  gap: 10px;
+  /* CSS gap can't go negative, so the 44px tappable hit areas sit flush
+     against each other (gap: 0) rather than spread apart — the visible 10px
+     dot (::after below) still reads at roughly the original rhythm. */
+  gap: 0;
 }
 .cn-hero__dot {
+  /* Visual dot is still 10px (via ::after) — the button itself is a 44px hit
+     area per WCAG's touch-target guidance, invisible so it doesn't change
+     the design. */
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+}
+.cn-hero__dot::after {
+  content: "";
   width: 10px;
   height: 10px;
   border-radius: var(--radius-full);
   background: rgba(255, 255, 255, 0.3);
-  cursor: pointer;
-  border: none;
-  padding: 0;
+  transition: background 0.15s ease;
 }
 .cn-hero__dot:focus-visible {
   outline: 2px solid #fff;
   outline-offset: 2px;
 }
-.cn-hero__dot--active {
+.cn-hero__dot--active::after {
   background: #fff;
 }
 .cn-hero__sr-status {
@@ -207,8 +223,8 @@
     margin-bottom: 20px;
   }
   .cn-hero__arrow {
-    width: 36px;
-    height: 36px;
+    width: 44px;
+    height: 44px;
     font-size: 16px;
     /* Was pinned to top: 24px (right under the header) — too high. Content
        is bottom-anchored and can run up to ~half the hero's height (title

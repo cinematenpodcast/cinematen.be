@@ -4,6 +4,7 @@
 // src/styles/design-system/USAGE.md. Loaded alongside the existing
 // /style.css monolith (not a replacement yet); pages migrate incrementally.
 import "../styles/design-system/index.css";
+import { buildAuthorSchema } from "../lib/format";
 
 const { canonicalURL, title, description, publishedDate, modifiedDate, articleType, author, image } = Astro.props;
 const defaultCanonical = "https://www.cinematen.be/";
@@ -136,7 +137,7 @@ const formattedModifiedDate = formatDateForMeta(modifiedDate);
   "url": finalCanonical,
   ...(formattedPublishedDate && { "datePublished": formattedPublishedDate }),
   ...(formattedModifiedDate && { "dateModified": formattedModifiedDate }),
-  ...(author && { "author": { "@type": "Person", "name": author, "url": "https://www.cinematen.be/#over-ons", "sameAs": ["https://www.instagram.com/cinematen_podcast"] } }),
+  ...(author && { "author": buildAuthorSchema(author) }),
   ...(image && { "image": image.startsWith('http') ? image : `https://www.cinematen.be${encodeURI(image)}` }),
   "publisher": {
     "@type": "Organization",

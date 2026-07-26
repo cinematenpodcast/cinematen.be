@@ -54,33 +54,43 @@ export default function HeroCarousel({ slides, autoplayMs = 0 }: HeroCarouselPro
 
   return (
     <div className="cn-hero">
-      {slides.map((s, i) => (
-        <div
-          key={i}
-          className={`cn-hero__slide${i === index ? " cn-hero__slide--active" : ""}`}
-          aria-hidden={i !== index}
-        >
-          <img
-            className="cn-hero__image"
-            src={s.image.src}
-            alt={s.image.alt}
-            loading={i === 0 ? "eager" : "lazy"}
-            fetchpriority={i === 0 ? "high" : "auto"}
-            decoding={i === 0 ? "sync" : "async"}
-          />
-          <div className="cn-hero__scrim-side" aria-hidden="true" />
-          <div className="cn-hero__scrim-bottom" aria-hidden="true" />
-          <div className="cn-hero__content">
-            <h1 className="cn-hero__title">{s.title}</h1>
-            {s.description && <p className="cn-hero__desc">{s.description}</p>}
-            {s.ctaLabel && s.ctaHref && (
-              <a className="cn-hero__cta" href={s.ctaHref}>
-                {s.ctaLabel}
-              </a>
-            )}
+      {slides.map((s, i) => {
+        // Every slide is present in the DOM at once (only the active one is
+        // shown; the rest are aria-hidden for the carousel transition), so a
+        // hardcoded <h1> here rendered 4 H1s per page — a real heading-outline
+        // violation, not just a visual one, since aria-hidden doesn't remove
+        // an element from parsers that don't respect it. Only the active
+        // slide gets the page's one H1; inactive slides render the same
+        // styling as a <p> instead.
+        const TitleTag = i === index ? "h1" : "p";
+        return (
+          <div
+            key={i}
+            className={`cn-hero__slide${i === index ? " cn-hero__slide--active" : ""}`}
+            aria-hidden={i !== index}
+          >
+            <img
+              className="cn-hero__image"
+              src={s.image.src}
+              alt={s.image.alt}
+              loading={i === 0 ? "eager" : "lazy"}
+              fetchpriority={i === 0 ? "high" : "auto"}
+              decoding={i === 0 ? "sync" : "async"}
+            />
+            <div className="cn-hero__scrim-side" aria-hidden="true" />
+            <div className="cn-hero__scrim-bottom" aria-hidden="true" />
+            <div className="cn-hero__content">
+              <TitleTag className="cn-hero__title">{s.title}</TitleTag>
+              {s.description && <p className="cn-hero__desc">{s.description}</p>}
+              {s.ctaLabel && s.ctaHref && (
+                <a className="cn-hero__cta" href={s.ctaHref}>
+                  {s.ctaLabel}
+                </a>
+              )}
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
 
       {count > 1 && (
         <>

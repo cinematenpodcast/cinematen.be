@@ -7,17 +7,23 @@ import BaseFooter from "../../components/BaseFooter.astro";
 import BaseScript from "../../components/BaseScript.astro";
 import BasePodcastBanner from "../../components/BasePodcastBanner.astro";
 import BaseNieuwsItem from "../../components/BaseNieuwsItem.astro";
-import { slugFromEntryId } from "../../lib/format";
+import { slugFromEntryId, authorSlug, isCollectiveAuthor } from "../../lib/format";
 
 export async function getStaticPaths() {
-  const reviews = await getCollection("reviews");
+  const [reviews, nieuws] = await Promise.all([getCollection("reviews"), getCollection("nieuws")]);
 
-  // Get unique authors from reviews (schrijver field)
+  // Get unique named authors (schrijver field) from both collections — not
+  // just reviews, so a real nieuws byline (added going forward, see
+  // NieuwsLayout.astro) gets a working /auteur/ page instead of a 404. The
+  // collective "de Cinematen" byline isn't a real person, so it doesn't get
+  // its own author page.
   const authors = new Set<string>();
-  reviews.forEach(r => { if (r.data.schrijver) authors.add(r.data.schrijver); });
+  [...reviews, ...nieuws].forEach(entry => {
+    if (entry.data.schrijver && !isCollectiveAuthor(entry.data.schrijver)) authors.add(entry.data.schrijver);
+  });
 
   return Array.from(authors).map(author => ({
-    params: { slug: author.toLowerCase().replace(/\s+/g, '-') },
+    params: { slug: authorSlug(author) },
     props: { authorName: author },
   }));
 }
@@ -40,6 +46,16 @@ const canonicalURL = `https://www.cinematen.be/auteur/${slug}/`;
     description={`Alle reviews en blogs van ${authorName} op Cinematen.be. Film- en seriereviews met sterbeoordeling.`}
     canonicalURL={canonicalURL}
   />
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    "url": canonicalURL,
+    "mainEntity": {
+      "@type": "Person",
+      "name": authorName,
+      "url": canonicalURL
+    }
+  })}></script>
 </head>
 <body class="body">
   <div class="page-wrapper">

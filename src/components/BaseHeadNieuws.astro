@@ -2,6 +2,7 @@
 // Same design-system tokens import as BaseHead.astro — this head partial
 // (used on the Nieuws article detail pages) was missing it.
 import "../styles/design-system/index.css";
+import { buildAuthorSchema } from "../lib/format";
 
 const { title, thumbnail, description, canonicalURL, publishedDate, modifiedDate, author } = Astro.props;
 const defaultCanonical = "https://www.cinematen.be/";
@@ -21,12 +22,11 @@ const formattedModifiedDate = formatDateForMeta(modifiedDate);
 const finalThumbnail = thumbnail ? (thumbnail.startsWith('http') ? thumbnail : `https://www.cinematen.be${encodeURI(thumbnail)}`) : "https://www.cinematen.be/images/Cinematelogotrans.png";
 
 // `author` is the per-article `schrijver` frontmatter value, or undefined when
-// no individual writer is recorded — in that case attribute to the
-// Organization rather than guessing/hardcoding a specific person's name.
+// no individual writer is recorded — buildAuthorSchema() attributes to the
+// Organization rather than guessing/hardcoding a specific person's name in
+// that case, and ties real authors to their own /auteur/[slug]/ page.
 const authorMetaContent = author || "Cinematen";
-const authorSchema = author
-  ? { "@type": "Person", "name": author, "url": "https://www.cinematen.be/#over-ons", "sameAs": ["https://www.instagram.com/cinematen_podcast"] }
-  : { "@type": "Organization", "name": "Cinematen", "url": "https://www.cinematen.be/" };
+const authorSchema = buildAuthorSchema(author);
 ---
 <meta charset="utf-8" />
 <meta content="width=device-width, initial-scale=1" name="viewport" />

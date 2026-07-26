@@ -13,7 +13,7 @@ import SocialIcons from "../components/design-system/SocialIcons.astro";
 import CategoryBadge from "../components/design-system/CategoryBadge.astro";
 import PodcastCard from "../components/design-system/PodcastCard.astro";
 import RandomReviews from "../components/RandomReviews.astro";
-import { formatCardDate, formatDateISO, ratingOutOfTen } from "../lib/format";
+import { formatCardDate, formatDateISO, ratingOutOfTen, buildAuthorSchema } from "../lib/format";
 import { getNavLinks, FOOTER_COLUMNS, FOOTER_BOTTOM_LEFT, FOOTER_TAGLINE, PARTNER_LABEL } from "../lib/siteNav";
 
 const { frontmatter } = Astro.props;
@@ -21,17 +21,25 @@ const { frontmatter } = Astro.props;
 // Generate canonical URL for this review
 const canonicalURL = `https://www.cinematen.be${Astro.url.pathname}`;
 
-// Generate title and description for this review
-const reviewTitle = `${frontmatter.title} - ${frontmatter.soort || 'Review'}`;
-const soortLower = (frontmatter.soort || "").toLowerCase();
-const itemReviewedType = soortLower.includes("serie") || soortLower.includes("tv") ? "TVSeries" : "Movie";
-const reviewDescription = `Lees onze ${frontmatter.soort ? frontmatter.soort.toLowerCase() : 'review'} van ${frontmatter.title}. Bekijk onze beoordeling en ontdek of deze ${frontmatter.soort ? frontmatter.soort.toLowerCase() : 'content'} de moeite waard is.`;
-
-const displayDate = formatCardDate(frontmatter.date);
 // `rating` is stored on a 0–10 scale (migrated from the original 0–5-in-
 // 0.5-steps scale — see scripts/organize-content.mjs) — the schema.org
 // Review markup below keeps that native scale (bestRating: 10).
 const ratingLabel = ratingOutOfTen(frontmatter.rating);
+const reviewYear = frontmatter.date ? new Date(frontmatter.date).getFullYear() : null;
+// SEO-facing title — distinct from the visible on-page <h1> below (which just
+// shows frontmatter.title) — needs "recensie" + rating so the page can rank
+// for exact "<film> recensie" queries (SXO audit: reviews weren't appearing
+// in search for their own review queries despite out-depth-ing competitors
+// that do include "recensie" in their title tags).
+const reviewTitle = `${frontmatter.title}${reviewYear ? ` (${reviewYear})` : ""} recensie${ratingLabel ? ` – ${ratingLabel}/10` : ""} | Cinematen`;
+const soortLower = (frontmatter.soort || "").toLowerCase();
+const itemReviewedType = soortLower.includes("serie") || soortLower.includes("tv") ? "TVSeries" : "Movie";
+// Real per-review summary when set, falling back to the generic template only
+// when frontmatter.summary is missing — previously always boilerplate, so
+// every review's search snippet/schema description looked identical.
+const reviewDescription = frontmatter.summary || `Lees onze ${frontmatter.soort ? frontmatter.soort.toLowerCase() : 'review'} van ${frontmatter.title}. Bekijk onze beoordeling en ontdek of deze ${frontmatter.soort ? frontmatter.soort.toLowerCase() : 'content'} de moeite waard is.`;
+
+const displayDate = formatCardDate(frontmatter.date);
 // `trailer` is a plain YouTube video ID in frontmatter (e.g. "f_bKjZeJBBI"),
 // not a full URL — see src/content/config.ts. youtube-nocookie.com avoids
 // setting third-party cookies until the visitor actually plays the video.
@@ -58,12 +66,7 @@ const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed
           "description": reviewDescription,
           "url": canonicalURL,
           ...(frontmatter.date && { "datePublished": new Date(frontmatter.date).toISOString() }),
-          "author": {
-            "@type": "Person",
-            "name": frontmatter.schrijver || "Cinematen",
-            "url": "https://www.cinematen.be/#over-ons",
-            "sameAs": ["https://www.instagram.com/cinematen_podcast"]
-          },
+          "author": buildAuthorSchema(frontmatter.schrijver),
           "reviewRating": {
             "@type": "Rating",
             "ratingValue": frontmatter.rating,
@@ -91,7 +94,7 @@ const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed
           "itemListElement": [
             { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.cinematen.be/" },
             { "@type": "ListItem", "position": 2, "name": "Reviews & Blogs", "item": "https://www.cinematen.be/reviews&blogs/" },
-            { "@type": "ListItem", "position": 3, "name": reviewTitle, "item": canonicalURL }
+            { "@type": "ListItem", "position": 3, "name": frontmatter.title, "item": canonicalURL }
           ]
         })}></script>
     </head>

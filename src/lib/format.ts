@@ -100,3 +100,35 @@ export function readingTime(text: string | undefined | null): number {
   if (words === 0) return 1;
   return Math.max(1, Math.ceil(words / 200));
 }
+
+/**
+ * "de Cinematen" is the site's collective/brand byline, not a real person —
+ * schema.org markup for it should be Organization, never a fabricated Person.
+ */
+const COLLECTIVE_AUTHOR_NAMES = new Set(["de cinematen", "cinematen"]);
+
+export function isCollectiveAuthor(name: string | undefined | null): boolean {
+  return !!name && COLLECTIVE_AUTHOR_NAMES.has(name.trim().toLowerCase());
+}
+
+/** Matches the /auteur/[slug] route param derivation used across author pages/links. */
+export function authorSlug(name: string): string {
+  return name.trim().toLowerCase().replace(/\s+/g, "-");
+}
+
+/**
+ * Schema.org author entity for a byline name. Real named authors get a Person
+ * tied to their own /auteur/[slug]/ page (so distinct authors don't all point
+ * at the same url/sameAs); the collective byline and missing/unknown authors
+ * get Organization — never a guessed Person identity.
+ */
+export function buildAuthorSchema(name: string | undefined | null) {
+  if (!name || isCollectiveAuthor(name)) {
+    return { "@type": "Organization", "name": "Cinematen", "url": "https://www.cinematen.be/" };
+  }
+  return {
+    "@type": "Person",
+    "name": name,
+    "url": `https://www.cinematen.be/auteur/${authorSlug(name)}/`,
+  };
+}

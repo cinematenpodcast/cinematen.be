@@ -48,54 +48,61 @@ Each task lists: effort, impact, files touched, steps, and how to verify it's ac
 
 ---
 
-## Phase 2 — Next 2 weeks (builds on Phase 1)
+## Phase 2 — Next 2 weeks (builds on Phase 1) — ✅ DONE (2026-07-22)
 
-### 2.1 Fix Person schema per author (depends on 1.2)
+Note: the `cinematen-redesign` branch mentioned throughout Phase 2 as something to "coordinate with" turned out to already be fully merged into `main` (0 commits unique to that branch; it's just stale/behind now) — so there was no separate branch to coordinate with. All fixes below landed directly on `main`.
+
+### 2.1 Fix Person schema per author (depends on 1.2) — ✅ Done
 **Effort:** Low · **Impact:** Medium
 
-- [ ] In `BaseHead.astro:139`, `BaseHeadNieuws.astro:82`, and `ReviewLayout.astro:61-65`, stop hardcoding the same `Person.url`/`sameAs` for every author. Point `Person.url` to that author's real page: `https://www.cinematen.be/auteur/${slug}/`.
-- [ ] Add `Person`/`ProfilePage` schema to `src/pages/auteur/[slug].astro` (currently emits zero author-specific schema — only the generic sitewide `WebSite` fallback).
-- [ ] Change the "de Cinematen" collective byline's schema `@type` from `Person` to `Organization` (a brand name isn't a person).
+- [x] Added a shared `buildAuthorSchema()` helper in `src/lib/format.ts` (plus `authorSlug()`/`isCollectiveAuthor()`) so the Person-vs-Organization logic lives in one place instead of being copy-pasted across files. `BaseHead.astro`, `BaseHeadNieuws.astro`, and `ReviewLayout.astro` now all use it instead of hardcoding the same `Person.url`/`sameAs` for every author. Real authors get `Person.url` = `https://www.cinematen.be/auteur/{slug}/`; the shared Instagram `sameAs` (which was identical for every author regardless of who they were) was dropped rather than kept as another one-size-fits-all fabrication.
+- [x] Added real `ProfilePage`/`Person` schema to `src/pages/auteur/[slug].astro` (was emitting zero author-specific schema before — just the generic sitewide `WebSite` fallback).
+- [x] "de Cinematen" (and "Cinematen") now resolve to `{"@type": "Organization", "name": "Cinematen"}` via `isCollectiveAuthor()`, not a fabricated Person.
+- [x] Also widened `auteur/[slug].astro`'s `getStaticPaths()` to source authors from **both** `nieuws` and `reviews` collections (was reviews-only) — so a real per-article nieuws byline (once someone sets `schrijver` per Phase 1.2's backfill note) gets a working author page instead of a 404.
+- [x] **Verified in build output:** Snow White review (schrijver: Yorrick) → `"author":{"@type":"Person","name":"Yorrick","url":"https://www.cinematen.be/auteur/yorrick/"}`. Supergirl review (schrijver: de Cinematen) → `"author":{"@type":"Organization","name":"Cinematen","url":"https://www.cinematen.be/"}`. `/auteur/yorrick/` and `/auteur/maarten/` both now emit their own `ProfilePage` JSON-LD.
 
-**Verify:** Live-fetch JSON-LD on 3 articles by different authors — `Person.url` should differ per author and resolve to a real page with its own schema.
-
-### 2.2 Make review pages rankable for "recensie" queries (depends on 1.2)
+### 2.2 Make review pages rankable for "recensie" queries (depends on 1.2) — ✅ Done (one bullet deferred, same reason as 1.2)
 **Effort:** Low · **Impact:** High — reviews currently don't appear in search for their own exact-match queries despite beating ranking competitors on content depth
 
-- [ ] Add "Review"/"Recensie" + rating to review `<title>` tags, e.g. `Supergirl (2026) recensie – 7/10 | Cinematen`.
-- [ ] Replace the boilerplate `Review`/`Article` schema `description` ("Lees onze film van Supergirl...") with the real frontmatter summary.
-- [ ] Introduce 2-3 named recurring critic bylines instead of the generic org byline "de Cinematen" for actual reviews.
+- [x] Review `<title>` now includes "recensie" + year + rating, e.g. `Supergirl (2026) recensie – 7/10 | Cinematen` (verified in build output — exact match to the audit's suggested format). Left the visible on-page `<h1>` as just the film title (unchanged) — only the SEO-facing title/meta/schema changed, matching what the audit actually flagged.
+- [x] Schema/OG description now uses the real `frontmatter.summary` when present, falling back to the old boilerplate template only when a review has no summary set.
+- [x] Also fixed the `BreadcrumbList`'s final `name` to use the plain film title instead of the new, longer SEO title — a breadcrumb showing "Supergirl (2026) recensie – 7/10 | Cinematen" as a nav label would've looked wrong.
+- [ ] **Not done — introducing 2-3 named recurring critic bylines.** Same issue as the Phase 1.2 nieuws-authorship gap: I'm not going to invent which specific reviews should be attributed to which named critic instead of "de Cinematen" — that's an editorial call, not a code fix. **Action needed from you:** decide which existing "de Cinematen"-byline reviews should carry a real name, and set `schrijver` accordingly.
 
-**Verify:** Google "[filmtitel] recensie" for 2-3 recently reviewed titles — track whether cinematen.be starts appearing (this is a leading indicator to watch over 4-8 weeks, not immediate).
-
-### 2.3 Enable Search Console visibility
+### 2.3 Enable Search Console visibility — ⚠️ Partially done — needs one manual step from you
 **Effort:** Trivial (config only) · **Impact:** High (currently zero indexation visibility)
 
-- [ ] Enable the Search Console API on GCP project `616018303481`: https://console.developers.google.com/apis/api/searchconsole.googleapis.com/overview?project=616018303481
-- [ ] Confirm service account `claude-cli-user-yorrick@cronos-ai-lab.iam.gserviceaccount.com` is added under GSC → Settings → Users and permissions for the `cinematen.be` property.
+- [x] Enabled the Search Console API on GCP project `616018303481` directly via `gcloud services enable searchconsole.googleapis.com` (confirmed authenticated as `yorrick.schoonheydt@cronos.be` with access to do this).
+- [ ] **Still needed — I cannot do this part myself:** the service account `claude-cli-user-yorrick@cronos-ai-lab.iam.gserviceaccount.com` still isn't listed as a user on the `cinematen.be` Search Console property (`gsc_query.py sites` returns an empty list even with the API enabled). You need to add it manually: **Search Console → cinematen.be property → Settings → Users and permissions → Add user** → paste that service account email → grant at least Full/Owner access for GSC data queries to work.
 
-**Verify:** Re-run a GSC Search Analytics query — should return data instead of 403.
+**Verify:** Once added, re-run a GSC Search Analytics query — should return data instead of an empty property list.
 
-### 2.4 Clean up URL structure
+### 2.4 Clean up URL structure — ✅ Done (one bullet deferred — see note)
 **Effort:** Low · **Impact:** Medium
 
-- [ ] Add `trailingSlash: "always"` to `astro.config.mjs` (or add a Vercel redirect rule) so non-slash URL variants 301 instead of serving duplicate 200s.
-- [ ] Plan migration of `/reviews&blogs/` → `/reviews-en-blogs/` or `/reviews/`, with 301 redirects from the old path. (Larger change — coordinate with the redesign branch since it touches routing.)
+- [x] Added `"trailingSlash": true` to **`vercel.json`** (not `astro.config.mjs`'s own `trailingSlash` option). Traced through how this deployment actually works first: `.vercel/output/config.json` (what `astro build` generates for the `@astrojs/vercel` adapter) doesn't include this project's existing custom redirects from `vercel.json` at all — those are applied by Vercel's platform separately, by reading the root `vercel.json` directly at deploy time. So Vercel's own top-level `trailingSlash` key is the layer that actually controls this for prerendered static pages, not Astro's build-time config (which mainly affects Astro's own dev-server routing and wouldn't have touched the live redirect behavior here).
+- [ ] **Deferred, not done — `/reviews&blogs/` → `/reviews-en-blogs/` migration.** Sizing this up further confirmed it's a genuinely large, cross-cutting change: the literal path segment appears in the page-route directory itself (`src/pages/reviews&blogs/`), canonical URL construction, the sitemap's `serialize()` regex, breadcrumb hrefs, and nav links throughout the site — and it would need a carefully verified 301 for every existing review URL to avoid a real ranking/traffic hit on an already-live section of the site. That's a bigger, higher-blast-radius change than fits a routine Phase 2 pass — flagging it for a dedicated pass with your explicit sign-off rather than doing it quietly here.
 
-**Verify:** `curl -I` a known non-slash URL — should return 301, not 200.
+**Verify:** `curl -I` a known non-slash URL once deployed — should return a redirect, not 200.
 
-### 2.5 Fix homepage heading structure
+### 2.5 Fix homepage heading structure — ✅ Done
 **Effort:** Low · **Impact:** Low-medium
 
-- [ ] Homepage hero carousel currently renders 4× `<h1>` (one per slide). Change to a single `<h1>` with the other slide headings demoted to `<h2>` or `<p>` with appropriate ARIA labeling.
+- [x] `HeroCarousel.tsx` was rendering a `<h1>` per slide (all 4 in the DOM at once, only visually hidden via `aria-hidden` on inactive slides — a real heading-outline defect, not just a visual one, since `aria-hidden` doesn't stop generic HTML parsers from seeing it). Now only the active slide renders `<h1>`; inactive slides render the identical styling as a `<p>` instead (confirmed the CSS only ever targeted the class, never the tag, so this was a safe swap).
+- [x] **Verified in build output:** homepage now has exactly 1 `<h1>` (was 4).
 
-### 2.6 Enlarge touch targets
+### 2.6 Enlarge touch targets — ✅ Done
 **Effort:** Low · **Impact:** Low-medium (mobile UX)
 
-- [ ] Hero carousel nav dots: 10×10px → at least 44×44px hit area (visual dot can stay small, expand the clickable/tappable area).
-- [ ] Mobile prev/next chevrons: 36×36px → 44×44px.
-- [ ] Mobile hamburger menu button: 40×40px → 44×44px.
-- [ ] *Coordinate with the in-progress redesign (`cinematen-redesign` branch) — check whether the new design system already fixes this before implementing here.*
+- [x] Hero carousel nav dots: kept the visible dot at 10px (via a `::after` pseudo-element) but the actual `<button>` hit area is now 44×44px.
+- [x] Mobile prev/next chevrons: 36×36px → 44×44px.
+- [x] Mobile hamburger menu button: 40×40px → 44×44px.
+- [x] Grepped for any other rule targeting these classes before changing them — confirmed no other stylesheet overrides them, so these were safe, isolated changes.
+- Redesign-branch coordination turned out to be moot (see the Phase 2 header note above) — done directly on `main`.
+
+---
+
+**Verification run:** `npx astro check` (61 pre-existing errors — was 60 at the Phase 1 check; grew by one sometime between then and now, unrelated to these changes, confirmed via git-stash comparison both with and without this pass's edits) and `npm run build` both pass cleanly. Nothing has been deployed yet.
 
 ---
 
