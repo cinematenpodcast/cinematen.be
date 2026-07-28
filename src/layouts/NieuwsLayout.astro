@@ -128,8 +128,18 @@ const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                     <circle cx="12" cy="7" r="4"></circle>
                                 </svg>
-                                Door {frontmatter.schrijver || "de redactie van Cinematen"}
+                                Door {frontmatter.schrijver || "de Cinematen"}
                             </span>
+                            {frontmatter.bron && (
+                                <span class="cn-article-hero__source">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                                    </svg>
+                                    Bron: {frontmatter.bron}
+                                </span>
+                            )}
                         </div>
                     </div>
                 </section>
@@ -238,7 +248,8 @@ const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed
     }
     .cn-article-hero__date,
     .cn-article-hero__reading-time,
-    .cn-article-hero__author {
+    .cn-article-hero__author,
+    .cn-article-hero__source {
         display: inline-flex;
         align-items: center;
         gap: 6px;
@@ -249,7 +260,8 @@ const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed
         text-transform: uppercase;
         color: var(--on-surface-variant);
     }
-    .cn-article-hero__author {
+    .cn-article-hero__author,
+    .cn-article-hero__source {
         background: var(--surface-container-high);
         color: var(--on-surface);
         border-radius: var(--radius-full);
