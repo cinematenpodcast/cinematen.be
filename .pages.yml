@@ -62,6 +62,10 @@ content:
         label: Samenvatting
         type: text
         required: false
+      - name: bron
+        label: Bron
+        type: text
+        required: false
       - name: body
         label: Inhoud
         type: rich-text
