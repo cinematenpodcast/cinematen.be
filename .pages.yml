@@ -64,7 +64,7 @@ content:
         required: false
       - name: bron
         label: Bron
-        type: text
+        type: string
         required: false
       - name: body
         label: Inhoud
