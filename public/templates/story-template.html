@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Storie-post-Cinematen.be</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800;900&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body, html {
+            width: 810px;
+            height: 1440px;
+            overflow: hidden;
+            position: relative;
+            font-family: 'Rubik', sans-serif;
+        }
+
+        /* Blurred background image */
+        .background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+              background-image: url('__CINEMATEN_IMAGE_URL__');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            filter: blur(75px);
+            z-index: -1;
+        }
+
+        /* Main container */
+        .container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Top image with margin */
+        .top-image {
+            width: calc(100% - 40px);
+            margin: 60px 20px 0 20px;
+            border-radius: 20px;
+            object-fit: cover;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Title container - takes remaining space between image and bottom text */
+        .title-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 30px;
+            width: 750px;
+            height: 770px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        /* Main title */
+        .title {
+            color: white;
+            font-family: 'Rubik', sans-serif;
+            font-weight: 800;
+            text-align: center;
+            line-height: 1.1;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+            word-wrap: break-word;
+            hyphens: auto;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50pt;
+        }
+
+        /* Bottom text */
+        .bottom-text {
+            color: white;
+            font-family: 'Rubik', sans-serif;
+            font-weight: 400;
+            font-size: 28px;
+            text-align: center;
+            padding: 0 30px 40px 30px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+        }
+    </style>
+</head>
+<body>
+    <!-- Blurred background -->
+    <div class="background"></div>
+    
+    <!-- Main content -->
+    <div class="container">
+        <!-- Top image -->
+        <img src="__CINEMATEN_IMAGE_URL__" id="topImage" class="top-image">
+        
+        <!-- Title container -->
+        <div class="title-container">
+            <h1 class="title" id="mainTitle">__CINEMATEN_HEADLINE__</h1>
+        </div>
+        
+        <!-- Bottom text -->
+        <div class="bottom-text">Check onze instagram post voor meer info</div>
+    </div>
+
+    <script>
+        function adjustTitleSize() {
+            const title = document.getElementById('mainTitle');
+            
+            if (!title) {
+                console.log('❌ Title element not found!');
+                return;
+            }
+            
+            const titleText = title.textContent || title.innerText;
+            const characterCount = titleText.length;
+            
+            console.log('🔍 Adjusting title size...');
+            console.log('📝 Text:', titleText);
+            console.log('🔢 Character count:', characterCount);
+            
+            // Start with 50pt
+            let fontSize = 50;
+            
+            // Only reduce if over 115 characters  
+            if (characterCount > 115) {
+                const extraChars = characterCount - 115;
+                fontSize = Math.max(24, 50 - (extraChars * 1)); // Reduce by 1pt per extra character
+                console.log('⚠️ Text is over 115 chars (' + characterCount + ')');
+                console.log('📉 Extra chars:', extraChars);
+                console.log('🎯 Reducing font size to:', fontSize + 'pt');
+            } else {
+                console.log('✅ Text is ≤115 characters (' + characterCount + ')');
+                console.log('🎯 Keeping at:', fontSize + 'pt');
+            }
+            
+            // Apply the font size with !important to override CSS
+            title.style.setProperty('font-size', fontSize + 'pt', 'important');
+            console.log('✨ Applied font size:', fontSize + 'pt');
+            
+            // Double check what was actually applied
+            setTimeout(function() {
+                const actualSize = window.getComputedStyle(title).fontSize;
+                console.log('📏 Actual computed font size:', actualSize);
+            }, 100);
+        }
+        
+        function adjustImageAndTitle() {
+            const topImage = document.getElementById('topImage');
+            
+            // Set image height to maintain aspect ratio
+            if (topImage && topImage.naturalWidth && topImage.naturalHeight) {
+                const imageWidth = 810 - 40; // minus margins
+                const imageAspectRatio = topImage.naturalHeight / topImage.naturalWidth;
+                const imageHeight = imageWidth * imageAspectRatio;
+                topImage.style.height = imageHeight + 'px';
+                console.log('Image sized:', imageWidth + 'x' + imageHeight);
+            }
+            
+            // Adjust title size
+            adjustTitleSize();
+        }
+        
+        // Multiple trigger points to ensure the function runs
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, adjusting...');
+            setTimeout(adjustImageAndTitle, 100);
+        });
+        
+        window.addEventListener('load', function() {
+            console.log('Window loaded, adjusting...');
+            setTimeout(adjustImageAndTitle, 100);
+        });
+        
+        // Image load event
+        const img = document.getElementById('topImage');
+        if (img) {
+            img.addEventListener('load', function() {
+                console.log('Image loaded, adjusting...');
+                setTimeout(adjustImageAndTitle, 100);
+            });
+            
+            // If already loaded
+            if (img.complete) {
+                console.log('Image already complete, adjusting...');
+                setTimeout(adjustImageAndTitle, 100);
+            }
+        }
+        
+        // Fallback after delay
+        setTimeout(function() {
+            console.log('Fallback adjustment...');
+            adjustImageAndTitle();
+        }, 1000);
+    </script>
+</body>
+</html>
