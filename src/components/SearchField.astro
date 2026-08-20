@@ -28,17 +28,11 @@ const divProps = {
         allSelector,
       ].join("");
       const bundlePath = el.getAttribute("data-bundle-path");
-      const pagefind = new PagefindUI({
+      new PagefindUI({
         element: elSelector,
         bundlePath,
         showImages: false,
         debounceTimeoutMs: 100,
-        filters: {
-          exclude: {
-            // This filters out any page that has exclude_from_search set to true
-            "exclude_from_search": "true",
-          },
-        },
       });
 
       const input = el.querySelector<HTMLInputElement>(`input[type="text"]`);
