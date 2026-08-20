@@ -67,6 +67,10 @@ const metaDescription = frontmatter.summary || plainText.substring(0, 155) || un
 const minutesToRead = readingTime(plainText);
 
 const displayDate = formatCardDate(frontmatter.date);
+// Pagefind sort key: emitted on the page wrapper so every page has it (unlike
+// visible date meta, which only renders when a date exists). Missing dates
+// use a low sentinel so `sort: { date: "desc" }` drops them to the bottom.
+const sortDate = frontmatter.date ? formatDateISO(frontmatter.date) : "0000-00-00";
 // Spoke -> hub link (see src/pages/franchises/[slug].astro): the first
 // hub-eligible franchise this article is tagged with, if any. An article
 // can have multiple franchise tags (rare); only one hub link is shown.
@@ -90,7 +94,7 @@ const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed
         />
     </head>
     <body>
-        <div class="cn-page">
+        <div class="cn-page" data-pagefind-sort={`date:${sortDate}`}>
             <Header links={getNavLinks("nieuws")} partnerLabel={PARTNER_LABEL}>
                 <img slot="logo" src="/images/cinematen-white-horizontal.png" alt="Cinematen.be" width="185" height="28" />
                 <img slot="partner-logo" src="/images/kinepolis.png" alt="Kinepolis" width="34" height="34" />
