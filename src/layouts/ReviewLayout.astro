@@ -41,6 +41,10 @@ const itemReviewedType = soortLower.includes("serie") || soortLower.includes("tv
 const reviewDescription = frontmatter.summary || `Lees onze ${frontmatter.soort ? frontmatter.soort.toLowerCase() : 'review'} van ${frontmatter.title}. Bekijk onze beoordeling en ontdek of deze ${frontmatter.soort ? frontmatter.soort.toLowerCase() : 'content'} de moeite waard is.`;
 
 const displayDate = formatCardDate(frontmatter.date);
+// Pagefind sort key: emitted on the page wrapper so every page has it (unlike
+// visible date meta, which only renders when a date exists). Missing dates
+// use a low sentinel so `sort: { date: "desc" }` drops them to the bottom.
+const sortDate = frontmatter.date ? formatDateISO(frontmatter.date) : "0000-00-00";
 // Spoke -> hub link (see src/pages/franchises/[slug].astro).
 const hubFranchiseSlug = (frontmatter.franchise || []).find((f) => HUB_ELIGIBLE.has(f));
 // `trailer` is a plain YouTube video ID in frontmatter (e.g. "f_bKjZeJBBI"),
@@ -104,7 +108,7 @@ const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed
         })}></script>
     </head>
     <body>
-        <div class="cn-page">
+        <div class="cn-page" data-pagefind-sort={`date:${sortDate}`}>
             <Header links={getNavLinks("reviews")} partnerLabel={PARTNER_LABEL}>
                 <img slot="logo" src="/images/cinematen-white-horizontal.png" alt="Cinematen.be" width="185" height="28" />
                 <img slot="partner-logo" src="/images/kinepolis.png" alt="Kinepolis" width="34" height="34" />

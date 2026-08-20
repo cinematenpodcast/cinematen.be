@@ -33,6 +33,10 @@ const divProps = {
         bundlePath,
         showImages: false,
         debounceTimeoutMs: 100,
+        // Sort results newest-first by the `date` sort key emitted on each
+        // page's wrapper (see NieuwsLayout/ReviewLayout). Pages without a date
+        // carry a low sentinel ("0000-00-00"), so they fall to the bottom.
+        sort: { date: "desc" },
       });
 
       const input = el.querySelector<HTMLInputElement>(`input[type="text"]`);
