@@ -169,17 +169,10 @@ const navLinks = getNavLinks("contact");
         outline: 2px solid var(--primary);
         outline-offset: 2px;
       }
-      /* Anti-spam rekenvraagje */
-      .cn-contact__form-shell .form-captcha__label {
-        display: block;
-        font-family: var(--font-sans);
-        font-size: 13px;
-        font-weight: 700;
-        color: var(--on-surface-variant);
-        margin-bottom: 6px;
-      }
-      .cn-contact__form-shell .form-captcha__input {
-        max-width: 220px;
+      /* Rate-limit cooldown: knop tijdelijk uit */
+      .cn-contact__form-shell input.button-2.is-form-submit:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
       }
       /* Succes- en foutpanelen na het versturen — extra ademruimte t.o.v.
          de "Of mail ons!"-knop eronder */

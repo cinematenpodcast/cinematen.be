@@ -20,12 +20,6 @@
                                     maxlength="5000" data-name="Message"
                                     placeholder="Je boodschap, vraag, compliment, suggestie, feedback, e.d..."
                                     class="form-input-2 is-text-area w-input"></textarea></div>
-                            <div class="form-field-wrapper form-captcha">
-                                <label for="Captcha" id="CaptchaLabel" class="form-captcha__label">Anti-spam: hoeveel is 3 + 4?</label>
-                                <input class="form-input-2 w-input form-captcha__input" inputmode="numeric"
-                                    autocomplete="off" name="Captcha" data-name="Captcha" placeholder="Je antwoord"
-                                    type="text" id="Captcha" required="" />
-                            </div>
                             <div class="margin-top margin-small"><input type="submit" data-wait="Please wait..."
                                     class="button-2 is-form-submit w-button" value="Verzend" /></div>
                         </form>
@@ -60,17 +54,30 @@
     const retryBtn = errorView?.querySelector(".form-error__retry");
     const submitBtn = form.querySelector('input[type="submit"]');
 
-    // --- Anti-spam: simpel rekenvraagje, per pageload random ---
-    const captchaInput = form.querySelector<HTMLElement>("#Captcha");
-    const captchaLabel = form.querySelector<HTMLElement>("#CaptchaLabel");
-    let captchaAnswer = 0;
-    const newQuestion = () => {
-      const a = 2 + Math.floor(Math.random() * 8); // 2..9
-      const b = 2 + Math.floor(Math.random() * 8);
-      captchaAnswer = a + b;
-      if (captchaLabel) captchaLabel.textContent = `Anti-spam: hoeveel is ${a} + ${b}?`;
+    // --- Rate limit (client-side): 1 verzending per minuut, overleeft refresh ---
+    const RATE_LIMIT_MS = 60 * 1000;
+    const RATE_LIMIT_KEY = "cn-contact-last-submit";
+
+    const setSubmitEnabled = (enabled: boolean) => {
+      if (submitBtn instanceof HTMLInputElement) {
+        submitBtn.disabled = !enabled;
+        if (enabled) submitBtn.value = "Verzend";
+      }
     };
-    newQuestion();
+
+    const applyCooldown = () => {
+      const last = Number(localStorage.getItem(RATE_LIMIT_KEY) ?? 0);
+      const remaining = last + RATE_LIMIT_MS - Date.now();
+      if (remaining <= 0) return;
+      setSubmitEnabled(false);
+      if (submitBtn instanceof HTMLInputElement) {
+        submitBtn.value = `Even wachten (${Math.ceil(remaining / 1000)}s)…`;
+      }
+      setTimeout(() => {
+        setSubmitEnabled(true);
+      }, remaining);
+    };
+    applyCooldown();
 
     const show = (el) => {
       if (el instanceof HTMLElement) el.hidden = false;
@@ -81,28 +88,15 @@
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
-
-      // Captcha-check vóór validatie/verzenden — fout antwoord blokkeert direct
-      if (captchaInput instanceof HTMLInputElement) {
-        if (Number(captchaInput.value.trim()) !== captchaAnswer) {
-          captchaInput.setCustomValidity("Dat antwoord klopt niet — probeer het opnieuw.");
-          captchaInput.value = "";
-          newQuestion();
-          form.reportValidity();
-          return;
-        }
-        captchaInput.setCustomValidity("");
-      }
       if (!form.reportValidity()) return;
 
+      setSubmitEnabled(false);
       if (submitBtn instanceof HTMLInputElement) {
-        submitBtn.disabled = true;
         submitBtn.value = "Verzenden…";
       }
 
       try {
         const body = new FormData(form);
-        body.delete("Captcha"); // captcha is lokaal, hoeft niet naar n8n
         const response = await fetch(form.action, {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -110,10 +104,12 @@
         });
         const data = await response.json().catch(() => ({} as { success?: boolean }));
         if (response.ok && data.success) {
+          localStorage.setItem(RATE_LIMIT_KEY, String(Date.now()));
           hide(form);
           hide(errorView);
           show(successView);
           if (successView instanceof HTMLElement) successView.focus();
+          return; // cooldown is al actief na succesvolle verzending
         } else {
           hide(form);
           show(errorView);
@@ -124,17 +120,15 @@
         show(errorView);
         if (errorView instanceof HTMLElement) errorView.focus();
       } finally {
-        if (submitBtn instanceof HTMLInputElement) {
-          submitBtn.disabled = false;
-          submitBtn.value = "Verzend";
-        }
+        // Bij mislukken (netwerkfout of 429 rate limit): knop direct terug actief,
+        // zodat de gebruiker opnieuw kan proberen
+        setSubmitEnabled(true);
       }
     });
 
     retryBtn?.addEventListener("click", () => {
       hide(errorView);
       show(form);
-      newQuestion();
       const first = form.querySelector<HTMLElement>("#Naam");
       first?.focus();
     });
