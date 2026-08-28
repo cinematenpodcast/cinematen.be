@@ -169,6 +169,43 @@ const navLinks = getNavLinks("contact");
         outline: 2px solid var(--primary);
         outline-offset: 2px;
       }
+      /* Succes- en foutpanelen na het versturen */
+      .cn-contact__form-shell .form-success,
+      .cn-contact__form-shell .form-error {
+        text-align: center;
+        padding: 40px 24px;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--outline-variant);
+        background: var(--surface-container);
+      }
+      .cn-contact__form-shell .form-success__title,
+      .cn-contact__form-shell .form-error__title {
+        font-family: var(--font-sans);
+        font-weight: 700;
+        font-size: 22px;
+        margin: 0 0 8px;
+        color: var(--on-surface);
+      }
+      .cn-contact__form-shell .form-success__title {
+        color: #16a34a;
+      }
+      .cn-contact__form-shell .form-error__title {
+        color: #dc2626;
+      }
+      .cn-contact__form-shell .form-success__text,
+      .cn-contact__form-shell .form-error__text {
+        font-family: var(--font-sans);
+        font-size: 15px;
+        line-height: 1.6;
+        color: var(--on-surface-variant);
+        margin: 0;
+      }
+      .cn-contact__form-shell .form-error__text a {
+        color: var(--primary);
+      }
+      .cn-contact__form-shell input.button-2.form-error__retry {
+        margin-top: 20px;
+      }
       .cn-contact__form-shell .margin-top.margin-large:last-child {
         margin-top: 32px;
         padding-top: 24px;
