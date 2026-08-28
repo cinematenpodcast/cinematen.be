@@ -169,11 +169,25 @@ const navLinks = getNavLinks("contact");
         outline: 2px solid var(--primary);
         outline-offset: 2px;
       }
-      /* Succes- en foutpanelen na het versturen */
+      /* Anti-spam rekenvraagje */
+      .cn-contact__form-shell .form-captcha__label {
+        display: block;
+        font-family: var(--font-sans);
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--on-surface-variant);
+        margin-bottom: 6px;
+      }
+      .cn-contact__form-shell .form-captcha__input {
+        max-width: 220px;
+      }
+      /* Succes- en foutpanelen na het versturen — extra ademruimte t.o.v.
+         de "Of mail ons!"-knop eronder */
       .cn-contact__form-shell .form-success,
       .cn-contact__form-shell .form-error {
         text-align: center;
-        padding: 40px 24px;
+        padding: 48px 32px;
+        margin-bottom: 8px;
         border-radius: var(--radius-md);
         border: 1px solid var(--outline-variant);
         background: var(--surface-container);
