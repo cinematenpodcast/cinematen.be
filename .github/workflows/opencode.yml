@@ -8,9 +8,8 @@ on:
 jobs:
   opencode:
     if: |
-      github.event.comment.user.type != 'Bot' &&
-      (contains(github.event.comment.body, '/oc') ||
-      contains(github.event.comment.body, '/opencode'))
+      contains(github.event.comment.body, '/oc') ||
+      contains(github.event.comment.body, '/opencode')
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -28,5 +27,6 @@ jobs:
         uses: anomalyco/opencode/github@latest
         env:
           ROUTE33_API_KEY: ${{ secrets.ROUTE33_API_KEY }}
+          ROUTE33_TUI_PROMPT: "0"
         with:
           model: route_33/anthropic/claude-opus-4-8
