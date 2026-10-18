@@ -142,7 +142,12 @@ export function buildPublisherSchema() {
       "https://podcasts.apple.com/us/podcast/cinematen/id1674761868",
     ],
     "founder": [
-      { "@type": "Person", "name": "Yorrick Schoonheydt", "url": "https://www.cinematen.be/auteur/yorrick/" },
+      {
+        "@type": "Person",
+        "name": "Yorrick Schoonheydt",
+        "url": "https://www.cinematen.be/auteur/yorrick/",
+        "sameAs": ["https://yorrickschoonheydt.be/nl"],
+      },
       { "@type": "Person", "name": "Maarten", "url": "https://www.cinematen.be/auteur/maarten/" },
     ],
   };

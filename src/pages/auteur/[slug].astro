@@ -76,6 +76,7 @@ const knowsAbout = [...topicCounts.entries()]
       "jobTitle": "Filmrecensent",
       "description": `${authorName} schrijft film- en seriereviews voor Cinematen.be.`,
       ...(knowsAbout.length > 0 && { "knowsAbout": knowsAbout }),
+      ...(slug === "yorrick" && { "sameAs": ["https://yorrickschoonheydt.be/nl"] }),
       "worksFor": buildPublisherSchema()
     }
   })}></script>
@@ -88,6 +89,11 @@ const knowsAbout = [...topicCounts.entries()]
       <div class="container">
         <h1 class="nieuws-title">Reviews door {authorName}</h1>
         <p style="color: #a78bfa; margin-bottom: 2rem;">{authorReviews.length} review{authorReviews.length !== 1 ? 's' : ''}</p>
+        {slug === "yorrick" && (
+          <p style="color: #a78bfa; margin-bottom: 2rem;">
+            Yorrick is ook AI-automatiseringsspecialist voor eenmanszaken en kleine KMO's — <a href="https://yorrickschoonheydt.be/nl" target="_blank" rel="noopener" style="color: inherit; text-decoration: underline;">bekijk zijn werk op yorrickschoonheydt.be</a>.
+          </p>
+        )}
         <div class="w-layout-grid nieuws-list">
           {authorReviews.map(post => (
             <BaseNieuwsItem
