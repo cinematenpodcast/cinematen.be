@@ -16,6 +16,7 @@ import RandomReviews from "../components/RandomReviews.astro";
 import { formatCardDate, formatDateISO, ratingOutOfTen, buildAuthorSchema, buildPublisherSchema } from "../lib/format";
 import { getNavLinks, FOOTER_COLUMNS, FOOTER_BOTTOM_LEFT, FOOTER_TAGLINE, PARTNER_LABEL } from "../lib/siteNav";
 import { HUB_ELIGIBLE, franchiseName } from "../lib/franchises";
+import { clipDescription } from "../lib/contentText";
 
 const { frontmatter } = Astro.props;
 
@@ -38,7 +39,7 @@ const itemReviewedType = soortLower.includes("serie") || soortLower.includes("tv
 // Real per-review summary when set, falling back to the generic template only
 // when frontmatter.summary is missing — previously always boilerplate, so
 // every review's search snippet/schema description looked identical.
-const reviewDescription = frontmatter.summary || `Lees onze ${frontmatter.soort ? frontmatter.soort.toLowerCase() : 'review'} van ${frontmatter.title}. Bekijk onze beoordeling en ontdek of deze ${frontmatter.soort ? frontmatter.soort.toLowerCase() : 'content'} de moeite waard is.`;
+const reviewDescription = clipDescription(frontmatter.summary || `Lees onze ${frontmatter.soort ? frontmatter.soort.toLowerCase() : 'review'} van ${frontmatter.title}. Bekijk onze beoordeling en ontdek of deze ${frontmatter.soort ? frontmatter.soort.toLowerCase() : 'content'} de moeite waard is.`);
 
 const displayDate = formatCardDate(frontmatter.date);
 // Pagefind sort key: emitted on the page wrapper so every page has it (unlike

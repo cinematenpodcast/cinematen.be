@@ -22,36 +22,12 @@ import SocialIcons from "../components/design-system/SocialIcons.astro";
 import PodcastCard from "../components/design-system/PodcastCard.astro";
 import RelatedNieuws from "../components/RelatedNieuws.astro";
 import RandomReviews from "../components/RandomReviews.astro";
-import { readFileSync } from "fs";
-import { join } from "path";
 import { formatCardDate, formatDateISO, readingTime } from "../lib/format";
 import { getNavLinks, FOOTER_COLUMNS, FOOTER_BOTTOM_LEFT, FOOTER_TAGLINE, PARTNER_LABEL } from "../lib/siteNav";
 import { HUB_ELIGIBLE, franchiseName } from "../lib/franchises";
+import { getPlainTextFromMDX, clipDescription } from "../lib/contentText";
 
 const { frontmatter } = Astro.props;
-
-// Fallback meta-description source for the (still-common, pre-backfill) case
-// where nieuws.summary is blank — read straight from the MDX file on disk.
-// Also the source for the hero's reading-time pill, which needs the actual
-// rendered body word count (see src/lib/format.ts readingTime).
-function getPlainTextFromMDX(slug) {
-  if (!slug) return "";
-  try {
-    const filePath = join(process.cwd(), "src/content/nieuws", `${slug}.mdx`);
-    const content = readFileSync(filePath, "utf-8");
-    const withoutFrontmatter = content.replace(/^---[\s\S]*?---\s*\n\n?/m, "");
-    return withoutFrontmatter
-      .replace(/#{1,6}\s+/g, "")
-      .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
-      .replace(/\*\*([^*]+)\*\*/g, "$1")
-      .replace(/\*([^*]+)\*/g, "$1")
-      .replace(/!\[([^\]]*)\]\([^)]+\)/g, "")
-      .replace(/\s+/g, " ")
-      .trim();
-  } catch {
-    return "";
-  }
-}
 
 // Generate canonical URL for this news article
 const canonicalURL = `https://www.cinematen.be${Astro.url.pathname}`;
@@ -63,7 +39,7 @@ try {
   // rawUrlSlug wasn't percent-encoded; use as-is.
 }
 const plainText = getPlainTextFromMDX(urlSlug) || getPlainTextFromMDX(frontmatter.slug);
-const metaDescription = frontmatter.summary || plainText.substring(0, 155) || undefined;
+const metaDescription = clipDescription(frontmatter.summary || plainText) || undefined;
 const minutesToRead = readingTime(plainText);
 
 const displayDate = formatCardDate(frontmatter.date);
