@@ -39,10 +39,21 @@ export async function getStaticPaths({ paginate }) {
 // unrelated to the actual data being fine at runtime.
 const { page } = Astro.props as { page: Page<any> };
 
+// Page 1 is the section landing: /nieuws/ 301s here and the header nav links
+// here, so hiding it from the index (the old default) meant the section had no
+// indexable entry page at all. Pages 2+ stay noindex, follow.
+const isFirstPage = page.currentPage === 1;
+
 exclude_from_search: true
 ---
 
-<ListingShell navActive="nieuws">
+<ListingShell
+  navActive="nieuws"
+  useExcludeHead={!isFirstPage}
+  title={isFirstPage ? "Film & TV Nieuws | Cinematen.be" : undefined}
+  description={isFirstPage ? "Blijf op de hoogte van de laatste nieuwtjes, casting updates, trailers en geruchten uit de wondere wereld van cinema en televisie." : undefined}
+  canonicalURL={isFirstPage ? "https://www.cinematen.be/nieuws/pages/1/" : undefined}
+>
   <div class="cn-listing__inner">
     <h1>Film &amp; TV Nieuws</h1>
     <p class="cn-listing__intro">

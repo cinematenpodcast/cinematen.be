@@ -53,6 +53,7 @@ export const FOOTER_COLUMNS = [
       { label: "Nieuws", href: "/nieuws/pages/1" },
       { label: "Reviews", href: "/reviews&blogs/pages/1" },
       { label: "Blogs", href: "/reviews&blogs/tags/blog" },
+      { label: "Franchises", href: "/franchises" },
       { label: "Podcasts", href: "/#podcast" },
     ],
   },
@@ -60,6 +61,7 @@ export const FOOTER_COLUMNS = [
     heading: "Informatie",
     links: [
       { label: "Over ons", href: "/over-ons" },
+      { label: "Redactie", href: "/redactie" },
       { label: "Contact", href: "/contact" },
     ],
   },

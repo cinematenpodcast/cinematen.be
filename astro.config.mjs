@@ -146,8 +146,10 @@ export default defineConfig({
           }
         }
         return (
-          !page.includes('/nieuws/pages/') &&
-          !page.includes('/reviews&blogs/pages/') &&
+          // Page 1 of each section is the indexable landing page (page 2+ is
+          // noindex, follow), so only the numbered pages above 1 are excluded.
+          (!page.includes('/nieuws/pages/') || /\/nieuws\/pages\/1\/?$/.test(page)) &&
+          (!page.includes('/reviews&blogs/pages/') || /\/reviews&blogs\/pages\/1\/?$/.test(page)) &&
           !/\/search\/?$/.test(page) &&
           !/^https?:\/\/[^/]+\/nieuws\/?$/.test(page) &&
           !/^https?:\/\/[^/]+\/reviews&blogs\/?$/.test(page) &&

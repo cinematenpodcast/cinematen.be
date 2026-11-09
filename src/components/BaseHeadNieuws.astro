@@ -4,7 +4,7 @@
 import "../styles/design-system/index.css";
 import { buildAuthorSchema, buildPublisherSchema } from "../lib/format";
 
-const { title, thumbnail, description, canonicalURL, publishedDate, modifiedDate, author } = Astro.props;
+const { title, thumbnail, description, canonicalURL, publishedDate, modifiedDate, author, bronUrl } = Astro.props;
 const defaultCanonical = "https://www.cinematen.be/";
 const finalCanonical = canonicalURL || defaultCanonical;
 
@@ -89,6 +89,7 @@ const authorSchema = buildAuthorSchema(author);
   ...(formattedModifiedDate && { "dateModified": formattedModifiedDate }),
   "author": authorSchema,
   ...(thumbnail && { "image": finalThumbnail }),
+  ...(bronUrl && { "isBasedOn": bronUrl }),
   "publisher": buildPublisherSchema()
 })}></script>
 

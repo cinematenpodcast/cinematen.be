@@ -38,10 +38,20 @@ export async function getStaticPaths({ paginate }) {
 // actual data being fine at runtime.
 const { page } = Astro.props as { page: Page<any> };
 
+// See the same change in src/pages/nieuws/pages/[page].astro: page 1 is the
+// section landing (/reviews&blogs/ 301s here), so it must be indexable.
+const isFirstPage = page.currentPage === 1;
+
 exclude_from_search: true
 ---
 
-<ListingShell navActive="reviews">
+<ListingShell
+  navActive="reviews"
+  useExcludeHead={!isFirstPage}
+  title={isFirstPage ? "Reviews & Blogs | Cinematen.be" : undefined}
+  description={isFirstPage ? "Diepgaande analyses, recensies en beschouwingen over de films en series die er echt toe doen." : undefined}
+  canonicalURL={isFirstPage ? "https://www.cinematen.be/reviews&blogs/pages/1/" : undefined}
+>
   <div class="cn-listing__inner">
     <h1>Reviews &amp; Blogs</h1>
     <p class="cn-listing__intro">

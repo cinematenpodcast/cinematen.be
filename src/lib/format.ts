@@ -131,6 +131,7 @@ export function buildPublisherSchema() {
     "@id": "https://www.cinematen.be/#organization",
     "name": "Cinematen",
     "url": "https://www.cinematen.be/",
+    "publishingPrinciples": "https://www.cinematen.be/redactie/",
     "logo": {
       "@type": "ImageObject",
       "url": "https://www.cinematen.be/images/Cinematelogotrans.png",

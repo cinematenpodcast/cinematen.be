@@ -55,6 +55,14 @@ const hubFranchiseSlug = (frontmatter.franchise || []).find((f) => HUB_ELIGIBLE.
 // not a full URL — see src/content/config.ts. youtube-nocookie.com avoids
 // setting third-party cookies until the visitor actually plays the video.
 const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed/${frontmatter.trailer}` : null;
+
+// Source attribution. `bron` holds a bare domain ("variety.com", sometimes
+// quoted); link it when it is one, otherwise keep the text as-is (some older
+// files say things like "volgens verschillende bronnen"). 274 articles cite a
+// source but none of them linked to it — for a news publisher that is the
+// difference between "says who?" and a verifiable citation.
+const bronText = (frontmatter.bron || "").trim().replace(/^["']|["']$/g, "");
+const bronUrl = /^[a-z0-9.-]+\.[a-z]{2,}$/i.test(bronText) ? `https://${bronText.toLowerCase()}` : null;
 ---
 
 <html lang="nl">
@@ -67,6 +75,7 @@ const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed
           publishedDate={frontmatter.date}
           modifiedDate={frontmatter.updated || frontmatter.date}
           author={frontmatter.schrijver}
+          bronUrl={bronUrl}
         />
     </head>
     <body>
@@ -127,6 +136,17 @@ const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed
                 <article class="cn-article-prose">
                     {frontmatter.summary && <p>{frontmatter.summary}</p>}
                     <slot />
+
+                    {bronText && (
+                        <p class="cn-article-source">
+                            Bron:{" "}
+                            {bronUrl ? (
+                                <a href={bronUrl} target="_blank" rel="noopener">{bronText}</a>
+                            ) : (
+                                bronText
+                            )}
+                        </p>
+                    )}
 
                     {trailerSrc && (
                         <div class="cn-article-trailer">
@@ -257,6 +277,20 @@ const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed
         padding: 4px 12px;
     }
 
+    .cn-article-source {
+        font-family: var(--font-sans);
+        font-size: 13px;
+        line-height: 1.5;
+        color: var(--on-surface-variant);
+        border-top: 1px solid color-mix(in srgb, var(--on-surface-variant) 25%, transparent);
+        padding-top: 16px;
+        margin-top: 32px;
+    }
+    .cn-article-source a {
+        color: var(--primary, #7aa2ff);
+        text-decoration: underline;
+        text-underline-offset: 2px;
+    }
     .cn-article-prose {
         max-width: 900px;
         margin: 0 auto;
