@@ -4,10 +4,22 @@
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=(), interest-cohort=()" },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+        },
         {
           "key": "Content-Security-Policy",
           "value": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval' 'sha256-v47lSjgy8bf0s1E6D9jx3JZw8bvkO/g+H0JyZDa1kFQ=' 'sha256-UBE4rDOL9DSswErtCybCJDswhmdIfI9TizBVdo7Pjho=' 'sha256-tQbBcq7U5nzIeLJTPQOBLl/BUu/KGIvO+JXZb1yvqPo=' https://www.googletagmanager.com https://ajax.googleapis.com https://d3e54v103j8qbb.cloudfront.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https: blob:; frame-src 'self' https://open.spotify.com https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com https://youtube-nocookie.com; connect-src 'self' https://n8n.cinematen.be https://www.google-analytics.com; base-uri 'self'; form-action 'self'"
@@ -24,27 +36,27 @@
   "redirects": [
     {
       "source": "/nieuws/%F0%9D%99%85%F0%9D%99%96%F0%9D%99%98%F0%9D%99%A0-%F0%9D%98%BD%F0%9D%99%A1%F0%9D%99%96%F0%9D%99%98%F0%9D%99%A0-%F0%9D%99%96%F0%9D%99%96%F0%9D%99%A3%F0%9D%99%9C%F0%9D%99%9A%F0%9D%99%A3%F0%9D%99%A4%F0%9D%99%A2%F0%9D%99%9A%F0%9D%99%A3-%F0%9D%99%AB%F0%9D%99%96%F0%9D%99%A3-%F0%9D%99%88%F0%9D%99%9E%F0%9D%99%A3%F0%9D%99%9A%F0%9D%99%98%F0%9D%99%A7%F0%9D%99%96%F0%9D%99%9B%F0%9D%99%A9-%F0%9D%99%9B%F0%9D%99%9E%F0%9D%99%A1%F0%9D%99%A2",
-      "destination": "/nieuws/jack-black-gecast-in-minecraft-film",
+      "destination": "/nieuws/jack-black-gecast-in-minecraft-film/",
       "permanent": true
     },
     {
       "source": "/nieuws.html",
-      "destination": "/nieuws/pages/1",
+      "destination": "/nieuws/pages/1/",
       "permanent": true
     },
     {
       "source": "/lees.html",
-      "destination": "/nieuws/pages/1",
+      "destination": "/nieuws/pages/1/",
       "permanent": true
     },
     {
       "source": "/nieuws",
-      "destination": "/nieuws/pages/1",
+      "destination": "/nieuws/pages/1/",
       "permanent": true
     },
     {
       "source": "/reviews&blogs",
-      "destination": "/reviews&blogs/pages/1",
+      "destination": "/reviews&blogs/pages/1/",
       "permanent": true
     },
     {
@@ -53,15 +65,85 @@
       "permanent": true
     },
     {
+      "source": "/a-knight-of-the-seven-kingdoms-laat-draken-achterwege-voor-toernooien",
+      "destination": "/franchises/game-of-thrones/",
+      "permanent": true
+    },
+    {
+      "source": "/a-knight-of-the-seven-kingdoms-laat-draken-achterwege-voor-toernooien/",
+      "destination": "/franchises/game-of-thrones/",
+      "permanent": true
+    },
+    {
+      "source": "/star-trek-starfleet-academy-gaat-morgen-van-start",
+      "destination": "/franchises/star-trek/",
+      "permanent": true
+    },
+    {
+      "source": "/star-trek-starfleet-academy-gaat-morgen-van-start/",
+      "destination": "/franchises/star-trek/",
+      "permanent": true
+    },
+    {
+      "source": "/collectorsbeurs",
+      "destination": "https://kinepolis.be/nl/direct-vista-redirect/311558/0/METRO/0",
+      "permanent": false
+    },
+    {
+      "source": "/collectorsbeurs/",
+      "destination": "https://kinepolis.be/nl/direct-vista-redirect/311558/0/METRO/0",
+      "permanent": false
+    },
+    {
+      "source": "/luister",
+      "destination": "https://open.spotify.com/show/19O8JqKPSbQWek15vG3sig",
+      "permanent": false
+    },
+    {
+      "source": "/luister/",
+      "destination": "https://open.spotify.com/show/19O8JqKPSbQWek15vG3sig",
+      "permanent": false
+    },
+    {
       "source": "/listen",
-      "destination": "/luister",
+      "destination": "https://open.spotify.com/show/19O8JqKPSbQWek15vG3sig",
+      "permanent": false
+    },
+    {
+      "source": "/listen/",
+      "destination": "https://open.spotify.com/show/19O8JqKPSbQWek15vG3sig",
+      "permanent": false
+    },
+    {
+      "source": "/lets-go-app",
+      "destination": "https://letsgo.cinematen.be/api/download-latest-apk",
+      "permanent": false
+    },
+    {
+      "source": "/lets-go-app/",
+      "destination": "https://letsgo.cinematen.be/api/download-latest-apk",
+      "permanent": false
+    },
+    {
+      "source": "/lees",
+      "destination": "/nieuws/pages/1/",
+      "permanent": true
+    },
+    {
+      "source": "/lees/",
+      "destination": "/nieuws/pages/1/",
       "permanent": true
     },
     {
       "source": "/:path*",
       "destination": "https://www.cinematen.be/:path*",
       "permanent": true,
-      "has": [{"type": "host", "value": "cinematen.be"}]
+      "has": [
+        {
+          "type": "host",
+          "value": "cinematen.be"
+        }
+      ]
     }
   ]
 }

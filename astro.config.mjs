@@ -46,6 +46,60 @@ function buildDateMap(collectionDir) {
   return map;
 }
 
+
+// Review-tag pages are only indexable when they have >= MIN_POSTS_TO_INDEX
+// posts (see src/pages/reviews&blogs/tags/[tag].astro). The sitemap filter is
+// URL-pattern based, so without this count it would keep submitting tag pages
+// that serve `noindex, follow` — a sitemap/indexability conflict. Keyed by the
+// lowercased tag slug, matching the URL segment.
+function buildTagCounts(collectionDir) {
+  const counts = new Map();
+  let entries = [];
+  try {
+    entries = readdirSync(join(process.cwd(), collectionDir), { recursive: true }).filter((f) =>
+      f.endsWith(".mdx")
+    );
+  } catch {
+    return counts;
+  }
+  for (const rel of entries) {
+    try {
+      const content = readFileSync(join(process.cwd(), collectionDir, rel), "utf-8");
+      const frontmatter = (content.match(/^---\r?\n([\s\S]*?)\r?\n---/) || [])[1] || "";
+      const line = frontmatter.match(/^tags:\s*(.*)$/m);
+      if (!line) continue;
+      let values = [];
+      const inline = line[1].trim();
+      if (inline.startsWith("[")) {
+        values = (inline.match(/"[^"]+"|'[^']+'|[A-Za-z0-9_-]+/g) || []).map((v) =>
+          v.replace(/^["']|["']$/g, "")
+        );
+      } else {
+        const rest = frontmatter.slice(line.index + line[0].length);
+        const block = rest.match(/^\n((?:[ \t]+-[^\n]*\n?)+)/);
+        if (block) {
+          values = block[1]
+            .split("\n")
+            .map((v) => v.replace(/^[ \t]*-\s*/, "").trim().replace(/^["']|["']$/g, ""))
+            .filter(Boolean);
+        }
+      }
+      for (const value of values) {
+        const key = value.toLowerCase().trim();
+        if (key) counts.set(key, (counts.get(key) || 0) + 1);
+      }
+    } catch {
+      // Skip unreadable files; those tags fall back to excluded (below threshold).
+    }
+  }
+  return counts;
+}
+
+const reviewTagCounts = buildTagCounts("src/content/reviews");
+
+// Keep in sync with src/pages/reviews&blogs/tags/[tag].astro
+const MIN_POSTS_TO_INDEX = 3;
+
 const nieuwsDates = buildDateMap("src/content/nieuws");
 const reviewDates = buildDateMap("src/content/reviews");
 
@@ -78,21 +132,46 @@ export default defineConfig({
       // has no business in a sitemap regardless of whether it renders
       // correctly, so these are excluded explicitly rather than relying on
       // the prerender=false switch alone to keep them out.
-      filter: (page) =>
-        !page.includes('/nieuws/pages/') &&
-        !page.includes('/reviews&blogs/pages/') &&
-        !/^https?:\/\/[^/]+\/nieuws\/?$/.test(page) &&
-        !/^https?:\/\/[^/]+\/reviews&blogs\/?$/.test(page) &&
-        !/\/nieuws\/tags\/[^/]+\/\d+\/?$/.test(page) &&
-        !/\/reviews&blogs\/tags\/[^/]+\/\d+\/?$/.test(page) &&
-        !page.includes('/nieuws/14days'),
+      filter: (page) => {
+        const reviewTag = page.match(/\/reviews&blogs\/tags\/([^/]+)\/?$/);
+        if (reviewTag) {
+          let slug = reviewTag[1];
+          try {
+            slug = decodeURIComponent(slug);
+          } catch {
+            // Not percent-encoded; use as-is.
+          }
+          if ((reviewTagCounts.get(slug.toLowerCase()) || 0) < MIN_POSTS_TO_INDEX) {
+            return false;
+          }
+        }
+        return (
+          !page.includes('/nieuws/pages/') &&
+          !page.includes('/reviews&blogs/pages/') &&
+          !/\/search\/?$/.test(page) &&
+          !/^https?:\/\/[^/]+\/nieuws\/?$/.test(page) &&
+          !/^https?:\/\/[^/]+\/reviews&blogs\/?$/.test(page) &&
+          !/\/nieuws\/tags\/[^/]+\/\d+\/?$/.test(page) &&
+          !/\/reviews&blogs\/tags\/[^/]+\/\d+\/?$/.test(page) &&
+          !page.includes('/nieuws/14days')
+        );
+      },
       serialize(item) {
         const match = item.url.match(/\/(nieuws|reviews&blogs)\/([^/]+)\/?$/);
         let lastmod = new Date().toISOString();
         if (match) {
           const [, section, slug] = match;
           const dateMap = section === "nieuws" ? nieuwsDates : reviewDates;
-          lastmod = dateMap.get(slug) || lastmod;
+          // Sitemap URLs are percent-encoded ("timoth%C3%A9e-…") while the date
+          // map is keyed by the raw frontmatter basename ("timothée-…"); without
+          // decoding, those entries silently fall back to the build timestamp.
+          let lookup = slug;
+          try {
+            lookup = decodeURIComponent(slug);
+          } catch {
+            // Not percent-encoded; use as-is.
+          }
+          lastmod = dateMap.get(lookup) || lastmod;
         }
         return {
           ...item,
