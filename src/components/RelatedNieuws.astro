@@ -25,9 +25,9 @@ const related = rankRelated({ soort, tags, franchise }, candidates, 3);
 ---
 
 {related.length > 0 && (
-  <section class="cn-related-nieuws">
+  <aside class="cn-related-nieuws" aria-label="Gerelateerd nieuws">
     <div class="cn-related-nieuws__inner">
-      <h2>Meer nieuws</h2>
+      <p class="cn-related-nieuws__title">Meer nieuws</p>
       <div class="cn-related-nieuws__grid">
         {related.map((post) => (
           <ArticleCard title={post.data.title} href={post.url} excerpt={post.data.summary ?? undefined}>
@@ -37,7 +37,7 @@ const related = rankRelated({ soort, tags, franchise }, candidates, 3);
         ))}
       </div>
     </div>
-  </section>
+  </aside>
 )}
 
 <style>
@@ -46,7 +46,7 @@ const related = rankRelated({ soort, tags, franchise }, candidates, 3);
     margin: 0 auto;
     padding: 0 var(--space-margin-desktop) 32px;
   }
-  .cn-related-nieuws__inner h2 {
+  .cn-related-nieuws__title {
     font-family: var(--font-sans);
     font-weight: 700;
     font-size: 24px;

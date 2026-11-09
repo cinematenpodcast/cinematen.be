@@ -34,9 +34,9 @@ const randomReviews = rankRelated({ soort, tags, franchise }, allReviews, 3);
 ---
 
 {randomReviews.length > 0 && (
-  <section class="cn-random-reviews">
+  <aside class="cn-random-reviews" aria-label="Gerelateerde reviews">
     <div class="cn-random-reviews__inner">
-      <h2>Misschien ben je ook wel geïnteresseerd in&hellip;</h2>
+      <p class="cn-random-reviews__title">Misschien ben je ook wel geïnteresseerd in&hellip;</p>
       <div class="cn-random-reviews__grid">
         {randomReviews.map((post) => {
           return (
@@ -48,7 +48,7 @@ const randomReviews = rankRelated({ soort, tags, franchise }, allReviews, 3);
         })}
       </div>
     </div>
-  </section>
+  </aside>
 )}
 
 <style>
@@ -57,7 +57,7 @@ const randomReviews = rankRelated({ soort, tags, franchise }, allReviews, 3);
     margin: 0 auto;
     padding: 0 var(--space-margin-desktop) 32px;
   }
-  .cn-random-reviews__inner h2 {
+  .cn-random-reviews__title {
     font-family: var(--font-sans);
     font-weight: 700;
     font-size: 24px;

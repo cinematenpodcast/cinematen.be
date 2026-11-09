@@ -125,7 +125,12 @@ const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed
                         <div class="cn-review-hero__row">
                             <div class="cn-review-hero__text">
                                 <CategoryBadge label="REVIEW" tone={soortLower === "tv" ? "tv" : "film"} />
-                                <h1>{frontmatter.title}</h1>
+                                <h1>
+                                    {frontmatter.title}
+                                    {!/\b(review|recensie)\b/i.test(frontmatter.title) && (
+                                        <span class="cn-review-hero__h1-suffix">&mdash; recensie</span>
+                                    )}
+                                </h1>
                                 <div class="cn-review-hero__meta">
                                     {displayDate && (
                                         <span class="cn-review-hero__date" data-pagefind-meta={`date:${formatDateISO(frontmatter.date)}`}>
@@ -264,6 +269,13 @@ const trailerSrc = frontmatter.trailer ? `https://www.youtube-nocookie.com/embed
         line-height: 1.05;
         color: var(--on-surface);
         margin: 16px 0 24px;
+    }
+    .cn-review-hero__text h1 .cn-review-hero__h1-suffix {
+        font-size: 0.42em;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+        color: var(--on-surface-variant);
+        white-space: nowrap;
     }
     .cn-review-hero__meta {
         display: flex;
